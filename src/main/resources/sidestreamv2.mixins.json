@@ -1,0 +1,30 @@
+{
+  "required": true,
+  "minVersion": "0.8",
+  "package": "client.mixin.client",
+  "compatibilityLevel": "JAVA_8",
+  "mixins": [
+    "IEntityVelocityUpdateS2CPacketMixin",
+    "MixinClientConnection",
+    "MixinClientPlayerEntity",
+    "MixinGameRenderer",
+    "MixinIngameHud",
+    "MixinKeyboard",
+    "MixinPlayerEntity"
+  ],
+  "client": [
+    "MixinChatScreen",
+    "MixinClientPlayerInteractionManager",
+    "MixinEntity",
+    "MixinEntityRenderDispatcher",
+    "MixinEntityRenderer",
+    "MixinMinecraftClient",
+    "MixinRotatingCubeMapRenderer",
+    "MixinSimpleOption",
+    "MixinTitleScreen",
+    "MixinWorldRenderer"
+  ],
+  "injectors": {
+    "defaultRequire": 1
+  }
+}
