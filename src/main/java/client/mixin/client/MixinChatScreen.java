@@ -8,7 +8,6 @@
 package client.mixin.client;
 
 import client.Client;
-import client.command.CommandManager;
 import net.minecraft.text.Text;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.Shadow;
@@ -23,29 +22,29 @@ import net.minecraft.client.gui.widget.TextFieldWidget;
 @Mixin(ChatScreen.class)
 public abstract class MixinChatScreen extends Screen
 {
-    @Shadow
-    protected TextFieldWidget chatField;
-
-    private MixinChatScreen(Text title)
-    {
-        super(title);
-    }
-
-
-    @Inject(at = @At("HEAD"),
-            method = "sendMessage(Ljava/lang/String;Z)V",
-            cancellable = true)
-    public void onSendMessage(String message, boolean addToHistory,
-                              CallbackInfo ci)
-    {
-        // Ignore empty messages just like vanilla
-        if((message = normalize(message)).isEmpty())
-            return;
-        if(Client.commandManager.handleCommand(message)){
-            ci.cancel();
-        }
-    }
-
-    @Shadow
-    public abstract String normalize(String chatText);
+	@Shadow
+	protected TextFieldWidget chatField;
+	
+	private MixinChatScreen(Text title)
+	{
+		super(title);
+	}
+	
+	@Inject(at = @At("HEAD"),
+		method = "sendMessage(Ljava/lang/String;Z)V",
+		cancellable = true)
+	public void onSendMessage(String message, boolean addToHistory,
+		CallbackInfo ci)
+	{
+		// Ignore empty messages just like vanilla
+		if((message = normalize(message)).isEmpty())
+			return;
+		if(Client.commandManager.handleCommand(message))
+		{
+			ci.cancel();
+		}
+	}
+	
+	@Shadow
+	public abstract String normalize(String chatText);
 }

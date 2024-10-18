@@ -9,22 +9,15 @@ package client.ui.gui.altmanager.screens;
 
 import java.io.IOException;
 import java.io.InputStream;
-import java.lang.reflect.Field;
-import java.lang.reflect.Method;
 import java.net.URI;
 import java.net.URL;
 import java.net.URLEncoder;
 import java.nio.charset.StandardCharsets;
-import java.nio.file.Files;
-import java.nio.file.Path;
-import java.nio.file.StandardCopyOption;
 import java.util.List;
-import java.util.Random;
 import java.util.UUID;
 
 import client.Client;
 import com.google.common.collect.Lists;
-import net.minecraft.client.MinecraftClient;
 import net.minecraft.client.gui.Element;
 import net.minecraft.client.gui.Selectable;
 import org.apache.commons.codec.binary.Base64;
@@ -52,7 +45,6 @@ import net.minecraft.client.util.math.MatrixStack;
 import net.minecraft.text.OrderedText;
 import net.minecraft.text.Style;
 import net.minecraft.text.Text;
-import net.minecraft.util.Util;
 import org.spongepowered.asm.mixin.Unique;
 
 public abstract class AltEditorScreen extends Screen
@@ -60,7 +52,7 @@ public abstract class AltEditorScreen extends Screen
 	
 	protected final Screen prevScreen;
 	@Unique
-	private  List<Drawable> drawables2 = Lists.newArrayList();
+	private List<Drawable> drawables2 = Lists.newArrayList();
 	
 	private TextFieldWidget nameOrEmailBox;
 	private TextFieldWidget passwordBox;
@@ -69,7 +61,7 @@ public abstract class AltEditorScreen extends Screen
 	
 	protected String message = "";
 	private int errorTimer;
-
+	
 	public AltEditorScreen(Screen prevScreen, Text title)
 	{
 		super(title);
@@ -89,12 +81,13 @@ public abstract class AltEditorScreen extends Screen
 			.dimensions(width / 2 - 100, height / 4 + 120 + 12, 200, 20)
 			.build());
 		
-		addDrawableChild(ButtonWidget
-			.builder(Text.literal("Random Name"),
-				b -> nameOrEmailBox.setText(Client.NAME+ UUID.randomUUID()))
-			.dimensions(width / 2 - 100, height / 4 + 96 + 12, 200, 20)
-			.build());
-
+		addDrawableChild(
+			ButtonWidget
+				.builder(Text.literal("Random Name"),
+					b -> nameOrEmailBox
+						.setText(Client.NAME + UUID.randomUUID()))
+				.dimensions(width / 2 - 100, height / 4 + 96 + 12, 200, 20)
+				.build());
 		
 		nameOrEmailBox = new TextFieldWidget(textRenderer, width / 2 - 100, 60,
 			200, 20, Text.literal(""));
@@ -117,7 +110,6 @@ public abstract class AltEditorScreen extends Screen
 		
 		setFocused(nameOrEmailBox);
 	}
-
 	
 	@Override
 	public final void tick()
@@ -127,7 +119,7 @@ public abstract class AltEditorScreen extends Screen
 		
 		doneButton.active = !nameOrEmail.isEmpty()
 			&& !(alex && passwordBox.getText().isEmpty());
-
+		
 	}
 	
 	/**
@@ -165,8 +157,6 @@ public abstract class AltEditorScreen extends Screen
 	{
 		errorTimer = 8;
 	}
-
-
 	
 	/**
 	 * Decodes the base64 textures value from {@link #getSessionJson(String)}.
@@ -325,26 +315,28 @@ public abstract class AltEditorScreen extends Screen
 			GL11.glDisable(GL11.GL_BLEND);
 			errorTimer--;
 		}
-
-
-
-            for(Drawable drawable : drawables2()) {
-			 drawable.render(context, mouseX, mouseY, partialTicks);
-
-			}
-    }
-
-	private List<Drawable> drawables2() {
-		return  drawables2;
+		
+		for(Drawable drawable : drawables2())
+		{
+			drawable.render(context, mouseX, mouseY, partialTicks);
+			
+		}
 	}
-
-
+	
+	private List<Drawable> drawables2()
+	{
+		return drawables2;
+	}
+	
 	@Override
 	public final void close()
 	{
 		client.setScreen(prevScreen);
 	}
-	protected <T extends Element & Drawable & Selectable> T addDrawableChild(T drawableElement) {
+	
+	protected <T extends Element & Drawable & Selectable> T addDrawableChild(
+		T drawableElement)
+	{
 		this.drawables2.add((Drawable)drawableElement);
 		return this.addSelectableChild(drawableElement);
 	}

@@ -4,6 +4,6 @@ import net.minecraft.client.session.Session;
 
 public interface IMinecraftClient
 {
-
-   void setSession(Session session);
+	
+	void setSession(Session session);
 }

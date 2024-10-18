@@ -3,9 +3,9 @@ package client.utils.render.easing;
 import client.utils.render.AnimationUtil;
 import org.jetbrains.annotations.Nullable;
 
-
-public class Color extends EaseValue {
-
+public class Color extends EaseValue
+{
+	
 	public float red;
 	public float green;
 	public float blue;
@@ -21,7 +21,9 @@ public class Color extends EaseValue {
 	public float easeToBlue;
 	public float easeToAlpha;
 	
-	public Color(float red, float green, float blue, float alpha, @Nullable AnimationUtil.Mode easeMode) {
+	public Color(float red, float green, float blue, float alpha,
+		@Nullable AnimationUtil.Mode easeMode)
+	{
 		this.red = red;
 		this.green = green;
 		this.blue = blue;
@@ -39,27 +41,38 @@ public class Color extends EaseValue {
 		
 		this.duration = 1;
 		this.easeMode = easeMode;
-		if(easeMode == null) {
+		if(easeMode == null)
+		{
 			this.easeMode = AnimationUtil.Mode.NONE;
 		}
 	}
 	
-	public Color(java.awt.Color color, @Nullable AnimationUtil.Mode easeMode) {
-		this(color.getRed(), color.getGreen(), color.getBlue(), color.getAlpha(), easeMode);
-	}
-
-
-    @Override
-	public void updateEase() {
-		float time = this.timer.getCurrentMS() - this.timer.getLastMS();
-		this.red = lastRed + AnimationUtil.easing(easeMode, time / duration, easeToRed - lastRed);
-		this.green = lastGreen + AnimationUtil.easing(easeMode, time / duration, easeToGreen - lastGreen);
-		this.blue = lastBlue + AnimationUtil.easing(easeMode, time / duration, easeToBlue - lastBlue);
-		this.alpha = lastAlpha + AnimationUtil.easing(easeMode, time / duration, easeToAlpha - lastAlpha);
+	public Color(java.awt.Color color, @Nullable AnimationUtil.Mode easeMode)
+	{
+		this(color.getRed(), color.getGreen(), color.getBlue(),
+			color.getAlpha(), easeMode);
 	}
 	
-	public void easeTo(float red, float green, float blue, float alpha, float duration, boolean reset) {
-		if(!(this.easeToRed == red && this.easeToGreen == green && this.easeToBlue == blue && this.easeToAlpha == alpha)) {
+	@Override
+	public void updateEase()
+	{
+		float time = this.timer.getCurrentMS() - this.timer.getLastMS();
+		this.red = lastRed + AnimationUtil.easing(easeMode, time / duration,
+			easeToRed - lastRed);
+		this.green = lastGreen + AnimationUtil.easing(easeMode, time / duration,
+			easeToGreen - lastGreen);
+		this.blue = lastBlue + AnimationUtil.easing(easeMode, time / duration,
+			easeToBlue - lastBlue);
+		this.alpha = lastAlpha + AnimationUtil.easing(easeMode, time / duration,
+			easeToAlpha - lastAlpha);
+	}
+	
+	public void easeTo(float red, float green, float blue, float alpha,
+		float duration, boolean reset)
+	{
+		if(!(this.easeToRed == red && this.easeToGreen == green
+			&& this.easeToBlue == blue && this.easeToAlpha == alpha))
+		{
 			timer.reset();
 			this.lastRed = this.red;
 			this.lastGreen = this.green;
@@ -73,127 +86,158 @@ public class Color extends EaseValue {
 		this.duration = duration;
 	}
 	
-	public java.awt.Color getColor() {
+	public java.awt.Color getColor()
+	{
 		return new java.awt.Color((int)red, (int)green, (int)blue, (int)alpha);
 	}
-
-	public float getRed() {
+	
+	public float getRed()
+	{
 		return red;
 	}
-
-	public void setRed(float red) {
+	
+	public void setRed(float red)
+	{
 		this.red = red;
 	}
-
-	public float getGreen() {
+	
+	public float getGreen()
+	{
 		return green;
 	}
-
-	public void setGreen(float green) {
+	
+	public void setGreen(float green)
+	{
 		this.green = green;
 	}
-
-	public float getBlue() {
+	
+	public float getBlue()
+	{
 		return blue;
 	}
-
-	public void setBlue(float blue) {
+	
+	public void setBlue(float blue)
+	{
 		this.blue = blue;
 	}
-
-	public float getAlpha() {
+	
+	public float getAlpha()
+	{
 		return alpha;
 	}
-
-	public void setAlpha(float alpha) {
+	
+	public void setAlpha(float alpha)
+	{
 		this.alpha = alpha;
 	}
-
-	public float getLastRed() {
+	
+	public float getLastRed()
+	{
 		return lastRed;
 	}
-
-	public void setLastRed(float lastRed) {
+	
+	public void setLastRed(float lastRed)
+	{
 		this.lastRed = lastRed;
 	}
-
-	public float getLastGreen() {
+	
+	public float getLastGreen()
+	{
 		return lastGreen;
 	}
-
-	public void setLastGreen(float lastGreen) {
+	
+	public void setLastGreen(float lastGreen)
+	{
 		this.lastGreen = lastGreen;
 	}
-
-	public float getLastBlue() {
+	
+	public float getLastBlue()
+	{
 		return lastBlue;
 	}
-
-	public void setLastBlue(float lastBlue) {
+	
+	public void setLastBlue(float lastBlue)
+	{
 		this.lastBlue = lastBlue;
 	}
-
-	public float getLastAlpha() {
+	
+	public float getLastAlpha()
+	{
 		return lastAlpha;
 	}
-
-	public void setLastAlpha(float lastAlpha) {
+	
+	public void setLastAlpha(float lastAlpha)
+	{
 		this.lastAlpha = lastAlpha;
 	}
-
-	public float getEaseToRed() {
+	
+	public float getEaseToRed()
+	{
 		return easeToRed;
 	}
-
-	public void setEaseToRed(float easeToRed) {
+	
+	public void setEaseToRed(float easeToRed)
+	{
 		this.easeToRed = easeToRed;
 	}
-
-	public float getEaseToGreen() {
+	
+	public float getEaseToGreen()
+	{
 		return easeToGreen;
 	}
-
-	public void setEaseToGreen(float easeToGreen) {
+	
+	public void setEaseToGreen(float easeToGreen)
+	{
 		this.easeToGreen = easeToGreen;
 	}
-
-	public float getEaseToBlue() {
+	
+	public float getEaseToBlue()
+	{
 		return easeToBlue;
 	}
-
-	public void setEaseToBlue(float easeToBlue) {
+	
+	public void setEaseToBlue(float easeToBlue)
+	{
 		this.easeToBlue = easeToBlue;
 	}
-
-	public float getEaseToAlpha() {
+	
+	public float getEaseToAlpha()
+	{
 		return easeToAlpha;
 	}
-
-	public void setEaseToAlpha(float easeToAlpha) {
+	
+	public void setEaseToAlpha(float easeToAlpha)
+	{
 		this.easeToAlpha = easeToAlpha;
 	}
-
-	public float getDuration() {
+	
+	public float getDuration()
+	{
 		return duration;
 	}
-
-	public void setDuration(float duration) {
+	
+	public void setDuration(float duration)
+	{
 		this.duration = duration;
 	}
-
-	public Time getTime() {
+	
+	public Time getTime()
+	{
 		return timer;
 	}
-
-	public void setTime(Time time) {
+	
+	public void setTime(Time time)
+	{
 		this.timer = time;
 	}
-
-	public AnimationUtil.Mode getEaseMode() {
+	
+	public AnimationUtil.Mode getEaseMode()
+	{
 		return easeMode;
 	}
-
-	public void setEaseMode(AnimationUtil.Mode easeMode) {
+	
+	public void setEaseMode(AnimationUtil.Mode easeMode)
+	{
 		this.easeMode = easeMode;
 	}
 }

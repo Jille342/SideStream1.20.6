@@ -18,23 +18,21 @@ import java.io.File;
 
 public class Client
 {
-    public static final String NAME = "SideStream";
-    public static final String VERSION = "20241017";
+	public static final String NAME = "SideStream";
+	public static final String VERSION = "20241018";
 	public static HUD2 hud2 = new HUD2();
 	public static String bgLocation = "client/bg1.png";
-	public static  AltManager altManager;
+	public static AltManager altManager;
 	public static ConfigManager configManager;
-
-
+	
 	public static IMinecraftClient IMC;
 	public static MinecraftClient mc = MinecraftClient.getInstance();
-	public static final File FOLDER = new File(mc.runDirectory,NAME);
+	public static final File FOLDER = new File(mc.runDirectory, NAME);
 	public static CommandManager commandManager = new CommandManager();
 	public static ModuleManager moduleManager;
-
-
-    public static void init()
-    {
+	
+	public static void init()
+	{
 		System.out.println("Starting " + NAME);
 		IMC = (IMinecraftClient)mc;
 		commandManager.init();
@@ -45,23 +43,29 @@ public class Client
 		configManager = new ConfigManager();
 		moduleManager = new ModuleManager();
 	}
-
-	public static Event<?> onEvent(Event<?> e) {
-		if (e instanceof EventPacket) {
+	
+	public static Event<?> onEvent(Event<?> e)
+	{
+		if(e instanceof EventPacket)
+		{
 			EventPacket event = (EventPacket)e;
 			Packet p = event.getPacket();
-			if (p instanceof WorldTimeUpdateS2CPacket) {
-				WorldUtils.onTime((WorldTimeUpdateS2CPacket) p);
+			if(p instanceof WorldTimeUpdateS2CPacket)
+			{
+				WorldUtils.onTime((WorldTimeUpdateS2CPacket)p);
 			}
 		}
-    	ModuleManager.onEvent(e);
+		ModuleManager.onEvent(e);
 		return e;
 	}
-	public static void shutdown(){
+	
+	public static void shutdown()
+	{
 		ModuleManager.saveModuleSetting();
 	}
-
-public static ModuleManager getModuleManager(){
+	
+	public static ModuleManager getModuleManager()
+	{
 		return moduleManager;
-}
+	}
 }

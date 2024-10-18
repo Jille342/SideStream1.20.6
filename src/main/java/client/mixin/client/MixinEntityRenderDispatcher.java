@@ -33,20 +33,31 @@ import org.spongepowered.asm.mixin.injection.ModifyArg;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 
 @Mixin(EntityRenderDispatcher.class)
-public abstract class MixinEntityRenderDispatcher {
-    @Unique
-    private static Entity entity;
-
-    @Inject(method = "renderHitbox", at = @At(value = "HEAD"))
-    private static void getEntity(MatrixStack matrices, VertexConsumer vertices, Entity entity, float tickDelta, CallbackInfo ci) {
-        MixinEntityRenderDispatcher.entity = entity;
-    }
-
-    @ModifyArg(method = "renderHitbox", at = @At(value = "INVOKE", target = "Lnet/minecraft/client/render/WorldRenderer;drawBox(Lnet/minecraft/client/util/math/MatrixStack;Lnet/minecraft/client/render/VertexConsumer;Lnet/minecraft/util/math/Box;FFFF)V", ordinal = 0), index = 2, require = 1, allow = 1)
-    private static Box updateBoundingBox(Box box) {
-        if (ModuleManager.getModulebyClass(HitBoxes.class).isEnable() ) {
-            return box.expand(HitBoxes.getSize(entity));
-        }
-        return box;
-    }
+public abstract class MixinEntityRenderDispatcher
+{
+	@Unique
+	private static Entity entity;
+	
+	@Inject(method = "renderHitbox", at = @At(value = "HEAD"))
+	private static void getEntity(MatrixStack matrices, VertexConsumer vertices,
+		Entity entity, float tickDelta, CallbackInfo ci)
+	{
+		MixinEntityRenderDispatcher.entity = entity;
+	}
+	
+	@ModifyArg(method = "renderHitbox",
+		at = @At(value = "INVOKE",
+			target = "Lnet/minecraft/client/render/WorldRenderer;drawBox(Lnet/minecraft/client/util/math/MatrixStack;Lnet/minecraft/client/render/VertexConsumer;Lnet/minecraft/util/math/Box;FFFF)V",
+			ordinal = 0),
+		index = 2,
+		require = 1,
+		allow = 1)
+	private static Box updateBoundingBox(Box box)
+	{
+		if(ModuleManager.getModulebyClass(HitBoxes.class).isEnable())
+		{
+			return box.expand(HitBoxes.getSize(entity));
+		}
+		return box;
+	}
 }

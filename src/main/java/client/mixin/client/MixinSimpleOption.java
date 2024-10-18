@@ -21,26 +21,26 @@ import net.minecraft.client.option.SimpleOption;
 @Mixin(SimpleOption.class)
 public class MixinSimpleOption<T> implements ISimpleOption<T>
 {
-    @Shadow
-    T value;
-
-    @Shadow
-    @Final
-    private Consumer<T> changeCallback;
-
-    @Override
-    public void forceSetValue(T newValue)
-    {
-        if(!MinecraftClient.getInstance().isRunning())
-        {
-            value = newValue;
-            return;
-        }
-
-        if(!Objects.equals(value, newValue))
-        {
-            value = newValue;
-            changeCallback.accept(value);
-        }
-    }
+	@Shadow
+	T value;
+	
+	@Shadow
+	@Final
+	private Consumer<T> changeCallback;
+	
+	@Override
+	public void forceSetValue(T newValue)
+	{
+		if(!MinecraftClient.getInstance().isRunning())
+		{
+			value = newValue;
+			return;
+		}
+		
+		if(!Objects.equals(value, newValue))
+		{
+			value = newValue;
+			changeCallback.accept(value);
+		}
+	}
 }

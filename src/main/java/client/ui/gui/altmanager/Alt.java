@@ -18,7 +18,6 @@ public abstract class Alt
 		this.favorite = favorite;
 	}
 	
-
 	public abstract void login() throws LoginException;
 	
 	/**
@@ -71,7 +70,7 @@ public abstract class Alt
 	{
 		return favorite;
 	}
-
+	
 	public final void setFavorite(boolean favorite)
 	{
 		this.favorite = favorite;

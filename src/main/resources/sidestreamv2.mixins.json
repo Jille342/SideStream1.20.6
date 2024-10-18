@@ -18,10 +18,12 @@
     "MixinEntity",
     "MixinEntityRenderDispatcher",
     "MixinEntityRenderer",
+    "MixinLogoDrawer",
     "MixinMinecraftClient",
+    "MixinMultiplayerScreen",
     "MixinRotatingCubeMapRenderer",
+    "MixinScreen",
     "MixinSimpleOption",
-    "MixinTitleScreen",
     "MixinWorldRenderer"
   ],
   "injectors": {

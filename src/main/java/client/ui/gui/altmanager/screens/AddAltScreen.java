@@ -15,26 +15,26 @@ import net.minecraft.text.Text;
 
 public final class AddAltScreen extends AltEditorScreen
 {
-
-    public AddAltScreen(Screen prevScreen, AltManager altManager)
-    {
-        super(prevScreen, Text.literal("New Alt"));
-    }
-
-    @Override
-    protected String getDoneButtonText()
-    {
-        return "Add";
-    }
-
-    @Override
-    protected void pressDoneButton()
-    {
-        String nameOrEmail = getNameOrEmail();
-        String password = getPassword();
-
-            Client.altManager.contents.add(new Alt(nameOrEmail,password));
-
-        client.setScreen(prevScreen);
-    }
+	
+	public AddAltScreen(Screen prevScreen, AltManager altManager)
+	{
+		super(prevScreen, Text.literal("New Alt"));
+	}
+	
+	@Override
+	protected String getDoneButtonText()
+	{
+		return "Add";
+	}
+	
+	@Override
+	protected void pressDoneButton()
+	{
+		String nameOrEmail = getNameOrEmail();
+		String password = getPassword();
+		
+		Client.altManager.contents.add(new Alt(nameOrEmail, password));
+		
+		client.setScreen(prevScreen);
+	}
 }

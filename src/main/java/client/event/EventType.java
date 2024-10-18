@@ -1,8 +1,9 @@
 package client.event;
 
-public enum EventType {
-
+public enum EventType
+{
+	
 	PRE,
 	POST;
-	
+
 }

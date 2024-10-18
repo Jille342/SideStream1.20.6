@@ -17,14 +17,22 @@ import org.spongepowered.asm.mixin.injection.Redirect;
 import java.util.Objects;
 
 @Mixin(ClientPlayerInteractionManager.class)
-public class MixinClientPlayerInteractionManager {
-    @Shadow
-    private int blockBreakingCooldown;
-
-    @Redirect(method = "updateBlockBreakingProgress",
-            at = @At(value = "FIELD", target = "Lnet/minecraft/client/network/ClientPlayerInteractionManager;blockBreakingCooldown:I", opcode = Opcodes.GETFIELD, ordinal = 0))
-    public int coffee_overwriteCooldown(ClientPlayerInteractionManager clientPlayerInteractionManager) {
-        int cd = this.blockBreakingCooldown;
-        return Objects.requireNonNull(ModuleManager.getModulebyClass(NoBreakDelay.class)).isEnable() ? 0 : cd;
-    }
+public class MixinClientPlayerInteractionManager
+{
+	@Shadow
+	private int blockBreakingCooldown;
+	
+	@Redirect(method = "updateBlockBreakingProgress",
+		at = @At(value = "FIELD",
+			target = "Lnet/minecraft/client/network/ClientPlayerInteractionManager;blockBreakingCooldown:I",
+			opcode = Opcodes.GETFIELD,
+			ordinal = 0))
+	public int coffee_overwriteCooldown(
+		ClientPlayerInteractionManager clientPlayerInteractionManager)
+	{
+		int cd = this.blockBreakingCooldown;
+		return Objects
+			.requireNonNull(ModuleManager.getModulebyClass(NoBreakDelay.class))
+			.isEnable() ? 0 : cd;
+	}
 }

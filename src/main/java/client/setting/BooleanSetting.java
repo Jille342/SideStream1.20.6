@@ -2,31 +2,38 @@ package client.setting;
 
 import java.util.function.Supplier;
 
-public class BooleanSetting extends Setting {
-
+public class BooleanSetting extends Setting
+{
+	
 	public boolean enable;
-
-	public BooleanSetting(String name, Supplier<Boolean> visibility, boolean enable) {
+	
+	public BooleanSetting(String name, Supplier<Boolean> visibility,
+		boolean enable)
+	{
 		super(name, visibility, enable);
 		this.name = name;
 		this.enable = enable;
 	}
-
-	public BooleanSetting(String name, boolean enable) {
+	
+	public BooleanSetting(String name, boolean enable)
+	{
 		super(name, null, enable);
 		this.name = name;
 		this.enable = enable;
 	}
-
-	public boolean isEnable() {
+	
+	public boolean isEnable()
+	{
 		return enable;
 	}
-
-	public void setEnable(boolean enable) {
+	
+	public void setEnable(boolean enable)
+	{
 		this.enable = enable;
 	}
-
-	public void toggle() {
+	
+	public void toggle()
+	{
 		enable = !enable;
 	}
 }

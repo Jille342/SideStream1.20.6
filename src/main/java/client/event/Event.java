@@ -1,56 +1,73 @@
 package client.event;
 
-public class Event<T> {
+public class Event<T>
+{
 	
 	public boolean cancelled;
 	public EventType type;
 	public EventDirection direction;
-
-	public void cancel() {
+	
+	public void cancel()
+	{
 		this.cancelled = true;
 	}
-
-	public boolean isCancelled() {
+	
+	public boolean isCancelled()
+	{
 		return cancelled;
 	}
-	public void setCancelled(boolean cancelled) {
+	
+	public void setCancelled(boolean cancelled)
+	{
 		this.cancelled = cancelled;
 	}
-	public EventType getType() {
+	
+	public EventType getType()
+	{
 		return type;
 	}
-	public void setType(EventType type) {
+	
+	public void setType(EventType type)
+	{
 		this.type = type;
 	}
-	public EventDirection getDirection() {
+	
+	public EventDirection getDirection()
+	{
 		return direction;
 	}
-	public void setDirection(EventDirection direction) {
+	
+	public void setDirection(EventDirection direction)
+	{
 		this.direction = direction;
 	}
 	
-	public boolean isPre() {
+	public boolean isPre()
+	{
 		if(type == null)
 			return false;
 		
 		return type == EventType.PRE;
 	}
 	
-	public boolean isPost() {
+	public boolean isPost()
+	{
 		if(type == null)
 			return false;
 		
 		return type == EventType.POST;
 	}
 	
-	public boolean isIncoming() {
+	public boolean isIncoming()
+	{
 		if(direction == null)
 			return false;
 		
 		return direction == EventDirection.INCOMING;
 	}
 	
-	public boolean isOutgoing() {
+	public boolean isOutgoing()
+	{
 		if(direction == null)
 			return false;
 		

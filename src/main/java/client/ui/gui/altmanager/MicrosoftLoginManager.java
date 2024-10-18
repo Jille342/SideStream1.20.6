@@ -389,7 +389,7 @@ public enum MicrosoftLoginManager
 		{
 			throw new LoginException("Server sent invalid JSON.", e);
 		}
-    }
+	}
 	
 	private static String getMinecraftAccessToken(String uhs, String xstsToken)
 		throws LoginException

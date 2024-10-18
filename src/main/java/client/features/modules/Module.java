@@ -11,10 +11,11 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 
-public class Module {
-
+public class Module
+{
+	
 	private final Translate translate = new Translate(0.0F, 0.0F);
-
+	
 	protected static MinecraftClient mc = MinecraftClient.getInstance();
 	
 	public Category category;
@@ -22,22 +23,26 @@ public class Module {
 	public String name;
 	public String displayName;
 	public boolean enable;
-
+	
 	public int priority;
 	
 	public List<Setting> settings = new ArrayList<Setting>();
 	
-	public Module(String name, Category category) {
+	public Module(String name, Category category)
+	{
 		this.name = name;
 		this.category = category;
 		init();
 	}
 	
-	public Module(String name, int keyCode, Category category) {
-		if (this instanceof ClickGUI) {
+	public Module(String name, int keyCode, Category category)
+	{
+		if(this instanceof ClickGUI)
+		{
 			this.keyBindSetting = new KeyBindSetting("KeyBind", keyCode);
 			setKeyCode(keyCode);
-		}else {
+		}else
+		{
 			this.keyBindSetting = new KeyBindSetting("KeyBind", keyCode);
 		}
 		this.name = name;
@@ -47,85 +52,114 @@ public class Module {
 		init();
 	}
 	
-	public Module(String name, int keyCode, Category category, boolean enable) {
+	public Module(String name, int keyCode, Category category, boolean enable)
+	{
 		this(name, keyCode, category);
 		this.enable = enable;
 	}
-
-	public Module(String name, int keyCode, Category category, int priority) {
+	
+	public Module(String name, int keyCode, Category category, int priority)
+	{
 		this(name, keyCode, category);
 		this.priority = priority;
 	}
-	public Translate getTranslate() {
+	
+	public Translate getTranslate()
+	{
 		return translate;
 	}
-
-
-	public void addSetting(Setting... settings) {
+	
+	public void addSetting(Setting... settings)
+	{
 		this.settings.addAll(Arrays.asList(settings));
 	}
-	public List<Setting> getSettings(){
+	
+	public List<Setting> getSettings()
+	{
 		return settings;
 	}
 	
-	public Category getCategory() {
+	public Category getCategory()
+	{
 		return category;
 	}
-
-	public void setCategory(Category category) {
+	
+	public void setCategory(Category category)
+	{
 		this.category = category;
 	}
-
-	public int getKeyCode() {
+	
+	public int getKeyCode()
+	{
 		return keyBindSetting.getKeyCode();
 	}
-
-	public void setKeyCode(int keyCode) {
+	
+	public void setKeyCode(int keyCode)
+	{
 		this.keyBindSetting.setKeyCode(keyCode);
 	}
-
-	public boolean isEnable() {
+	
+	public boolean isEnable()
+	{
 		return enable;
 	}
-
-	public void setEnable(boolean enable) {
+	
+	public void setEnable(boolean enable)
+	{
 		this.enable = enable;
 	}
-
-	public String getDisplayName() {
+	
+	public String getDisplayName()
+	{
 		return displayName == null ? name : displayName;
 	}
 	
-	public void setDisplayName(String name) {
+	public void setDisplayName(String name)
+	{
 		this.displayName = name;
 	}
 	
-	public String getName() {
+	public String getName()
+	{
 		return name;
 	}
-
-	public void setTag(String string) {
-		setDisplayName(name + " "+ "\u00A77" + string);
+	
+	public void setTag(String string)
+	{
+		setDisplayName(name + " " + "\u00A77" + string);
 	}
-
-	public void setName(String name) {
+	
+	public void setName(String name)
+	{
 		this.name = name;
 	}
-
-	public void toggle() {
+	
+	public void toggle()
+	{
 		enable = !enable;
-		if(enable) {
+		if(enable)
+		{
 			onEnable();
-		}else {
+		}else
+		{
 			onDisable();
 		}
 	}
 	
-	public void init() {}
-	public void onEnable() {}
-	public void onDisable() {}
-	public void onEvent(Event<?> e) {}
-	public enum Category {
+	public void init()
+	{}
+	
+	public void onEnable()
+	{}
+	
+	public void onDisable()
+	{}
+	
+	public void onEvent(Event<?> e)
+	{}
+	
+	public enum Category
+	{
 		COMBAT("Combat"),
 		MOVEMENT("Movement"),
 		MISC("Misc"),
@@ -135,8 +169,9 @@ public class Module {
 		
 		public String name;
 		
-		Category(String name) {
-			this.name=name;
+		Category(String name)
+		{
+			this.name = name;
 		}
 	}
 	

@@ -14,109 +14,136 @@ import java.lang.invoke.MethodType;
 /**
  * A reimplementation of {@link MatrixStack}, containing a few optimizations.
  */
-public class FastMStack extends MatrixStack {
+public class FastMStack extends MatrixStack
+{
 	private static final MethodHandle MATRIXSTACK_ENTRY_CTOR;
-
-	static {
-		try {
+	
+	static
+	{
+		try
+		{
 			// reflection should be fine, we're not doing any string names here
-			MethodHandles.Lookup lookup = MethodHandles.privateLookupIn(MatrixStack.Entry.class,
-					MethodHandles.lookup());
-			MATRIXSTACK_ENTRY_CTOR = lookup.findConstructor(MatrixStack.Entry.class,
-					MethodType.methodType(void.class, Matrix4f.class, Matrix3f.class));
-		} catch (IllegalAccessException | NoSuchMethodException e) {
+			MethodHandles.Lookup lookup = MethodHandles.privateLookupIn(
+				MatrixStack.Entry.class, MethodHandles.lookup());
+			MATRIXSTACK_ENTRY_CTOR =
+				lookup.findConstructor(MatrixStack.Entry.class, MethodType
+					.methodType(void.class, Matrix4f.class, Matrix3f.class));
+		}catch(IllegalAccessException | NoSuchMethodException e)
+		{
 			throw new RuntimeException(e);
 		}
 	}
-
+	
 	private final ObjectArrayList<Entry> fEntries = new ObjectArrayList<>(8);
 	private Entry top;
-
-	public FastMStack() {
+	
+	public FastMStack()
+	{
 		fEntries.add(top = new Entry(new Matrix4f(), new Matrix3f()));
 	}
-
-	public FastMStack(Matrix4f top4f, Matrix3f top3f) {
+	
+	public FastMStack(Matrix4f top4f, Matrix3f top3f)
+	{
 		fEntries.add(top = new Entry(top4f, top3f));
 	}
-
+	
 	@Override
-	public void translate(float x, float y, float z) {
+	public void translate(float x, float y, float z)
+	{
 		top.positionMatrix.translate(x, y, z);
 	}
-
+	
 	@Override
-	public void scale(float x, float y, float z) {
+	public void scale(float x, float y, float z)
+	{
 		top.positionMatrix.scale(x, y, z);
-		if (x == y && y == z) {
-			// normal matrix is normalized, if all elements are uniform, we can just scale it based on the sign of the
+		if(x == y && y == z)
+		{
+			// normal matrix is normalized, if all elements are uniform, we can
+			// just scale it based on the sign of the
 			// elements. (positive / zero = no effect, negative = flip it)
-			if (x != 0) {
+			if(x != 0)
+			{
 				top.normalMatrix.scale(Math.signum(x));
 			}
-			return; // original MatrixStack implementation is missing this, resulting in invalid transformations
+			return; // original MatrixStack implementation is missing this,
+					// resulting in invalid transformations
 		}
 		float inverseX = 1.0f / x;
 		float inverseY = 1.0f / y;
 		float inverseZ = 1.0f / z;
 		// cbrt is faster than the pure java approximation these days
-		float scalar = (float) (1f / Math.cbrt(inverseX * inverseY * inverseZ));
-		top.normalMatrix.scale(scalar * inverseX, scalar * inverseY, scalar * inverseZ);
+		float scalar = (float)(1f / Math.cbrt(inverseX * inverseY * inverseZ));
+		top.normalMatrix.scale(scalar * inverseX, scalar * inverseY,
+			scalar * inverseZ);
 	}
-
+	
 	@Override
-	public void multiply(Quaternionf quaternion) {
+	public void multiply(Quaternionf quaternion)
+	{
 		top.positionMatrix.rotate(quaternion);
 		top.normalMatrix.rotate(quaternion);
 	}
-
+	
 	@Override
-	public void multiply(Quaternionf quaternion, float originX, float originY, float originZ) {
+	public void multiply(Quaternionf quaternion, float originX, float originY,
+		float originZ)
+	{
 		top.positionMatrix.rotateAround(quaternion, originX, originY, originZ);
 		top.normalMatrix.rotate(quaternion);
 	}
-
+	
 	@Override
-	public void multiplyPositionMatrix(Matrix4f matrix) {
+	public void multiplyPositionMatrix(Matrix4f matrix)
+	{
 		top.positionMatrix.mul(matrix);
 	}
-
+	
 	@Override
-	public void push() {
-		fEntries.add(top = new Entry(new Matrix4f(top.positionMatrix), new Matrix3f(top.normalMatrix)));
+	public void push()
+	{
+		fEntries.add(top = new Entry(new Matrix4f(top.positionMatrix),
+			new Matrix3f(top.normalMatrix)));
 	}
-
+	
 	@Override
-	public void pop() {
-		if (fEntries.size() == 1) {
+	public void pop()
+	{
+		if(fEntries.size() == 1)
+		{
 			throw new IllegalStateException("Trying to pop an empty stack");
 		}
 		fEntries.pop();
 		top = fEntries.top();
 	}
-
-
+	
 	@Override
-	public MatrixStack.Entry peek() {
+	public MatrixStack.Entry peek()
+	{
 		// ugly hack but needed to interop with the original stack api
-        try {
-            return (MatrixStack.Entry) MATRIXSTACK_ENTRY_CTOR.invoke(top.positionMatrix, top.normalMatrix);
-        } catch (Throwable e) {
-            throw new RuntimeException(e);
-        }
-    }
-
+		try
+		{
+			return (MatrixStack.Entry)MATRIXSTACK_ENTRY_CTOR
+				.invoke(top.positionMatrix, top.normalMatrix);
+		}catch(Throwable e)
+		{
+			throw new RuntimeException(e);
+		}
+	}
+	
 	@Override
-	public boolean isEmpty() {
+	public boolean isEmpty()
+	{
 		return fEntries.size() == 1;
 	}
-
+	
 	@Override
-	public void loadIdentity() {
+	public void loadIdentity()
+	{
 		top.positionMatrix.identity();
 		top.normalMatrix.identity();
 	}
-
-	record Entry(Matrix4f positionMatrix, Matrix3f normalMatrix) {
-	}
+	
+	record Entry(Matrix4f positionMatrix, Matrix3f normalMatrix)
+	{}
 }
