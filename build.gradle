@@ -1,6 +1,5 @@
 buildscript {
 	dependencies {
-		classpath "org.kohsuke:github-api:1.323"
 	}
 }
 
@@ -34,14 +33,6 @@ dependencies {
 	
 	// Fabric API. This is technically optional, but you probably want it anyway.
 	modImplementation "net.fabricmc.fabric-api:fabric-api:${project.fabric_version}"
-	
-	// net.wurstclient.ai.PathPos extends net.minecraft.util.math.BlockPos,
-	// which uses javax.annotation.concurrent.Immutable, which is part of
-	// the JSR305 library.
-	//
-	// In other words, Wurst won't compile without this library,
-	// even though it's Minecraft that actually uses it.
-	modImplementation "com.google.code.findbugs:jsr305:3.0.2"
 }
 
 
@@ -85,41 +76,5 @@ spotless {
 	json {
 		target "src/**/*.json"
 		gson().indentWithSpaces(2).version("2.10.1")
-	}
-}
-
-task moveDevLibs(dependsOn: [remapJar, remapSourcesJar]) {
-	doLast {
-		def archivesName = project.base.archivesName.get() as String
-		ant.move(file:"${project.buildDir}/devlibs/${archivesName}-${version}-dev.jar", tofile:"${project.buildDir}/libs/${archivesName}-${version}-dev.jar")
-		ant.move(file:"${project.buildDir}/devlibs/${archivesName}-${version}-sources.jar", tofile:"${project.buildDir}/libs/${archivesName}-${version}-sources-dev.jar")
-	}
-}
-
-import org.kohsuke.github.GHReleaseBuilder
-import org.kohsuke.github.GitHub
-
-task github(dependsOn: moveDevLibs) {
-	onlyIf {
-		ENV.GITHUB_TOKEN
-	}
-	
-	doLast {
-		def github = GitHub.connectUsingOAuth(ENV.GITHUB_TOKEN as String)
-		def repository = github.getRepository("Wurst-Imperium/Wurst-MCX2")
-		def ghVersion = version.substring(0, version.indexOf("-"))
-		def archivesName = project.base.archivesName.get() as String
-		
-		def ghRelease = repository.getReleaseByTagName(ghVersion as String)
-		if(ghRelease == null) {
-			def releaseBuilder = new GHReleaseBuilder(repository, ghVersion as String)
-			releaseBuilder.prerelease(ghVersion.contains("pre"))
-			ghRelease = releaseBuilder.create()
-		}
-		
-		ghRelease.uploadAsset(remapJar.archiveFile.get().getAsFile(), "application/java-archive")
-		ghRelease.uploadAsset(remapSourcesJar.archiveFile.get().getAsFile(), "application/java-archive")
-		ghRelease.uploadAsset(new File("${project.buildDir}/libs/${archivesName}-${version}-dev.jar"), "application/java-archive")
-		ghRelease.uploadAsset(new File("${project.buildDir}/libs/${archivesName}-${version}-sources-dev.jar"), "application/java-archive")
 	}
 }
