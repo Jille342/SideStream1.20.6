@@ -1,45 +1,28 @@
 package client.utils;
 
 import com.mojang.blaze3d.systems.RenderSystem;
+import me.x150.renderer.util.BufferUtils;
 import net.minecraft.client.gui.DrawContext;
 import net.minecraft.client.render.*;
-import net.minecraft.client.render.model.json.ModelTransformationMode;
 import net.minecraft.client.util.math.MatrixStack;
-import net.minecraft.item.ItemStack;
 import net.minecraft.util.Identifier;
 import net.minecraft.util.math.Box;
-import net.minecraft.util.math.RotationAxis;
 import net.minecraft.util.math.Vec3d;
-import org.apache.commons.lang3.reflect.FieldUtils;
 import org.joml.Matrix4f;
-import org.joml.Vector3f;
-import org.joml.Vector4f;
 import org.lwjgl.opengl.GL11;
 
 import java.awt.*;
 import java.text.NumberFormat;
 
 import static me.x150.renderer.render.Renderer2d.renderQuad;
+import static me.x150.renderer.util.RendererUtils.endRender;
+import static me.x150.renderer.util.RendererUtils.setupRender;
 import static org.lwjgl.opengl.GL11.*;
 
 public class RenderingUtils implements MCUtil
 {
-	private static final Vector3f[] shaderLight;
 	private static final Matrix4f model = new Matrix4f();
 	private static final Matrix4f projection = new Matrix4f();
-	
-	static
-	{
-		try
-		{
-			shaderLight = (Vector3f[])FieldUtils
-				.getField(RenderSystem.class, "shaderLightDirections", true)
-				.get(null);
-		}catch(IllegalArgumentException | IllegalAccessException e)
-		{
-			throw new RuntimeException(e);
-		}
-	}
 	
 	public static void onRender(Matrix4f modelView)
 	{
@@ -70,34 +53,6 @@ public class RenderingUtils implements MCUtil
 		range[0] = startPoint - 1;
 		range[1] = startPoint;
 		return range;
-	}
-	
-	public static Vec3d getScreenSpaceCoordinate(final Vec3d pos,
-		final MatrixStack stack)
-	{
-		final Camera camera = mc.getEntityRenderDispatcher().camera;
-		if(camera == null)
-			return null;
-		final Matrix4f matrix = stack.peek().getPositionMatrix();
-		final int displayHeight = mc.getWindow().getHeight();
-		final int[] viewport = new int[4];
-		final Vector3f target = new Vector3f();
-		final double deltaX = pos.x - camera.getPos().x;
-		final double deltaY = pos.y - camera.getPos().y;
-		final double deltaZ = pos.z - camera.getPos().z;
-		GL11.glGetIntegerv(GL11.GL_VIEWPORT, viewport);
-		final Vector4f transformedCoordinates =
-			new Vector4f((float)deltaX, (float)deltaY, (float)deltaZ, 1.f)
-				.mul(matrix);
-		final Matrix4f matrixProj =
-			new Matrix4f(RenderSystem.getProjectionMatrix());
-		final Matrix4f matrixModel =
-			new Matrix4f(RenderSystem.getModelViewMatrix());
-		Vector3f a = matrixProj.mul(matrixModel).project(
-			transformedCoordinates.x(), transformedCoordinates.y(),
-			transformedCoordinates.z(), viewport, target);
-		return new Vec3d(a.x / mc.getWindow().getScaleFactor(),
-			(displayHeight - a.y) / mc.getWindow().getScaleFactor(), a.z);
 	}
 	
 	public static void drawRect(double left, double top, double right,
@@ -155,62 +110,6 @@ public class RenderingUtils implements MCUtil
 		return color;
 	}
 	
-	/** Draws a 2D gui items somewhere in the world. **/
-	public static void drawGuiItem(double x, double y, double z, double offX,
-		double offY, double scale, ItemStack item)
-	{
-		if(item.isEmpty())
-		{
-			return;
-		}
-		
-		MatrixStack matrices = matrixFrom(x, y, z);
-		
-		Camera camera = mc.gameRenderer.getCamera();
-		matrices.multiply(
-			RotationAxis.POSITIVE_Y.rotationDegrees(-camera.getYaw()));
-		matrices.multiply(
-			RotationAxis.POSITIVE_X.rotationDegrees(camera.getPitch()));
-		
-		matrices.translate(offX, offY, 0);
-		matrices.scale((float)scale, (float)scale, 0.001f);
-		
-		matrices.multiply(RotationAxis.POSITIVE_Y.rotationDegrees(180f));
-		
-		mc.getBufferBuilders().getEntityVertexConsumers().draw();
-		
-		RenderSystem.enableBlend();
-		RenderSystem.defaultBlendFunc();
-		
-		Vector3f[] currentLight = shaderLight.clone();
-		DiffuseLighting.disableGuiDepthLighting();
-		
-		mc.getItemRenderer().renderItem(item, ModelTransformationMode.GUI,
-			0xF000F0, OverlayTexture.DEFAULT_UV, matrices,
-			mc.getBufferBuilders().getEntityVertexConsumers(), mc.world, 0);
-		
-		mc.getBufferBuilders().getEntityVertexConsumers().draw();
-		
-		RenderSystem.setShaderLights(currentLight[0], currentLight[1]);
-		RenderSystem.disableBlend();
-	}
-	
-	public static MatrixStack matrixFrom(double x, double y, double z)
-	{
-		MatrixStack matrices = new MatrixStack();
-		
-		Camera camera = mc.gameRenderer.getCamera();
-		matrices.multiply(
-			RotationAxis.POSITIVE_X.rotationDegrees(camera.getPitch()));
-		matrices.multiply(
-			RotationAxis.POSITIVE_Y.rotationDegrees(camera.getYaw() + 180.0F));
-		
-		matrices.translate(x - camera.getPos().x, y - camera.getPos().y,
-			z - camera.getPos().z);
-		
-		return matrices;
-	}
-	
 	public static Color blend(Color color1, Color color2, double ratio)
 	{
 		float r = (float)ratio;
@@ -259,6 +158,46 @@ public class RenderingUtils implements MCUtil
 			exp.printStackTrace();
 		}
 		return color;
+	}
+	
+	public static void renderRect(MatrixStack matrices, double x1, double y1,
+		double x2, double y2, int color)
+	{
+		double j;
+		if(x1 < x2)
+		{
+			j = x1;
+			x1 = x2;
+			x2 = j;
+		}
+		
+		if(y1 < y2)
+		{
+			j = y1;
+			y1 = y2;
+			y2 = j;
+		}
+		float f3 = (float)(color >> 24 & 255) / 255.0F;
+		float f = (float)(color >> 16 & 255) / 255.0F;
+		float f1 = (float)(color >> 8 & 255) / 255.0F;
+		float f2 = (float)(color & 255) / 255.0F;
+		Matrix4f matrix = matrices.peek().getPositionMatrix();
+		
+		BufferBuilder buffer = Tessellator.getInstance().getBuffer();
+		buffer.begin(VertexFormat.DrawMode.QUADS, VertexFormats.POSITION_COLOR);
+		buffer.vertex(matrix, (float)x1, (float)y2, 0.0F).color(f, f1, f2, f3)
+			.next();
+		buffer.vertex(matrix, (float)x2, (float)y2, 0.0F).color(f, f1, f2, f3)
+			.next();
+		buffer.vertex(matrix, (float)x2, (float)y1, 0.0F).color(f, f1, f2, f3)
+			.next();
+		buffer.vertex(matrix, (float)x1, (float)y1, 0.0F).color(f, f1, f2, f3)
+			.next();
+		setupRender();
+		RenderSystem.setShader(GameRenderer::getPositionColorProgram);
+		
+		BufferUtils.draw(buffer);
+		endRender();
 	}
 	
 	public static void drawGradient(double x, double y, double x2, double y2,

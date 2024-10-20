@@ -57,7 +57,8 @@ public class HitBoxes extends Module
 							if(!ServerHelper.isTeammate((PlayerEntity)entity))
 							{
 								return (float)size.getValue();
-							} else{
+							}else
+							{
 								return 0;
 							}
 						}else

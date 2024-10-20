@@ -12,11 +12,12 @@ public class CommandManager
 	public List<Command> commands = new ArrayList<Command>();
 	public static String prefix = ".";
 	
-	public void init()
+	public CommandManager()
 	{
 		commands.add(new Toggle());
 		commands.add(new Prefix());
 		commands.add(new Bind());
+		commands.add(new Config());
 	}
 	
 	public boolean handleCommand(String str)

@@ -13,6 +13,7 @@
     "MixinPlayerEntity"
   ],
   "client": [
+    "MinecraftClientAccessor",
     "MixinChatScreen",
     "MixinClientPlayerInteractionManager",
     "MixinEntity",
@@ -20,11 +21,13 @@
     "MixinEntityRenderer",
     "MixinLogoDrawer",
     "MixinMinecraftClient",
+    "MixinMouse",
     "MixinMultiplayerScreen",
     "MixinRotatingCubeMapRenderer",
     "MixinScreen",
     "MixinSimpleOption",
-    "MixinWorldRenderer"
+    "MixinWorldRenderer",
+    "RenderTickCounterAccessor"
   ],
   "injectors": {
     "defaultRequire": 1

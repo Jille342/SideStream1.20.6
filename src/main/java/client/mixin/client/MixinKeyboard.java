@@ -2,7 +2,7 @@ package client.mixin.client;
 
 import client.Client;
 import client.event.listeners.EventKey;
-import client.ui.clicckgui2.ClickGui;
+import client.ui.clicckgui.ClickGui;
 import net.minecraft.client.Keyboard;
 import net.minecraft.client.MinecraftClient;
 import net.minecraft.client.util.InputUtil;
@@ -10,6 +10,7 @@ import org.lwjgl.glfw.GLFW;
 import org.spongepowered.asm.mixin.Final;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.Shadow;
+import org.spongepowered.asm.mixin.Unique;
 import org.spongepowered.asm.mixin.injection.At;
 import org.spongepowered.asm.mixin.injection.Inject;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
@@ -17,6 +18,7 @@ import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 @Mixin({Keyboard.class})
 public class MixinKeyboard
 {
+	@Unique
 	MinecraftClient mc = MinecraftClient.getInstance();
 	@Shadow
 	@Final

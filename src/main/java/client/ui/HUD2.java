@@ -38,7 +38,6 @@ public class HUD2
 	{
 		int[] counter = {1};
 		int color = -1;
-		MatrixStack matrixStack = new MatrixStack();
 		switch(HUD.namecolormode.getMode())
 		{
 			case "Default":
@@ -62,7 +61,6 @@ public class HUD2
 		Window scaledResolution = mc.getWindow();
 		float height = 10;
 		String name = Client.NAME;
-		matrixStack.loadIdentity();
 		
 		String build = "Build: \2477" + Client.VERSION;
 		String blockps = "Blocks/s: \2477"
@@ -88,7 +86,7 @@ public class HUD2
 			color);
 		if(namebackground.isEnable())
 		{
-			context.fill(nameX, nameY,
+			RenderingUtils.renderRect(context.getMatrices(), nameX, nameY,
 				(int)Fonts.titleFont.getStringWidth(name) + 5,
 				(int)Fonts.titleFont.getFontHeight() + 5,
 				Colors.getColor(0, 0, 0, 50));
@@ -169,7 +167,7 @@ public class HUD2
 					nextModule = getNextEnabledModule(sortedList, nextIndex);
 				Fonts.font.drawString(moduleLabel, (float)translateX,
 					(float)translateY, color);
-				if((Boolean) HUD.OUTLINE.enable)
+				if((Boolean)HUD.OUTLINE.enable)
 				{
 					RenderingUtils.drawRect(context, translateX - 2.6D,
 						translateY - 1.0D, translateX - 2.0D,
@@ -190,16 +188,16 @@ public class HUD2
 							translateY + offsetY - 0.6D, color);
 					}
 				}
-				if((Boolean) HUD.background.enable)
-					context.fill((int)(translateX - 2.0D),
-						(int)(translateY - 1.0D), width,
-						(int)(translateY + listOffset - 1.0D),
+				if((Boolean)HUD.background.enable)
+					RenderingUtils.renderRect(context.getMatrices(),
+						(int)(translateX - 2.0D), (int)(translateY - 1.0D),
+						width, (int)(translateY + listOffset - 1.0D),
 						Colors.getColor(0, 0, 0, 50));
 				
 				if(module.isEnable())
 				{
 					y += listOffset;
-					counter[0] -= 1F;
+					counter[0] -= (int)1F;
 				}
 			}
 		}

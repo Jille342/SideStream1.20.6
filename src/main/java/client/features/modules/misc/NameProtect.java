@@ -6,7 +6,9 @@ import client.event.listeners.EventPacket;
 import client.features.modules.Module;
 import client.utils.ChatUtils;
 import net.minecraft.network.packet.Packet;
-import net.minecraft.network.packet.c2s.play.ChatMessageC2SPacket;
+import net.minecraft.network.packet.s2c.play.ChatMessageS2CPacket;
+
+import java.util.Objects;
 
 public class NameProtect extends Module
 {
@@ -26,15 +28,15 @@ public class NameProtect extends Module
 			{
 				Packet<?> p = event.getPacket();
 				
-				if(p instanceof ChatMessageC2SPacket)
+				if(p instanceof ChatMessageS2CPacket)
 				{
 					
-					ChatMessageC2SPacket packet =
-						(ChatMessageC2SPacket)event.getPacket();
-					if(packet.chatMessage()
-						.contains(mc.player.getName().getString()))
+					ChatMessageS2CPacket packet =
+						(ChatMessageS2CPacket)event.getPacket();
+					if(Objects.requireNonNull(packet.unsignedContent())
+						.getString().contains(mc.player.getName().getString()))
 					{
-						String temp = packet.chatMessage();
+						String temp = packet.unsignedContent().getString();
 						ChatUtils.printChatNoName(
 							temp.replaceAll(String.valueOf(mc.player.getName()),
 								"\247d" + Client.NAME + "User" + "\247r"));
@@ -47,7 +49,8 @@ public class NameProtect extends Module
 							"was", "quit", "blood", "game"};
 						for(String str : list)
 						{
-							if(packet.chatMessage().toLowerCase().contains(str))
+							if(packet.unsignedContent().getString()
+								.toLowerCase().contains(str))
 							{
 								event.setCancelled(true);
 								break;

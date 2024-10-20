@@ -1,6 +1,7 @@
 package client.features.modules.misc;
 
 import client.event.Event;
+import client.event.listeners.EventMotion;
 import client.event.listeners.EventUpdate;
 import client.features.modules.Module;
 import client.setting.ModeSetting;
@@ -9,7 +10,6 @@ import net.minecraft.block.Block;
 import net.minecraft.block.Blocks;
 import net.minecraft.client.network.PendingUpdateManager;
 import net.minecraft.client.network.SequencedPacketCreator;
-import net.minecraft.network.packet.c2s.play.HandSwingC2SPacket;
 import net.minecraft.network.packet.c2s.play.PlayerInteractBlockC2SPacket;
 import net.minecraft.util.*;
 import net.minecraft.util.hit.BlockHitResult;
@@ -27,6 +27,7 @@ public class TPBreaker extends Module
 	
 	public static BlockPos blockBreaking;
 	private double xPos, yPos, zPos, minx;
+	float[] rotations = null;
 	
 	ModeSetting mode;
 	NumberSetting radius1;
@@ -70,10 +71,9 @@ public class TPBreaker extends Module
 					xPos = tpPos.getX();
 					yPos = tpPos.getY();
 					zPos = tpPos.getZ();
-					Block block =
-						mc.world.getBlockState(getNextBlock()).getBlock();
 					// ChatUtils.printChat(block.getName().getString());
-					placeBlock(getNextBlock());
+					placeBlock(tpPos);
+					rotations = getBlockRotations(tpPos.getX(), tpPos.getY(), tpPos.getZ());
 				}else
 				{
 					setTag(mode.getMode());
@@ -81,15 +81,13 @@ public class TPBreaker extends Module
 				
 			}
 		}
-		// if (event instanceof EventMotion) {
-		// if (getNextBlock() != null) {
-		// EventMotion emm = (EventMotion) event;
-		// float[] rotations =
-		// getBlockRotations(getNextBlock().getX(),getNextBlock().getY(),getNextBlock().getZ());
-		// emm.setYaw(rotations[0]);
-		// emm.setPitch(rotations[1]);
-		// }ne
-		
+		 if (event instanceof EventMotion) {
+			 if (rotations != null) {
+				 EventMotion emm = (EventMotion) event;
+				 emm.setYaw(rotations[0]);
+				 emm.setPitch(rotations[1]);
+			 }
+		 }
 	}
 	
 	// private boolean blockChecks(Block block) {
@@ -139,23 +137,31 @@ public class TPBreaker extends Module
 	private void placeBlock(BlockPos pos)
 	{
 		
-		for(Direction side : Direction.values())
-		{
-			BlockPos neighbor = pos.offset(side);
-			Direction side2 = side.getOpposite();
-			
-			Vec3d hitVec = Vec3d.ofCenter(neighbor)
-				.add(Vec3d.of(side2.getVector()).multiply(0.5));
-			
-			mc.player.networkHandler
-				.sendPacket(new HandSwingC2SPacket(Hand.MAIN_HAND));
-			BlockHitResult hitResult =
-				new BlockHitResult(hitVec, side2, neighbor, false);
-			// mc.interactionManager.interactBlock(mc.player,Hand.MAIN_HAND,
-			// hitResult);
-			sendSequencedPacket(id -> new PlayerInteractBlockC2SPacket(
-				Hand.MAIN_HAND, hitResult, id));
-		}
+		/*
+		 * for(Direction side : Direction.values())
+		 * {
+		 * BlockPos neighbor = pos.offset(side);
+		 * Direction side2 = side.getOpposite();
+		 *
+		 * Vec3d hitVec = Vec3d.ofCenter(neighbor)
+		 * .add(Vec3d.of(side2.getVector()).multiply(0.5));
+		 * BlockHitResult hitResult =
+		 * new BlockHitResult(hitVec, side2, neighbor, false);
+		 * Objects.requireNonNull(mc.player).networkHandler.sendPacket(new
+		 * PlayerInteractBlockC2SPacket(Hand.MAIN_HAND, hitResult,0));
+		 * }
+		 *
+		 */
+		Direction side = Direction.UP;
+		BlockPos neighbor = pos.offset(side);
+		Direction side2 = side.getOpposite();
+		Vec3d hitVec = Vec3d.ofCenter(neighbor)
+			.add(Vec3d.of(side2.getVector()).multiply(0.5));
+		BlockHitResult hitResult =
+			new BlockHitResult(hitVec, side2, neighbor, false);
+		Objects.requireNonNull(Objects.requireNonNull(mc).getNetworkHandler()).sendPacket(
+			new PlayerInteractBlockC2SPacket(Hand.MAIN_HAND, hitResult, 0));
+		mc.interactionManager.interactItem(mc.player,Hand.MAIN_HAND);
 		
 	}
 	

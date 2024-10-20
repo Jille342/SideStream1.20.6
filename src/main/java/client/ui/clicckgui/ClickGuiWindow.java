@@ -1,4 +1,4 @@
-package client.ui.clicckgui2;
+package client.ui.clicckgui;
 
 import client.features.modules.Module;
 import client.features.modules.ModuleManager;

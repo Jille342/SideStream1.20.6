@@ -3,7 +3,7 @@ package client.features.modules.render;
 import client.event.Event;
 import client.event.listeners.EventRenderGUI;
 import client.features.modules.Module;
-import client.ui.clicckgui2.ClickGui;
+import client.ui.clicckgui.ClickGui;
 
 public class ClickGUI extends Module
 {

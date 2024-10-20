@@ -3,6 +3,7 @@ package client.command.impl;
 import client.command.Command;
 import client.features.modules.Module;
 import client.features.modules.ModuleManager;
+import client.utils.ChatUtils;
 
 public class Toggle extends Command
 {
@@ -19,9 +20,10 @@ public class Toggle extends Command
 		{
 			for(Module m : ModuleManager.modules)
 			{
-				if(m.getName().toLowerCase().equals(args[0].toLowerCase()))
+				if(m.getName().equalsIgnoreCase(args[0]))
 				{
 					m.toggle();
+					ChatUtils.printChat("Toggled:" + m.getName());
 					return true;
 				}
 			}

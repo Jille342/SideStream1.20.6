@@ -68,6 +68,7 @@ public class AimAssist extends Module
 	{
 		if(e instanceof EventRender2D)
 		{
+			setTag("" + validated.size());
 			primary = findTarget();
 			if(e.isPost() || primary == null || !canAssist())
 			{

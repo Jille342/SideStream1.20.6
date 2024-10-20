@@ -28,8 +28,7 @@ public class InventoryMove extends Module
 	public void init()
 	{
 		super.init();
-		mode = new ModeSetting("Mode", "Normal",
-			new String[]{"Stop", "Normal", "Ghost"});
+		mode = new ModeSetting("Mode", "Normal", "Stop", "Normal", "Ghost");
 		addSetting(mode);
 	}
 	

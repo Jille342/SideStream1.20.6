@@ -5,7 +5,6 @@ import client.event.listeners.EventPacket;
 import client.features.modules.Module;
 import client.utils.ChatUtils;
 import net.minecraft.network.packet.Packet;
-import net.minecraft.network.packet.s2c.play.PlaySoundS2CPacket;
 
 public class Debug extends Module
 {
@@ -18,22 +17,12 @@ public class Debug extends Module
 	@Override
 	public void onEvent(Event<?> e)
 	{
-		if(e instanceof EventPacket)
+		if(e instanceof EventPacket event)
 		{
-			EventPacket event = ((EventPacket)e);
-			if(event.isIncoming())
+			Packet<?> p = event.getPacket();
+			if(p.toString().equalsIgnoreCase("interact"))
 			{
-				Packet<?> p = event.getPacket();
-				
-				if(p instanceof PlaySoundS2CPacket)
-				{
-					if(((PlaySoundS2CPacket)p).getSound().toString()
-						.toLowerCase().contains("attack"))
-					{
-						ChatUtils.printChat(
-							((PlaySoundS2CPacket)p).getSound().toString());
-					}
-				}
+				ChatUtils.printChat(p.toString());
 			}
 		}
 		super.onEvent(e);

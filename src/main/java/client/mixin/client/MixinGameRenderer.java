@@ -4,9 +4,7 @@ import client.Client;
 import client.event.listeners.EventRenderWorld;
 import client.features.modules.ModuleManager;
 import client.features.modules.render.NameTags;
-import client.features.modules.render.NoFov;
 import client.features.modules.render.NoHurtcam;
-import com.llamalad7.mixinextras.injector.ModifyExpressionValue;
 import com.mojang.blaze3d.systems.RenderSystem;
 import net.minecraft.client.MinecraftClient;
 import net.minecraft.client.render.Camera;
@@ -86,5 +84,5 @@ public abstract class MixinGameRenderer
 		RenderSystem.getModelViewStack().popMatrix();
 		RenderSystem.applyModelViewMatrix();
 	}
-
+	
 }

@@ -167,7 +167,7 @@ public class Module
 		RENDER("Render"),
 		WORLD("World");
 		
-		public String name;
+		public final String name;
 		
 		Category(String name)
 		{

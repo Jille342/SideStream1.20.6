@@ -12,9 +12,9 @@ import java.io.FileReader;
 import java.io.FileWriter;
 import java.io.IOException;
 
-public class SettingConfig extends Config
+public class SettingsConfig extends Config
 {
-	public SettingConfig()
+	public SettingsConfig()
 	{
 		super("settingconfig");
 	}

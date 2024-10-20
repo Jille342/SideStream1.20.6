@@ -213,6 +213,11 @@ public class Colors implements MCUtil
 			c.getAlpha() / 255.0F);
 	}
 	
+	public static int HSBtoRGB(float h, float s, float b)
+	{
+		return Color.HSBtoRGB(h, s, b);
+	}
+	
 	public static int rainbow(int delay, float saturation, float brightness)
 	{
 		double rainbow = Math.ceil((System.currentTimeMillis() + delay) / 8);

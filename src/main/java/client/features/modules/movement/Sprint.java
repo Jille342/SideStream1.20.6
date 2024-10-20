@@ -18,7 +18,7 @@ public class Sprint extends Module
 		{
 			if(mc.options.forwardKey.isPressed()
 				&& !(Objects.requireNonNull(mc.player).isUsingItem()))
-				mc.options.sprintKey.setPressed(true);
+				mc.player.setSprinting(true);
 		}
 	}
 }

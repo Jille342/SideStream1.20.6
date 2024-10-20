@@ -28,6 +28,8 @@ import java.util.concurrent.ThreadLocalRandom;
 
 public final class RotationUtils
 {
+	public static float virtualYaw, virtualPitch, virtualPrevYaw,
+		virtualPrevPitch;
 	static MinecraftClient mc = MinecraftClient.getInstance();
 	public static final double DEG_TO_RAD = Math.PI / 180.0;
 	
@@ -184,12 +186,15 @@ public final class RotationUtils
 			+ 540.0D) % 360.0D - 180.0D;
 		return v > 0.0D && v < fov || -fov < v && v < 0.0D;
 	}
-	public static float[] getRotationsRandom(LivingEntity entity) {
-		ThreadLocalRandom threadLocalRandom =  ThreadLocalRandom.current();
+	
+	public static float[] getRotationsRandom(LivingEntity entity)
+	{
+		ThreadLocalRandom threadLocalRandom = ThreadLocalRandom.current();
 		double randomXZ = threadLocalRandom.nextDouble(-0.08, 0.08);
 		double randomY = threadLocalRandom.nextDouble(-0.125, 0.125);
 		double x = entity.getX() + randomXZ;
-		double y = entity.getY() + (entity.getEyeHeight(entity.getPose()) / 2.05) + randomY;
+		double y = entity.getY()
+			+ (entity.getEyeHeight(entity.getPose()) / 2.05) + randomY;
 		double z = entity.getZ() + randomXZ;
 		return getRotations(x, y, z);
 	}

@@ -3,6 +3,7 @@ package client.features.modules.combat;
 
 import client.event.Event;
 import client.event.listeners.EventPacket;
+import client.event.listeners.EventUpdate;
 import client.features.modules.Module;
 import client.mixin.client.IEntityVelocityUpdateS2CPacketMixin;
 import client.setting.BooleanSetting;
@@ -40,6 +41,10 @@ public class AntiVelocity extends Module
 	@Override
 	public void onEvent(Event<?> e)
 	{
+		if(e instanceof EventUpdate)
+		{
+			setTag(mode.getMode());
+		}
 		if(e instanceof EventPacket event)
 		{
 			if(this.mode.getMode().equalsIgnoreCase("Simple"))

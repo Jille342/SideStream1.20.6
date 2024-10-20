@@ -1,4 +1,4 @@
-package client.ui.clicckgui2;
+package client.ui.clicckgui;
 
 public class ClickUtil
 {
