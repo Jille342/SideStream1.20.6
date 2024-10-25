@@ -54,7 +54,7 @@ public abstract class MixinGameRenderer
 	private void onTiltViewWhenHurt(MatrixStack matrices, float tickDelta,
 		CallbackInfo ci)
 	{
-		if(ModuleManager.getModulebyClass(NoHurtcam.class).isEnable())
+		if(ModuleManager.getModulebyClass(NoHurtcam.class).isEnabled())
 			ci.cancel();
 	}
 	

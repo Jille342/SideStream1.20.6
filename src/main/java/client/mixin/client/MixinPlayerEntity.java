@@ -17,7 +17,7 @@ public class MixinPlayerEntity
 	{
 		if((Object)this == MinecraftClient.getInstance().player)
 		{
-			if(ModuleManager.getModulebyClass(Reach.class).isEnable())
+			if(ModuleManager.getModulebyClass(Reach.class).isEnabled())
 			{
 				return Reach.reach.getValue();
 			}

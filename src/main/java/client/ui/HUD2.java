@@ -126,7 +126,7 @@ public class HUD2
 			String moduleLabel = module.getDisplayName();
 			float length = (float)Fonts.font.getStringWidth(moduleLabel);
 			float featureX = width - length - 3.0F;
-			boolean enable = module.isEnable();
+			boolean enable = module.isEnabled();
 			if(enable)
 			{
 				translate.interpolate(featureX, y, 7);
@@ -194,7 +194,7 @@ public class HUD2
 						width, (int)(translateY + listOffset - 1.0D),
 						Colors.getColor(0, 0, 0, 50));
 				
-				if(module.isEnable())
+				if(module.isEnabled())
 				{
 					y += listOffset;
 					counter[0] -= (int)1F;
@@ -210,7 +210,7 @@ public class HUD2
 			modulesSize = modules.size(); i < modulesSize; i++)
 		{
 			Module module = modules.get(i);
-			if(module.isEnable())
+			if(module.isEnabled())
 				return module;
 		}
 		return null;

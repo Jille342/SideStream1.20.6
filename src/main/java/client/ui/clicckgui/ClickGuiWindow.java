@@ -96,7 +96,7 @@ public class ClickGuiWindow
 			drawRect(context, outlineColor1.getRGB(), x - 1, currentY, x + 121,
 				currentY + 19);
 			drawRect(context,
-				m.isEnable() ? accentColor.getRGB() : backColor.getRGB(), x,
+				m.isEnabled() ? accentColor.getRGB() : backColor.getRGB(), x,
 				currentY, x + 120, currentY + 18);
 			if(m.getKeyCode() == 0
 				|| m.getKeyCode() == GLFW.GLFW_KEY_RIGHT_SHIFT

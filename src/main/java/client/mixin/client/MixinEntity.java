@@ -18,7 +18,7 @@ public class MixinEntity
 	@Inject(method = "getTargetingMargin", at = @At("HEAD"), cancellable = true)
 	private void onGetTargetingMargin(CallbackInfoReturnable<Float> cir)
 	{
-		if(ModuleManager.getModulebyClass(HitBoxes.class).isEnable())
+		if(ModuleManager.getModulebyClass(HitBoxes.class).isEnabled())
 		{
 			cir.setReturnValue(HitBoxes.getSize((Entity)(Object)this));
 		}

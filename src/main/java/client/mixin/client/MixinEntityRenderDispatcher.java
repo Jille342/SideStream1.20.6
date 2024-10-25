@@ -54,7 +54,7 @@ public abstract class MixinEntityRenderDispatcher
 		allow = 1)
 	private static Box updateBoundingBox(Box box)
 	{
-		if(ModuleManager.getModulebyClass(HitBoxes.class).isEnable())
+		if(ModuleManager.getModulebyClass(HitBoxes.class).isEnabled())
 		{
 			return box.expand(HitBoxes.getSize(entity));
 		}

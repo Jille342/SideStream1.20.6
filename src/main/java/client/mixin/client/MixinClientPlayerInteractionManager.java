@@ -33,6 +33,6 @@ public class MixinClientPlayerInteractionManager
 		int cd = this.blockBreakingCooldown;
 		return Objects
 			.requireNonNull(ModuleManager.getModulebyClass(NoBreakDelay.class))
-			.isEnable() ? 0 : cd;
+			.isEnabled() ? 0 : cd;
 	}
 }

@@ -51,7 +51,7 @@ public class MixinIngameHud
 	public void FuckEffects(DrawContext context, float tickDelta,
 		CallbackInfo ci)
 	{
-		if(ModuleManager.getModulebyClass(HUD.class).isEnable())
+		if(ModuleManager.getModulebyClass(HUD.class).isEnabled())
 		{
 			ci.cancel();
 		}

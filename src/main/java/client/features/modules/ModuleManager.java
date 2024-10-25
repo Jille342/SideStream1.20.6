@@ -81,7 +81,7 @@ public class ModuleManager implements MCUtil
 		modules.sort(new ModuleComparator());
 		
 		modules.forEach(m -> {
-			if(m.isEnable())
+			if(m.isEnabled())
 				m.onEvent(e);
 		});
 	}

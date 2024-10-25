@@ -42,7 +42,7 @@ import client.features.modules.ModuleManager;
 					/* 31 */ if(mod != null)
 					{
 						/* 32 */ mod
-							.setEnable(Boolean.parseBoolean(arguments[1]));
+							.setEnabled(Boolean.parseBoolean(arguments[1]));
 						/* 33 */ mod.setKeyCode(Integer.parseInt(arguments[2]));
 						/*    */ }
 					/*    */ }
@@ -70,7 +70,7 @@ import client.features.modules.ModuleManager;
 				/* 50 */ Module mod = var3.next();
 				/* 51 */ String text =
 					String.valueOf(mod.getName().toLowerCase()) + ":"
-						+ mod.isEnable() + ":" + mod.getKeyCode();
+						+ mod.isEnabled() + ":" + mod.getKeyCode();
 				/* 52 */ var4.write(text);
 				/* 53 */ var4.newLine();
 				/*    */ }

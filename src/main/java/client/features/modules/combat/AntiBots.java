@@ -85,7 +85,7 @@ public final class AntiBots extends Module
 	
 	public static boolean isBot(PlayerEntity e)
 	{
-		if(!(ModuleManager.getModulebyClass(AntiBots.class).isEnable()))
+		if(!(ModuleManager.getModulebyClass(AntiBots.class).isEnabled()))
 			return false;
 		switch(mode.getMode())
 		{

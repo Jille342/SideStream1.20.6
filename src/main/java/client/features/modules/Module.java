@@ -99,12 +99,12 @@ public class Module
 		this.keyBindSetting.setKeyCode(keyCode);
 	}
 	
-	public boolean isEnable()
+	public boolean isEnabled()
 	{
 		return enable;
 	}
 	
-	public void setEnable(boolean enable)
+	public void setEnabled(boolean enable)
 	{
 		this.enable = enable;
 	}
