@@ -89,20 +89,7 @@ public class AutoClicker extends Module
 		}
 		mc.player.swingHand(Hand.MAIN_HAND);
 	}
-	
-	private double calculateTime(double mincps, double maxcps)
-	{
-		if(mincps > maxcps)
-			mincps = maxcps;
-		cps = (client.utils.RandomUtils.nextInt((int)mincps, (int)maxcps)
-			+ client.utils.RandomUtils.nextInt(-3, 3));
-		if(cps > maxcps)
-			cps = (int)maxcps;
-		
-		return((Math.random() * (1000 / (cps - 2) - 1000 / cps + 1))
-			+ 1000 / cps);
-	}
-	
+
 	public boolean shouldClick()
 	{
 		if(!mc.isWindowFocused())

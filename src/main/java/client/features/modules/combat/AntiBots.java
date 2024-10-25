@@ -23,8 +23,7 @@ public final class AntiBots extends Module
 	public void init()
 	{
 		super.init();
-		mode = new ModeSetting("Mode ", "Shotbow", new String[]{"Hypixel",
-			"Mineplex", "Shotbow", "ShotbowTeams", "MatrixFlying"});
+		mode = new ModeSetting("Mode ", "Shotbow", new String[]{"Hypixel", "Shotbow", "ShotbowTeams"});
 		addSetting(mode);
 	}
 	

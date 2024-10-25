@@ -12,6 +12,7 @@ import net.minecraft.client.network.PendingUpdateManager;
 import net.minecraft.client.network.SequencedPacketCreator;
 import net.minecraft.network.packet.c2s.play.HandSwingC2SPacket;
 import net.minecraft.network.packet.c2s.play.PlayerInteractBlockC2SPacket;
+import net.minecraft.network.packet.s2c.play.BlockBreakingProgressS2CPacket;
 import net.minecraft.util.*;
 import net.minecraft.util.hit.BlockHitResult;
 import net.minecraft.util.math.BlockPos;
@@ -144,6 +145,8 @@ public class TPBreaker extends Module
 		  BlockHitResult blockHitResult=
 
 		  new BlockHitResult(pos.toCenterPos(), side2, pos, false).withBlockPos(pos);
+             assert mc.player != null;
+             Objects.requireNonNull(mc.getNetworkHandler()).sendPacket(new BlockBreakingProgressS2CPacket(mc.player.getId(),pos,100));
 		  Objects.requireNonNull(mc.getNetworkHandler()).sendPacket(new  HandSwingC2SPacket(Hand.MAIN_HAND));
 		  Objects.requireNonNull(mc.player).interactAt(mc.player,pos.toCenterPos(),Hand.MAIN_HAND);
 		 Objects.requireNonNull(mc.player).networkHandler.sendPacket(new PlayerInteractBlockC2SPacket(Hand.MAIN_HAND, blockHitResult,0));

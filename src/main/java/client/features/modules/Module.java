@@ -126,7 +126,7 @@ public class Module
 	
 	public void setTag(String string)
 	{
-		setDisplayName(name + " " + "\u00A77" + string);
+		setDisplayName(name + " " + "§7" + string);
 	}
 	
 	public void setName(String name)
