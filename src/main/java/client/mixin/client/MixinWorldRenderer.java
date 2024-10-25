@@ -55,7 +55,7 @@ public class MixinWorldRenderer
 	private void onRenderChunkDebugInfo(MatrixStack matrices,
 		VertexConsumerProvider vertexConsumers, Camera camera, CallbackInfo ci)
 	{
-		if(Client.moduleManager != null)
+		if(Client.getModuleManager() != null)
 		{
 			GL11.glEnable(3042);
 			GL11.glBlendFunc(770, 771);
