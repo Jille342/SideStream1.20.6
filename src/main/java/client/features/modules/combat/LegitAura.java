@@ -40,13 +40,12 @@ public class LegitAura extends Module
 	NumberSetting fov;
 	BooleanSetting hitThroughWalls;
 	BooleanSetting clickOnly;
-	BooleanSetting notAimingOnly;
-	BooleanSetting esp;
 	public static ModeSetting rotationmode;
 	NumberSetting maxCPS;
 	NumberSetting minCPS;
 	BooleanSetting noInventoryAttack;
 	BooleanSetting moveFix;
+	BooleanSetting itemCheck;
 	
 	public LegitAura()
 	{
@@ -68,18 +67,16 @@ public class LegitAura extends Module
 		sortmode = new ModeSetting("SortMode", "Angle",
 			new String[]{"Distance", "Angle"});
 		rotationmode = new ModeSetting("Rotation Mode", "Normal",
-			new String[]{"None", "Normal", "Normal2" ,"Random"});
+			new String[]{"None", "Normal", "Normal2" ,"Legit"});
 		moveFix = new BooleanSetting("Move Fix", true);
-		
+		itemCheck = new BooleanSetting("Item Check", true);
 		this.fov = new NumberSetting("FOV", 20D, 0D, 360D, 1.0D);
 		hitThroughWalls = new BooleanSetting("Hit Through Walls", false);
 		clickOnly = new BooleanSetting("Click Only", true);
-		notAimingOnly = new BooleanSetting("Not Aiming Only", true);
 
 		addSetting(rotationmode, maxCPS, minCPS, targetAnimalsSetting,
 			targetMonstersSetting, ignoreTeamsSetting, sortmode,
-			targetInvisibles, fov, hitThroughWalls, rangeSetting, clickOnly,
-			notAimingOnly, noInventoryAttack, moveFix);
+			targetInvisibles, fov, hitThroughWalls, rangeSetting, clickOnly, noInventoryAttack, moveFix, itemCheck);
 		super.init();
 	}
 	
@@ -97,7 +94,7 @@ public class LegitAura extends Module
 			setTag(sortmode.getMode() + " " + targets.size());
 			if(target != null)
 			{
-				if(!Objects.requireNonNull(mc.player).isUsingItem()
+				if(!(Objects.requireNonNull(mc.player).isUsingItem() && itemCheck.isEnable())
 					&& !(mc.currentScreen instanceof InventoryScreen
 						&& noInventoryAttack.isEnable()))
 				{
@@ -136,8 +133,6 @@ public class LegitAura extends Module
 				EventMotion event = (EventMotion)e;
 				if(!targets.isEmpty())
 				{
-					if(!isNotAiming(target) && notAimingOnly.enable)
-						return;
 					
 					if(!target.isAlive() || target == null)
 						return;
@@ -159,7 +154,7 @@ public class LegitAura extends Module
 						event.setYaw(fixed[0]);
 						event.setPitch(fixed[1]);
 					}
-					if(rotationmode.getMode().equalsIgnoreCase("Random")){
+					if(rotationmode.getMode().equalsIgnoreCase("Legit")){
 						float[] angles = RotationUtils.calcRotation((LivingEntity)target);
 						float[] fixed = RotationUtils.fixedSensitivity(angles,mc.options.getMouseSensitivity().getValue().floatValue());
 
@@ -270,40 +265,6 @@ public class LegitAura extends Module
 		target = null;
 		super.onEnabled();
 	}
-	
-	public boolean isNotAiming(LivingEntity entity)
-	{
-		
-		double diffX = entity.getX() - mc.player.getX();
-		double diffY = entity.getY() - (mc.player.getY()
-			+ (double)mc.player.getEyeHeight(mc.player.getPose()));
-		double diffZ = entity.getZ() - mc.player.getZ();
-		float currentYaw = mc.player.getYaw();
-		float currentPitch = mc.player.getPitch();
-		double dist =
-			(double)MathHelper.sqrt((float)(diffX * diffX + diffZ * diffZ));
-		float max = 5.0F;
-		boolean aim = false;
-		float yaw = (float)(Math.atan2(diffZ, diffX) * 180.0 / Math.PI) - 90.0F;
-		float pitch = (float)(-(Math.atan2(diffY, dist) * 180.0 / Math.PI));
-		if(MathHelper.wrapDegrees(yaw - currentYaw) > max * 2.0F)
-		{
-			aim = true;
-		}else if(MathHelper.wrapDegrees(yaw - currentYaw) < -max * 2.0F)
-		{
-			aim = true;
-		}
-		
-		if(MathHelper.wrapDegrees(pitch - currentPitch) > max * 4.0F)
-		{
-			aim = true;
-		}else if(MathHelper.wrapDegrees(pitch - currentPitch) < -max * 4.0F)
-		{
-			aim = true;
-		}
-		return aim;
-	}
-	
 	@Override
 	public void onDisabled()
 	{
