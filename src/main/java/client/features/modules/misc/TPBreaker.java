@@ -16,7 +16,6 @@ import net.minecraft.util.*;
 import net.minecraft.util.hit.BlockHitResult;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.Direction;
-import net.minecraft.util.math.Vec3d;
 
 import java.util.Objects;
 
@@ -39,10 +38,10 @@ public class TPBreaker extends Module
 	}
 	
 	@Override
-	public void onDisable()
+	public void onDisabled()
 	{
 		blockBreaking = null;
-		super.onDisable();
+		super.onDisabled();
 	}
 	
 	public void init()

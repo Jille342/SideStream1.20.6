@@ -44,7 +44,7 @@ public class AutoClicker extends Module
 	}
 	
 	@Override
-	public void onDisable()
+	public void onDisabled()
 	{
 		breakTick = 0;
 	}

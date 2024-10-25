@@ -30,11 +30,11 @@ public class ClickGUI extends Module
 	}
 	
 	@Override
-	public void onEnable()
+	public void onEnabled()
 	{
 		mc.setScreen(new ClickGui());
 		toggle();
 		// mc.setScreen(new GuiClickGUI(0));
-		super.onEnable();
+		super.onEnabled();
 	}
 }

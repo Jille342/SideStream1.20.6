@@ -26,17 +26,17 @@ public class Fullbright extends Module
 	}
 	
 	@Override
-	public void onEnable()
+	public void onEnabled()
 	{
 		lastGamma = (Double)mc.options.getGamma().getValue();
-		super.onEnable();
+		super.onEnabled();
 	}
 	
 	@Override
-	public void onDisable()
+	public void onDisabled()
 	{
 		mc.options.getGamma().setValue(lastGamma);
-		super.onDisable();
+		super.onDisabled();
 	}
 	
 	public void setGamma(double value)

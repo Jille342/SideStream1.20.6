@@ -139,20 +139,20 @@ public class Module
 		enable = !enable;
 		if(enable)
 		{
-			onEnable();
+			onEnabled();
 		}else
 		{
-			onDisable();
+			onDisabled();
 		}
 	}
 	
 	public void init()
 	{}
 	
-	public void onEnable()
+	public void onEnabled()
 	{}
 	
-	public void onDisable()
+	public void onDisabled()
 	{}
 	
 	public void onEvent(Event<?> e)

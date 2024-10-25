@@ -24,16 +24,16 @@ public class NoHurtcam extends Module
 	}
 	
 	@Override
-	public void onEnable()
+	public void onEnabled()
 	{
 		
-		super.onEnable();
+		super.onEnabled();
 	}
 	
 	@Override
-	public void onDisable()
+	public void onDisabled()
 	{
-		super.onDisable();
+		super.onDisabled();
 	}
 	
 }

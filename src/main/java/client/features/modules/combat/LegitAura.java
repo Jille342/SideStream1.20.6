@@ -22,7 +22,6 @@ import net.minecraft.network.packet.c2s.play.PlayerInteractEntityC2SPacket;
 import net.minecraft.util.Hand;
 import net.minecraft.util.math.MathHelper;
 
-import java.awt.*;
 import java.util.ArrayList;
 import java.util.Comparator;
 import java.util.Objects;
@@ -265,11 +264,11 @@ public class LegitAura extends Module
 	}
 	
 	@Override
-	public void onEnable()
+	public void onEnabled()
 	{
 		targets.clear();
 		target = null;
-		super.onEnable();
+		super.onEnabled();
 	}
 	
 	public boolean isNotAiming(LivingEntity entity)
@@ -306,10 +305,10 @@ public class LegitAura extends Module
 	}
 	
 	@Override
-	public void onDisable()
+	public void onDisabled()
 	{
 		targets.clear();
 		target = null;
-		super.onDisable();
+		super.onDisabled();
 	}
 }

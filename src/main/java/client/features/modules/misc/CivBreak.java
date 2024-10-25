@@ -196,7 +196,7 @@ public class CivBreak extends Module
 	}
 	
 	@Override
-	public void onEnable()
+	public void onEnabled()
 	{
 		// for (int i = 0; i < 20; i++) {
 		// mc.getNetworkHandler().sendChatMessage("/rank " +
@@ -204,14 +204,14 @@ public class CivBreak extends Module
 		// "abcdefghijklmnopqrstuvwxyz0123456789"));
 		// }
 		this.attempt = 0;
-		super.onEnable();
+		super.onEnabled();
 	}
 	
 	@Override
-	public void onDisable()
+	public void onDisabled()
 	{
 		this.blockPos = null;
 		this.hitResult = null;
-		super.onDisable();
+		super.onDisabled();
 	}
 }

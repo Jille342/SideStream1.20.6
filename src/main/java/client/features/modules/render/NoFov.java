@@ -21,16 +21,16 @@ public class NoFov extends Module
 	}
 	
 	@Override
-	public void onEnable()
+	public void onEnabled()
 	{
 		mc.options.getFovEffectScale().setValue(0D);
-		super.onEnable();
+		super.onEnabled();
 	}
 	
 	@Override
-	public void onDisable()
+	public void onDisabled()
 	{
-		super.onDisable();
+		super.onDisabled();
 	}
 	
 }

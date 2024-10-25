@@ -57,7 +57,7 @@ public class AimAssist extends Module
 	}
 	
 	@Override
-	public void onDisable()
+	public void onDisabled()
 	{
 		validated.clear();
 		primary = null;

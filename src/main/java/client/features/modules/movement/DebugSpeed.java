@@ -28,16 +28,16 @@ public class DebugSpeed extends Module
 		addSetting(timerSpeed);
 	}
 	
-	public void onEnable()
+	public void onEnabled()
 	{
 		MCTimerUtil.setTimerSpeed((float)this.timerSpeed.getValue());
-		super.onEnable();
+		super.onEnabled();
 	}
 	
-	public void onDisable()
+	public void onDisabled()
 	{
 		MCTimerUtil.setTimerSpeed(1);
-		super.onDisable();
+		super.onDisabled();
 	}
 	
 	public void onEvent(Event<?> event)
