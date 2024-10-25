@@ -4,6 +4,7 @@ import client.event.Event;
 import client.event.listeners.EventRender2D;
 import client.event.listeners.EventRender3D;
 import client.features.modules.Module;
+import client.setting.ModeSetting;
 import client.utils.font.TTFFontRenderer;
 import java.awt.Color;
 import java.util.Comparator;
@@ -44,7 +45,8 @@ public class NameTags extends Module
 	{
 		super("NameTags", 0, Category.RENDER);
 	}
-	
+
+
 	public void onEvent(Event<?> event)
 	{
 		if(event instanceof EventRender3D)
@@ -153,8 +155,10 @@ public class NameTags extends Module
 			new Vec3d(screenPos.x, screenPos.y - labelHeight, screenPos.z);
 		float width = this.nameDrawer.getStringWidth(text) + 4;
 		width = Math.max(width, 60);
-		Color color = (entity.isSneaking() || entity.isInvisible())
-			? new Color(100, 0, 0, 100) : new Color(0, 0, 5, 100);
+		Color color = null;
+			color = (entity.isSneaking() || entity.isInvisible())
+					? new Color(100, 0, 0, 100) : new Color(0, 0, 5, 100);
+
 		me.x150.renderer.render.Renderer2d.renderQuad(stack1, color,
 			actual.x - width / 2d, actual.y, actual.x + width / 2d,
 			actual.y + labelHeight);

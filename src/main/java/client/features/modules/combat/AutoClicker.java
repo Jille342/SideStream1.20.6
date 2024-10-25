@@ -5,6 +5,7 @@ import client.event.Event;
 import client.event.listeners.EventUpdate;
 import client.features.modules.Module;
 import client.setting.NumberSetting;
+import client.utils.RandomUtils;
 import client.utils.TimeHelper;
 import net.minecraft.block.AirBlock;
 import net.minecraft.client.MinecraftClient;
@@ -25,6 +26,7 @@ public class AutoClicker extends Module
 	public static double cps;
 	NumberSetting minCPS;
 	NumberSetting maxCPS;
+	private double currentCPS;
 	
 	public AutoClicker()
 	{
@@ -52,7 +54,7 @@ public class AutoClicker extends Module
 	{
 		if(e instanceof EventUpdate)
 		{
-			if(mc.options.attackKey.isPressed() && shouldClick(true))
+			if(mc.options.attackKey.isPressed() && shouldClick())
 			{
 				doLeftClick();
 			}
@@ -62,9 +64,12 @@ public class AutoClicker extends Module
 	
 	private void doLeftClick()
 	{
-		if(timer
-			.hasReached(calculateTime(minCPS.getValue(), maxCPS.getValue())))
+		if (this.currentCPS == 0) {
+			this.currentCPS = 1;
+		}
+		if(timer.hasReached(1000/currentCPS))
 		{
+			currentCPS = RandomUtils.nextDouble(this.minCPS.getValue(), this.maxCPS.getValue());
 			timer.reset();
 			legitAttack();
 		}
@@ -72,9 +77,8 @@ public class AutoClicker extends Module
 	
 	public void legitAttack()
 	{
-		MinecraftClient mc = MinecraftClient.getInstance();
-		mc.player.swingHand(Hand.MAIN_HAND);
-		if(mc.crosshairTarget == null || mc.player.isRiding()
+
+		if(mc.crosshairTarget == null || Objects.requireNonNull(mc.player).isRiding()
 			|| mc.crosshairTarget.getType() == null)
 		{
 			return;
@@ -84,6 +88,7 @@ public class AutoClicker extends Module
 		{
 			mc.interactionManager.attackEntity(mc.player, mc.targetedEntity);
 		}
+		mc.player.swingHand(Hand.MAIN_HAND);
 	}
 	
 	private double calculateTime(double mincps, double maxcps)
@@ -99,7 +104,7 @@ public class AutoClicker extends Module
 			+ 1000 / cps);
 	}
 	
-	public boolean shouldClick(boolean left)
+	public boolean shouldClick()
 	{
 		if(!mc.isWindowFocused())
 		{
@@ -111,7 +116,7 @@ public class AutoClicker extends Module
 			return false;
 		}
 		
-		if(mc.crosshairTarget != null && left)
+		if(mc.crosshairTarget != null )
 		{
 			if(mc.crosshairTarget
 				.getType() == net.minecraft.util.hit.HitResult.Type.BLOCK)

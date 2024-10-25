@@ -2,6 +2,7 @@
 package client.features.modules.combat;
 
 import client.event.Event;
+import client.event.listeners.EventInput;
 import client.event.listeners.EventMotion;
 import client.event.listeners.EventUpdate;
 import client.features.modules.Module;
@@ -46,6 +47,7 @@ public class LegitAura extends Module
 	NumberSetting maxCPS;
 	NumberSetting minCPS;
 	BooleanSetting noInventoryAttack;
+	BooleanSetting moveFix;
 	
 	public LegitAura()
 	{
@@ -67,16 +69,18 @@ public class LegitAura extends Module
 		sortmode = new ModeSetting("SortMode", "Angle",
 			new String[]{"Distance", "Angle"});
 		rotationmode = new ModeSetting("Rotation Mode", "Normal",
-			new String[]{"None", "Normal", "Normal2"});
+			new String[]{"None", "Normal", "Normal2" ,"Random"});
+		moveFix = new BooleanSetting("Move Fix", true);
 		
 		this.fov = new NumberSetting("FOV", 20D, 0D, 360D, 1.0D);
 		hitThroughWalls = new BooleanSetting("Hit Through Walls", false);
 		clickOnly = new BooleanSetting("Click Only", true);
 		notAimingOnly = new BooleanSetting("Not Aiming Only", true);
+
 		addSetting(rotationmode, maxCPS, minCPS, targetAnimalsSetting,
 			targetMonstersSetting, ignoreTeamsSetting, sortmode,
 			targetInvisibles, fov, hitThroughWalls, rangeSetting, clickOnly,
-			notAimingOnly, noInventoryAttack);
+			notAimingOnly, noInventoryAttack, moveFix);
 		super.init();
 	}
 	
@@ -108,10 +112,7 @@ public class LegitAura extends Module
 								minCPS.getValue(), maxCPS.getValue()))
 								&& target.isAlive())
 							{
-								mc.player.swingHand(Hand.MAIN_HAND);
-								mc.player.networkHandler.sendPacket(
-									PlayerInteractEntityC2SPacket.attack(target,
-										mc.player.isSneaking()));
+								attack(target);
 								attackTimer.reset();
 							}
 							
@@ -141,14 +142,12 @@ public class LegitAura extends Module
 					
 					if(!target.isAlive() || target == null)
 						return;
-					
+
 					if(rotationmode.getMode().equalsIgnoreCase("Normal"))
 					{
 						float[] angles =
 							RotationUtils.getRotationsEntity(target);
-						float[] fixed = RotationUtils.fixedSensitivity(angles,
-							(float)mc.options.getMouseSensitivity().getValue()
-								.floatValue());
+						float[] fixed = RotationUtils.fixedSensitivity(angles,mc.options.getMouseSensitivity().getValue().floatValue());
 						event.setYaw(fixed[0]);
 						event.setPitch(fixed[1]);
 					}
@@ -156,9 +155,15 @@ public class LegitAura extends Module
 					{
 						float[] angles = RotationUtils
 							.getRotationsRandom((LivingEntity)target);
-						float[] fixed =
-							RotationUtils.fixedSensitivity(angles, mc.options
-								.getMouseSensitivity().getValue().floatValue());
+						float[] fixed = RotationUtils.fixedSensitivity(angles,mc.options.getMouseSensitivity().getValue().floatValue());
+
+						event.setYaw(fixed[0]);
+						event.setPitch(fixed[1]);
+					}
+					if(rotationmode.getMode().equalsIgnoreCase("Random")){
+						float[] angles = RotationUtils.calcRotation((LivingEntity)target);
+						float[] fixed = RotationUtils.fixedSensitivity(angles,mc.options.getMouseSensitivity().getValue().floatValue());
+
 						event.setYaw(fixed[0]);
 						event.setPitch(fixed[1]);
 					}
@@ -166,7 +171,18 @@ public class LegitAura extends Module
 			}
 			
 		}
+		if(e instanceof EventInput){
+			((EventInput) e).moveFix = moveFix.isEnable();
+		}
 		
+	}
+	public void attack(Entity target){
+
+		Objects.requireNonNull(mc.getNetworkHandler()).sendPacket(
+				PlayerInteractEntityC2SPacket.attack(target,
+						Objects.requireNonNull(mc.player).isSneaking()));
+		Objects.requireNonNull(mc.player).swingHand(Hand.MAIN_HAND);
+
 	}
 	
 	private LivingEntity findTarget()

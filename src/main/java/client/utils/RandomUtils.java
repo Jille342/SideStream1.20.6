@@ -12,6 +12,9 @@ public class RandomUtils
 		int random = nextInt(0, 100);
 		return(percent >= random);
 	}
+	public static float nextFloat(float range) {
+		return random.nextFloat() * range;
+	}
 	
 	public static int nextInt(int min, int max)
 	{
@@ -19,7 +22,11 @@ public class RandomUtils
 		int result = min + random.nextInt(range + 1);
 		return result;
 	}
-	
+	public static int nextInt(int range) {
+		return random.nextInt(range);
+	}
+
+
 	public static double nextDouble(double startInclusive, double endInclusive)
 	{
 		if(startInclusive == endInclusive

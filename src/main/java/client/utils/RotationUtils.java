@@ -23,6 +23,7 @@ import net.minecraft.entity.LivingEntity;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.util.math.*;
 
+import java.util.Objects;
 import java.util.Optional;
 import java.util.concurrent.ThreadLocalRandom;
 
@@ -121,34 +122,30 @@ public final class RotationUtils
 		float f3 = MathHelper.sin(-rotation.getPitch() * (float)DEG_TO_RAD);
 		return new Vec3d((double)(f1 * f2), (double)f3, (double)(f * f2));
 	}
-	
-	public static Optional<Rotation> reachableOffset(Entity entity,
-		BlockPos pos, Vec3d offsetPos, double blockReachDistance,
-		boolean wouldSneak)
-	{
-		/*
-		 * Vec3d eyes = wouldSneak ?
-		 * RayTraceUtils.inferSneakingEyePosition(entity) :
-		 * entity.getPositionEyes(1.0F);
-		 * Rotation rotation = calcRotationFromVec3d(eyes, offsetPos, new
-		 * Rotation(entity.rotationYaw, entity.rotationPitch));
-		 * RayTraceResult result = RayTraceUtils.rayTraceTowards(entity,
-		 * rotation, blockReachDistance, wouldSneak);
-		 * //System.out.println(result);
-		 * if (result != null && result.typeOfHit == RayTraceResult.Type.BLOCK)
-		 * {
-		 * if (result.getBlockPos().equals(pos)) {
-		 * return Optional.of(rotation);
-		 * }
-		 * if (entity.world.getBlockState(pos).getBlock() instanceof BlockFire
-		 * && result.getBlockPos().equals(pos.down())) {
-		 * return Optional.of(rotation);
-		 * }
-		 * }
-		 * return Optional.empty();
-		 */
-		return null;
+
+	/**
+	 * Returns the smallest angle difference possible with a specific sensitivity ("gcd")
+	 */
+	public static float getFixedAngleDelta() {
+//        float z = (float) (mc.options.getMouseSensitivity().getValue() * 0.6f + 0.2f);
+		float z = (float) (0.1 * 0.6f + 0.2f);
+		return (z * z * z * 1.2f);
 	}
+
+	/**
+	 * Returns angle that is legitimately accomplishable with player's current sensitivity
+	 */
+	public static float getFixedSensitivityAngle(float targetAngle, float startAngle) {
+		float gcd = getFixedAngleDelta();
+		return startAngle + (int) ((targetAngle - startAngle) / gcd) * gcd;
+	}
+	public static float[] getFixedSensitivityAngles(float[] targetAngles, float[] startAngles){
+		return new float[]{
+				getFixedSensitivityAngle(targetAngles[0], startAngles[0]),getFixedSensitivityAngle(targetAngles[1], startAngles[1])
+		};
+
+	}
+
 	
 	public static boolean faceEntityClient(Entity entity)
 	{
@@ -228,6 +225,52 @@ public final class RotationUtils
 		float gcd = f * f * f * 1.2F;
 		return new float[]{(rotations[0] - rotations[0] % gcd),
 			(rotations[1] - rotations[1] % gcd)};
+	}
+	public static Vec3d nearest(Box box, Vec3d vec) {
+		return new Vec3d(
+				MathHelper.clamp(vec.x, box.minX, box.maxX),
+				MathHelper.clamp(vec.y, box.minY, box.maxY),
+				MathHelper.clamp(vec.z, box.minZ, box.maxZ)
+		);
+	}
+
+	public static float[] calcRotation(Entity entity) {
+		float aYaw = 0, aPitch = 0;
+		 long next = 0;
+		Vec3d eye = Objects.requireNonNull(mc.player).getEyePos();
+		Box bb = entity.getBoundingBox();
+		Vec3d nearest = nearest(bb, eye);
+		if (bb.intersects(eye, eye.add(mc.player.getRotationVec(1f).multiply(6)))) {
+			if (System.currentTimeMillis() > next) {
+				final float[] center = rotation(entity.getEyePos().add(0, -0.3, 0), eye);
+				next = System.currentTimeMillis() + RandomUtils.nextInt(50);
+				aYaw = RandomUtils.nextFloat(0.3f) * MathHelper.wrapDegrees(
+						center[0] - mc.player.getYaw()
+				);
+				aPitch = RandomUtils.nextFloat(0.3f) * MathHelper.wrapDegrees(
+						center[1] - mc.player.getPitch()
+				);
+			}
+			return new float[] {
+					mc.player.getYaw() + aYaw * RandomUtils.nextFloat(1),
+					mc.player.getPitch() + aPitch * RandomUtils.nextFloat(1)
+			};
+		}
+        return rotation(nearest.add(
+                RandomUtils.nextDouble(-0.1f, 0.1),
+                RandomUtils.nextDouble(-0.1f, 0.1),
+                RandomUtils.nextDouble(-0.1f, 0.1)
+        ), eye);
+	}
+	public static float[] rotation(double x, double y, double z, double ax, double ay, double az) {
+		final double diffX = x - ax, diffY = y - ay, diffZ = z - az;
+		final float yaw = (float) (Math.toDegrees(Math.atan2(diffZ, diffX)) - 90.0F),
+				pitch = (float) (-Math.toDegrees(Math.atan2(diffY, Math.hypot(diffX, diffZ))));
+		return new float[] { yaw, pitch };
+	}
+
+	public static float[] rotation(Vec3d a, Vec3d b) {
+		return rotation(a.x, a.y, a.z, b.x, b.y, b.z);
 	}
 	
 	public static float[] getRotations(double posX, double posY, double posZ)

@@ -10,6 +10,7 @@ import net.minecraft.block.Block;
 import net.minecraft.block.Blocks;
 import net.minecraft.client.network.PendingUpdateManager;
 import net.minecraft.client.network.SequencedPacketCreator;
+import net.minecraft.network.packet.c2s.play.HandSwingC2SPacket;
 import net.minecraft.network.packet.c2s.play.PlayerInteractBlockC2SPacket;
 import net.minecraft.util.*;
 import net.minecraft.util.hit.BlockHitResult;
@@ -137,32 +138,17 @@ public class TPBreaker extends Module
 	private void placeBlock(BlockPos pos)
 	{
 		
-		/*
-		 * for(Direction side : Direction.values())
-		 * {
-		 * BlockPos neighbor = pos.offset(side);
-		 * Direction side2 = side.getOpposite();
-		 *
-		 * Vec3d hitVec = Vec3d.ofCenter(neighbor)
-		 * .add(Vec3d.of(side2.getVector()).multiply(0.5));
-		 * BlockHitResult hitResult =
-		 * new BlockHitResult(hitVec, side2, neighbor, false);
-		 * Objects.requireNonNull(mc.player).networkHandler.sendPacket(new
-		 * PlayerInteractBlockC2SPacket(Hand.MAIN_HAND, hitResult,0));
-		 * }
-		 *
-		 */
-		Direction side = Direction.UP;
-		BlockPos neighbor = pos.offset(side);
-		Direction side2 = side.getOpposite();
-		Vec3d hitVec = Vec3d.ofCenter(neighbor)
-			.add(Vec3d.of(side2.getVector()).multiply(0.5));
-		BlockHitResult hitResult =
-			new BlockHitResult(hitVec, side2, neighbor, false);
-		Objects.requireNonNull(Objects.requireNonNull(mc).getNetworkHandler()).sendPacket(
-			new PlayerInteractBlockC2SPacket(Hand.MAIN_HAND, hitResult, 0));
-		mc.interactionManager.interactItem(mc.player,Hand.MAIN_HAND);
-		
+
+		  for(Direction side : Direction.values())
+		 {
+		  Direction side2 = side.getOpposite();
+		  BlockHitResult blockHitResult=
+
+		  new BlockHitResult(pos.toCenterPos(), side2, pos, false).withBlockPos(pos);
+		  Objects.requireNonNull(mc.getNetworkHandler()).sendPacket(new  HandSwingC2SPacket(Hand.MAIN_HAND));
+		  Objects.requireNonNull(mc.player).interactAt(mc.player,pos.toCenterPos(),Hand.MAIN_HAND);
+		 Objects.requireNonNull(mc.player).networkHandler.sendPacket(new PlayerInteractBlockC2SPacket(Hand.MAIN_HAND, blockHitResult,0));
+		 }
 	}
 	
 	protected void sendSequencedPacket(SequencedPacketCreator packetCreator)

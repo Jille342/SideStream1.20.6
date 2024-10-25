@@ -105,6 +105,11 @@ public class EventMotion extends Event<EventMotion>
 		this.y = y;
 		this.z = z;
 	}
+	public float[] getServerSideAngles(){
+		return new float[]{
+				yaw,pitch
+		};
+	}
 	
 	public void setPosition(BlockPos pos)
 	{

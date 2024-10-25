@@ -24,7 +24,6 @@ import net.minecraft.util.math.Vec3d;
 public class CivBreak extends Module
 {
 	ModeSetting mode;
-	NumberSetting delay;
 	NumberSetting range;
 	NumberSetting packetDelay;
 	private BlockPos blockPos;
@@ -42,9 +41,8 @@ public class CivBreak extends Module
 		this.range = new NumberSetting("Range", 5.0, 4.5, 7.0, 0.1);
 		mode =
 			new ModeSetting("Mode", "Legit", new String[]{"Legit", "Packet"});
-		delay = new NumberSetting("Delay", 5.0D, 0.0D, 20.0D, 1.0D);
 		packetDelay = new NumberSetting("Packet Delay", 20, 10, 200, 1.0);
-		addSetting(range, mode, packetDelay, delay);
+		addSetting(range, mode, packetDelay);
 	}
 	
 	// public void onClickTick(final ClickTickEvent event) {
@@ -57,6 +55,7 @@ public class CivBreak extends Module
 	{
 		if(event instanceof EventUpdate)
 		{
+			setTag(mode.getMode());
 			if(Objects.requireNonNull(mc.interactionManager).isBreakingBlock()
 				&& this.hitResult == null)
 			{
@@ -120,7 +119,6 @@ public class CivBreak extends Module
 					{
 						return;
 					}
-					this.blockPos = nexus;
 					final float f =
 						(float)(mc.player.getX() - this.blockPos.getX());
 					final float g =
@@ -131,14 +129,15 @@ public class CivBreak extends Module
 					
 					if(dist >= this.range.getValue())
 					{
-						this.hitResult = null;
-						this.blockPos = null;
-						this.attempt = 0;
+
 						return;
 					}
 					mc.player.networkHandler
 						.sendPacket(new HandSwingC2SPacket(Hand.MAIN_HAND));
-					mc.interactionManager.attackBlock(this.blockPos, facing);
+					mc.interactionManager.updateBlockBreakingProgress(this.blockPos,facing);
+						this.hitResult = null;
+						this.blockPos = null;
+						this.attempt = 0;
 					break;
 				}
 			}
@@ -167,7 +166,7 @@ public class CivBreak extends Module
 					pos = new BlockPos((int)(mc.player.getX() + x),
 						(int)(mc.player.getY() + y),
 						(int)(mc.player.getZ() + z));
-					if(mc.world.getBlockState(pos)
+					if(Objects.requireNonNull(mc.world).getBlockState(pos)
 						.getBlock() == Blocks.END_STONE)
 						return pos;
 				}

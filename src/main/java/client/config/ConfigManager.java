@@ -46,32 +46,32 @@ import static client.config.configs.SettingsConfig.getSettingbyName;
 		{
 			config.load();
 		}
-		/* 30 */ Runtime.getRuntime().addShutdownHook(new Thread(() -> {
-			/*    */ for(Config config : getConfigs())
+	 Runtime.getRuntime().addShutdownHook(new Thread(() -> {
+		 for(Config config : getConfigs())
 			{
-				/*    */ config.save();
-				/*    */ }
-			/*    */ }));
-		/*    */ }
+			 config.save();
+			 }
+		 }));
+	}
 		
-	/*    */
-	/*    */ public Config getFile(String name)
+
+	public Config getFile(String name)
 	{
-		/* 38 */ if(this.contents == null)
+	if(this.contents == null)
 		{
-			/* 39 */ return null;
-			/*    */ }
-		/* 41 */ Iterator<Config> var3 = this.contents.iterator();
-		/* 42 */ while(var3.hasNext())
+		 return null;
+		 }
+		 Iterator<Config> var3 = this.contents.iterator();
+ while(var3.hasNext())
 		{
-			/* 43 */ Config file = var3.next();
-			/* 44 */ if(file.getName().equalsIgnoreCase(name))
+		Config file = var3.next();
+		 if(file.getName().equalsIgnoreCase(name))
 			{
-				/* 45 */ return file;
-				/*    */ }
-			/*    */ }
-		/* 48 */ return null;
-		/*    */ }
+			return file;
+		 }
+		}
+	return null;
+	 }
 		
 	/*    */
 	/*    */ public Config getFile(Class<? extends Config> theFile)
