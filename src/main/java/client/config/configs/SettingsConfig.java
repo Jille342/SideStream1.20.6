@@ -16,7 +16,7 @@ public class SettingsConfig extends Config
 {
 	public SettingsConfig()
 	{
-		super("settingconfig");
+		super("settingsconfig");
 	}
 	
 	public static Setting getSettingbyName(Module module, String str)

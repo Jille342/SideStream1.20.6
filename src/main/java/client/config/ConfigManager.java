@@ -234,7 +234,7 @@ import static client.config.configs.SettingsConfig.getSettingbyName;
 						ModuleManager.getModulebyLowerName(arguments[0]);
 					if(module != null)
 					{
-						Setting setting =
+						Setting<?> setting =
 							getSettingbyName(module, arguments[1]);
 						if(setting != null)
 						{
