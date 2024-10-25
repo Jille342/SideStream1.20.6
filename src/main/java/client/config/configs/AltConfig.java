@@ -122,10 +122,4 @@ package client.config.configs;
 			/*    */ }
 		/*    */ }
 	/*    */ }
-	
-/*
- * Location: C:\Users\Null\Downloads\Qurobito
- * LEAK\Qurobito.jar!\client\config\configs\AltConfig.class
- * Java compiler version: 8 (52.0)
- * JD-Core Version: 1.1.3
- */
+
