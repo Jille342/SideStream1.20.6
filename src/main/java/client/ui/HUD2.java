@@ -82,8 +82,7 @@ public class HUD2
 			name = name + " " + String.format("[%s] [%dFPS]",
 				new Object[]{time.substring(0, 5), mc.getCurrentFps()});
 		}
-		Fonts.titleFont.drawString(context.getMatrices(), name, nameX, nameY,
-			color);
+
 		if(namebackground.isEnable())
 		{
 			RenderingUtils.renderRect(context.getMatrices(), nameX, nameY,
@@ -91,6 +90,11 @@ public class HUD2
 				(int)Fonts.titleFont.getFontHeight() + 5,
 				Colors.getColor(0, 0, 0, 50));
 		}
+		MatrixStack matrixStack = context.getMatrices();
+		matrixStack.push();
+		Fonts.titleFont.drawString(matrixStack, name, nameX, nameY,
+				color);
+		matrixStack.pop();
 		if(HUD.info.isEnable())
 		{
 			Fonts.font.drawString(blockps, 3,
@@ -161,12 +165,12 @@ public class HUD2
 							+ 3.0F * (counter[0] * 2.55) / 60).getRGB();
 					break;
 				}
+				MatrixStack matrixStack = context.getMatrices();
 				int nextIndex = sortedList.indexOf(module) + 1;
 				Module nextModule = null;
 				if(sortedList.size() > nextIndex)
 					nextModule = getNextEnabledModule(sortedList, nextIndex);
-				Fonts.font.drawString(moduleLabel, (float)translateX,
-					(float)translateY, color);
+
 				if((Boolean)HUD.OUTLINE.enable)
 				{
 					RenderingUtils.drawRect(context, translateX - 2.6D,
@@ -193,7 +197,10 @@ public class HUD2
 						(int)(translateX - 2.0D), (int)(translateY - 1.0D),
 						width, (int)(translateY + listOffset - 1.0D),
 						Colors.getColor(0, 0, 0, 50));
-				
+				matrixStack.push();
+				Fonts.font.drawString(matrixStack,moduleLabel, (float)translateX,
+						(float)translateY, color);
+				matrixStack.pop();
 				if(module.isEnabled())
 				{
 					y += listOffset;
