@@ -1,6 +1,6 @@
 package client.event.listeners;
 
-import client.setting.Setting;
+import client.settings.Setting;
 import client.event.Event;
 
 public class EventSettingClicked extends Event<EventSettingClicked>

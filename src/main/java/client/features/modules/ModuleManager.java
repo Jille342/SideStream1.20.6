@@ -8,7 +8,7 @@ import client.features.modules.movement.InventoryMove;
 import client.features.modules.movement.Sprint;
 import client.features.modules.player.NoBreakDelay;
 import client.features.modules.render.*;
-import client.setting.*;
+import client.settings.*;
 import client.event.Event;
 
 import client.utils.MCUtil;

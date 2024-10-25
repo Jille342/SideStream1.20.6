@@ -10,7 +10,7 @@ import client.config.configs.ModuleConfig;
 /*    */ import client.config.configs.SettingsConfig;
 import client.features.modules.Module;
 import client.features.modules.ModuleManager;
-import client.setting.*;
+import client.settings.*;
 import client.utils.Logger;
 import org.apache.commons.io.FilenameUtils;
 /*    */ import java.io.*;
@@ -245,7 +245,7 @@ import static client.config.configs.SettingsConfig.getSettingbyName;
 							}
 							if(setting instanceof BooleanSetting)
 							{
-								((BooleanSetting)setting).setEnable(
+								((BooleanSetting)setting).setEnabled(
 									Boolean.parseBoolean(arguments[2]));
 							}
 							if(setting instanceof ModeSetting)
@@ -305,7 +305,7 @@ import static client.config.configs.SettingsConfig.getSettingbyName;
 					{
 						text = String.valueOf(module.getName().toLowerCase()
 							+ ":" + setting.name.toLowerCase() + ":"
-							+ ((BooleanSetting)setting).isEnable());
+							+ ((BooleanSetting)setting).isEnabled());
 					}
 					
 					var4.write(text);

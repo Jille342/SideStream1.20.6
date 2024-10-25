@@ -4,7 +4,7 @@ import client.event.Event;
 import client.event.listeners.EventUpdate;
 import client.features.modules.Module;
 import client.features.modules.ModuleManager;
-import client.setting.ModeSetting;
+import client.settings.ModeSetting;
 import net.minecraft.entity.player.PlayerEntity;
 
 import java.util.Objects;
@@ -87,18 +87,14 @@ public final class AntiBots extends Module
 	{
 		if(!(ModuleManager.getModulebyClass(AntiBots.class).isEnabled()))
 			return false;
-		switch(mode.getMode())
-		{
-			case "Shotbow":
-			return(e.getHealth() == 20
-				|| Objects.requireNonNull(mc.getNetworkHandler())
-					.getPlayerListEntry(e.getUuid()) == null);
-			case "Hypixel":
-			return isHypixelBot(e);
-			case "ShotbowTeams":
-			return e.getTeamColorValue() == 0;
-		}
-		return false;
-	}
+        return switch (mode.getMode()) {
+            case "Shotbow" -> (e.getHealth() == 20
+                    || Objects.requireNonNull(mc.getNetworkHandler())
+                    .getPlayerListEntry(e.getUuid()) == null);
+            case "Hypixel" -> isHypixelBot(e);
+            case "ShotbowTeams" -> e.getTeamColorValue() == 0;
+            default -> false;
+        };
+    }
 	
 }

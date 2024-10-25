@@ -2,7 +2,7 @@ package client.ui.clicckgui;
 
 import client.features.modules.Module;
 import client.features.modules.ModuleManager;
-import client.setting.*;
+import client.settings.*;
 
 import client.utils.font.Fonts;
 import net.minecraft.client.MinecraftClient;
@@ -175,7 +175,7 @@ public class ClickGuiWindow
 				{
 					final BooleanSetting bs = (BooleanSetting)s;
 					drawRect(context,
-						bs.isEnable() ? accentColor.getRGB()
+						bs.isEnabled() ? accentColor.getRGB()
 							: outlineColor2.getRGB(),
 						x, currentY, x + 120, currentY + 18);
 					Fonts.font.drawString(s.name, x + 4, currentY + 4,

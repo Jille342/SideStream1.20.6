@@ -3,8 +3,8 @@ package client.features.modules.misc;
 import java.util.*;
 
 import client.features.modules.Module;
-import client.setting.ModeSetting;
-import client.setting.NumberSetting;
+import client.settings.ModeSetting;
+import client.settings.NumberSetting;
 import client.utils.ChatUtils;
 import client.utils.TimeHelper;
 import client.event.Event;

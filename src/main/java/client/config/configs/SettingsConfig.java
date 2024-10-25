@@ -3,7 +3,7 @@ package client.config.configs;
 import client.config.Config;
 import client.features.modules.Module;
 import client.features.modules.ModuleManager;
-import client.setting.*;
+import client.settings.*;
 
 import java.io.BufferedReader;
 import java.io.BufferedWriter;
@@ -56,7 +56,7 @@ public class SettingsConfig extends Config
 							}
 							if(setting instanceof BooleanSetting)
 							{
-								((BooleanSetting)setting).setEnable(
+								((BooleanSetting)setting).setEnabled(
 									Boolean.parseBoolean(arguments[2]));
 							}
 							if(setting instanceof ModeSetting)
@@ -116,7 +116,7 @@ public class SettingsConfig extends Config
 					{
 						text = String.valueOf(module.getName().toLowerCase()
 							+ ":" + setting.name.toLowerCase() + ":"
-							+ ((BooleanSetting)setting).isEnable());
+							+ ((BooleanSetting)setting).isEnabled());
 					}
 					
 					var4.write(text);

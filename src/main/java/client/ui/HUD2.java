@@ -77,13 +77,13 @@ public class HUD2
 			name.substring(0, 1))
 			+ name.substring(1).replaceAll(name.substring(1),
 				"\247f" + name.substring(1));
-		if(nameinfo.enable)
+		if(nameinfo.enabled)
 		{
 			name = name + " " + String.format("[%s] [%dFPS]",
 				new Object[]{time.substring(0, 5), mc.getCurrentFps()});
 		}
 
-		if(namebackground.isEnable())
+		if(namebackground.isEnabled())
 		{
 			RenderingUtils.renderRect(context.getMatrices(), nameX, nameY,
 				(int)Fonts.titleFont.getStringWidth(name) + 5,
@@ -95,18 +95,18 @@ public class HUD2
 		Fonts.titleFont.drawString(matrixStack, name, nameX, nameY,
 				color);
 		matrixStack.pop();
-		if(HUD.info.isEnable())
+		if(HUD.info.isEnabled())
 		{
 			Fonts.font.drawString(blockps, 3,
 				scaledResolution.getScaledHeight() - height, -1);
 		}
 		Fonts.font.drawString(build, 5, 16, -1);
 		
-		if(HUD.armor.isEnable())
+		if(HUD.armor.isEnabled())
 		{
 			drawArmorStatus(scaledResolution, context);
 		}
-		if(HUD.effects.isEnable())
+		if(HUD.effects.isEnabled())
 		{
 			drawPotionStatus(scaledResolution);
 		}
@@ -171,7 +171,7 @@ public class HUD2
 				if(sortedList.size() > nextIndex)
 					nextModule = getNextEnabledModule(sortedList, nextIndex);
 
-				if((Boolean)HUD.OUTLINE.enable)
+				if((Boolean)HUD.OUTLINE.enabled)
 				{
 					RenderingUtils.drawRect(context, translateX - 2.6D,
 						translateY - 1.0D, translateX - 2.0D,
@@ -192,7 +192,7 @@ public class HUD2
 							translateY + offsetY - 0.6D, color);
 					}
 				}
-				if((Boolean)HUD.background.enable)
+				if((Boolean)HUD.background.enabled)
 					RenderingUtils.renderRect(context.getMatrices(),
 						(int)(translateX - 2.0D), (int)(translateY - 1.0D),
 						width, (int)(translateY + listOffset - 1.0D),

@@ -4,7 +4,6 @@ import client.event.Event;
 import client.event.listeners.EventRender2D;
 import client.event.listeners.EventRender3D;
 import client.features.modules.Module;
-import client.setting.ModeSetting;
 import client.utils.font.TTFFontRenderer;
 import java.awt.Color;
 import java.util.Comparator;

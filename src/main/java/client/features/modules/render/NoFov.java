@@ -1,7 +1,7 @@
 package client.features.modules.render;
 
 import client.features.modules.Module;
-import client.setting.NumberSetting;
+import client.settings.NumberSetting;
 
 public class NoFov extends Module
 {

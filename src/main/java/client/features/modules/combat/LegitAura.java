@@ -6,9 +6,9 @@ import client.event.listeners.EventInput;
 import client.event.listeners.EventMotion;
 import client.event.listeners.EventUpdate;
 import client.features.modules.Module;
-import client.setting.BooleanSetting;
-import client.setting.ModeSetting;
-import client.setting.NumberSetting;
+import client.settings.BooleanSetting;
+import client.settings.ModeSetting;
+import client.settings.NumberSetting;
 import client.utils.RotationUtils;
 import client.utils.ServerHelper;
 import client.utils.TimeHelper;
@@ -20,7 +20,6 @@ import net.minecraft.entity.passive.AnimalEntity;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.network.packet.c2s.play.PlayerInteractEntityC2SPacket;
 import net.minecraft.util.Hand;
-import net.minecraft.util.math.MathHelper;
 
 import java.util.ArrayList;
 import java.util.Comparator;
@@ -94,9 +93,9 @@ public class LegitAura extends Module
 			setTag(sortmode.getMode() + " " + targets.size());
 			if(target != null)
 			{
-				if(!(Objects.requireNonNull(mc.player).isUsingItem() && itemCheck.isEnable())
+				if(!(Objects.requireNonNull(mc.player).isUsingItem() && itemCheck.isEnabled())
 					&& !(mc.currentScreen instanceof InventoryScreen
-						&& noInventoryAttack.isEnable()))
+						&& noInventoryAttack.isEnabled()))
 				{
 					
 					if(e.isPre())
@@ -124,7 +123,7 @@ public class LegitAura extends Module
 		if(e instanceof EventMotion)
 		{
 			if(mc.currentScreen instanceof InventoryScreen
-				&& noInventoryAttack.isEnable())
+				&& noInventoryAttack.isEnabled())
 			{
 				return;
 			}
@@ -166,7 +165,7 @@ public class LegitAura extends Module
 			
 		}
 		if(e instanceof EventInput){
-			((EventInput) e).moveFix = moveFix.isEnable();
+			((EventInput) e).moveFix = moveFix.isEnabled();
 		}
 		
 	}
@@ -192,14 +191,14 @@ public class LegitAura extends Module
 				{
 					continue;
 				}
-				if(clickOnly.enable && !mc.options.attackKey.isPressed())
+				if(clickOnly.enabled && !mc.options.attackKey.isPressed())
 					continue;
-				if(entity.isInvisible() && !targetInvisibles.enable)
+				if(entity.isInvisible() && !targetInvisibles.enabled)
 					continue;
 				
 				if(!RotationUtils.fov(entity, fov.value))
 					continue;
-				if(!mc.player.canSee(entity) && !hitThroughWalls.isEnable())
+				if(!mc.player.canSee(entity) && !hitThroughWalls.isEnabled())
 					continue;
 				double focusRange = rangeSetting.value;
 				if(mc.player.distanceTo(entity) > focusRange)
@@ -207,7 +206,7 @@ public class LegitAura extends Module
 				if(entity instanceof PlayerEntity)
 				{
 					
-					if(ignoreTeamsSetting.enable
+					if(ignoreTeamsSetting.enabled
 						&& ServerHelper.isTeammate((PlayerEntity)entity))
 					{
 						continue;
@@ -217,11 +216,11 @@ public class LegitAura extends Module
 					
 					targets.add((LivingEntity)entity);
 				}else if(entity instanceof AnimalEntity
-					&& targetAnimalsSetting.enable)
+					&& targetAnimalsSetting.enabled)
 				{
 					targets.add((LivingEntity)entity);
 				}else if(entity instanceof MobEntity
-					&& targetMonstersSetting.enable)
+					&& targetMonstersSetting.enabled)
 				{
 					targets.add((LivingEntity)entity);
 				}

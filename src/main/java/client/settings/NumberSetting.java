@@ -1,4 +1,4 @@
-package client.setting;
+package client.settings;
 
 import java.util.function.Supplier;
 

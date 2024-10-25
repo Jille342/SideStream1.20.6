@@ -3,7 +3,7 @@ package client.features.modules.combat;
 import client.event.Event;
 import client.event.listeners.EventUpdate;
 import client.features.modules.Module;
-import client.setting.NumberSetting;
+import client.settings.NumberSetting;
 
 public class Reach extends Module
 {

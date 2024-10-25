@@ -2,6 +2,7 @@ package client.command.impl;
 
 import client.command.Command;
 import client.Client;
+import client.command.CommandManager;
 
 public class Prefix extends Command
 {
@@ -16,7 +17,7 @@ public class Prefix extends Command
 	{
 		if(args.length == 1)
 		{
-			Client.commandManager.prefix = args[0];
+			CommandManager.prefix = args[0];
 			return true;
 		}
 		return false;

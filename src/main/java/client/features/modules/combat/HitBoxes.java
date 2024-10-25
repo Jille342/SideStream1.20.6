@@ -3,9 +3,9 @@ package client.features.modules.combat;
 import client.event.Event;
 import client.event.listeners.EventUpdate;
 import client.features.modules.Module;
-import client.setting.BooleanSetting;
-import client.setting.ModeSetting;
-import client.setting.NumberSetting;
+import client.settings.BooleanSetting;
+import client.settings.ModeSetting;
+import client.settings.NumberSetting;
 import client.utils.ServerHelper;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.LivingEntity;
@@ -52,7 +52,7 @@ public class HitBoxes extends Module
 				{
 					if(((LivingEntity)entity).hurtTime == 0)
 					{
-						if(ignoreTeams.isEnable())
+						if(ignoreTeams.isEnabled())
 						{
 							if(!ServerHelper.isTeammate((PlayerEntity)entity))
 							{

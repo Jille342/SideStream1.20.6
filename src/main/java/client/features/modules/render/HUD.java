@@ -3,8 +3,8 @@ package client.features.modules.render;
 import client.event.Event;
 import client.event.listeners.EventUpdate;
 import client.features.modules.Module;
-import client.setting.BooleanSetting;
-import client.setting.ModeSetting;
+import client.settings.BooleanSetting;
+import client.settings.ModeSetting;
 
 import java.util.ArrayList;
 

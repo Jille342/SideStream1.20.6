@@ -10,8 +10,8 @@ package client.features.modules.combat;
 import client.event.Event;
 import client.event.listeners.EventUpdate;
 import client.features.modules.Module;
-import client.setting.BooleanSetting;
-import client.setting.NumberSetting;
+import client.settings.BooleanSetting;
+import client.settings.NumberSetting;
 import client.utils.PlayerHelper;
 import client.utils.RotationUtils;
 import client.utils.ServerHelper;
@@ -172,7 +172,7 @@ public final class BowAimbot extends Module
 					{
 						continue;
 					}
-					if(ignoreTeamsSetting.enable
+					if(ignoreTeamsSetting.enabled
 						&& ServerHelper.isTeammate((PlayerEntity)entity))
 					{
 						continue;
@@ -180,11 +180,11 @@ public final class BowAimbot extends Module
 					
 					validated.add(entity);
 				}else if(entity instanceof AnimalEntity
-					&& targetAnimalsSetting.enable)
+					&& targetAnimalsSetting.enabled)
 				{
 					validated.add(entity);
 				}else if(entity instanceof MobEntity
-					&& targetMonstersSetting.enable)
+					&& targetMonstersSetting.enabled)
 				{
 					validated.add(entity);
 				}

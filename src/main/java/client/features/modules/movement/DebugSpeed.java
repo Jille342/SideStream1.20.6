@@ -3,7 +3,7 @@ package client.features.modules.movement;
 import client.event.Event;
 import client.event.listeners.EventUpdate;
 import client.features.modules.Module;
-import client.setting.NumberSetting;
+import client.settings.NumberSetting;
 import client.utils.MCTimerUtil;
 import net.minecraft.entity.effect.StatusEffects;
 

@@ -4,7 +4,7 @@ import client.event.Event;
 import client.event.listeners.EventPacket;
 import client.event.listeners.EventUpdate;
 import client.features.modules.Module;
-import client.setting.ModeSetting;
+import client.settings.ModeSetting;
 import net.minecraft.client.gui.screen.ChatScreen;
 import net.minecraft.client.gui.screen.ingame.GenericContainerScreen;
 import net.minecraft.client.gui.screen.ingame.InventoryScreen;

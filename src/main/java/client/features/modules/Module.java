@@ -1,8 +1,8 @@
 package client.features.modules;
 
 import client.features.modules.render.ClickGUI;
-import client.setting.KeyBindSetting;
-import client.setting.Setting;
+import client.settings.KeyBindSetting;
+import client.settings.Setting;
 import client.event.Event;
 import client.utils.Translate;
 import net.minecraft.client.MinecraftClient;

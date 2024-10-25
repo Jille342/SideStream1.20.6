@@ -3,8 +3,8 @@ package client.features.modules.combat;
 import client.event.Event;
 import client.event.listeners.EventRender2D;
 import client.features.modules.Module;
-import client.setting.BooleanSetting;
-import client.setting.NumberSetting;
+import client.settings.BooleanSetting;
+import client.settings.NumberSetting;
 import client.utils.PlayerHelper;
 import client.utils.ServerHelper;
 import net.minecraft.entity.Entity;
@@ -105,7 +105,7 @@ public class AimAssist extends Module
 			return false;
 		}
 		
-		if(!notHolding.enable && !mc.options.attackKey.isPressed())
+		if(!notHolding.enabled && !mc.options.attackKey.isPressed())
 		{
 			return false;
 		}
@@ -141,7 +141,7 @@ public class AimAssist extends Module
 				if(entity instanceof PlayerEntity)
 				{
 					
-					if(ignoreTeamsSetting.enable
+					if(ignoreTeamsSetting.enabled
 						&& ServerHelper.isTeammate((PlayerEntity)entity))
 					{
 						continue;
@@ -151,11 +151,11 @@ public class AimAssist extends Module
 					
 					validated.add((LivingEntity)entity);
 				}else if(entity instanceof AnimalEntity
-					&& targetAnimalsSetting.enable)
+					&& targetAnimalsSetting.enabled)
 				{
 					validated.add((LivingEntity)entity);
 				}else if(entity instanceof MobEntity
-					&& targetMonstersSetting.enable)
+					&& targetMonstersSetting.enabled)
 				{
 					validated.add((LivingEntity)entity);
 				}

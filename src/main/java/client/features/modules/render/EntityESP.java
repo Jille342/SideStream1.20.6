@@ -3,7 +3,7 @@ package client.features.modules.render;
 import client.event.Event;
 import client.event.listeners.EventRender3D;
 import client.features.modules.Module;
-import client.setting.ModeSetting;
+import client.settings.ModeSetting;
 import client.utils.*;
 import net.minecraft.client.network.AbstractClientPlayerEntity;
 import net.minecraft.client.render.Camera;

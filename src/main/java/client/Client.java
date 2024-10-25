@@ -54,6 +54,9 @@ public class Client
 	{
 		return moduleManager;
 	}
+	public static CommandManager getCommandManager(){
+		return commandManager;
+	}
 	
 	public static ConfigManager getConfigManager()
 	{

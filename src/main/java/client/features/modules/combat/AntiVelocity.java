@@ -6,9 +6,9 @@ import client.event.listeners.EventPacket;
 import client.event.listeners.EventUpdate;
 import client.features.modules.Module;
 import client.mixin.client.IEntityVelocityUpdateS2CPacketMixin;
-import client.setting.BooleanSetting;
-import client.setting.ModeSetting;
-import client.setting.NumberSetting;
+import client.settings.BooleanSetting;
+import client.settings.ModeSetting;
+import client.settings.NumberSetting;
 import net.minecraft.network.packet.s2c.play.EntityVelocityUpdateS2CPacket;
 
 public class AntiVelocity extends Module
@@ -49,7 +49,7 @@ public class AntiVelocity extends Module
 		{
 			if(this.mode.getMode().equalsIgnoreCase("Simple"))
 			{
-				if(this.clickOnly.isEnable() && !mc.options.useKey.isPressed())
+				if(this.clickOnly.isEnabled() && !mc.options.useKey.isPressed())
 				{
 					return;
 				}
