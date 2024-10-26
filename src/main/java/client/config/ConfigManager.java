@@ -1,8 +1,7 @@
-/*    */
+
 package client.config;
 
-/*    */
-/*    */ import client.Client;
+ import client.Client;
 import client.config.configs.AltConfig;
 /*    */
 import client.config.configs.ModuleConfig;
@@ -20,14 +19,9 @@ import java.util.ArrayList;
 
 import static client.config.configs.SettingsConfig.getSettingbyName;
 
-/*    */
-/*    */
-/*    */
-/*    */
-/*    */
-/*    */ public class ConfigManager
-/*    */ {
-	/*    */ public List<Config> contents;
+public class ConfigManager
+ {
+	 public List<Config> contents;
 	private List<File> customConfigs = new ArrayList<>();
 	
 	public static final File CONFIGS_DIR =
@@ -73,40 +67,33 @@ import static client.config.configs.SettingsConfig.getSettingbyName;
 	return null;
 	 }
 		
-	/*    */
-	/*    */ public Config getFile(Class<? extends Config> theFile)
+	 public Config getFile(Class<? extends Config> theFile)
 	{
-		/* 52 */ if(this.contents == null)
+		 if(this.contents == null)
 		{
-			/* 53 */ return null;
-			/*    */ }
-		/* 55 */ for(Config file : this.contents)
+		 return null;
+		}
+		 for(Config file : this.contents)
 		{
-			/* 56 */ if(file.getClass() == theFile)
+		 if(file.getClass() == theFile)
 			{
-				/* 57 */ return file;
-				/*    */ }
-			/*    */ }
-		/* 60 */ return null;
-		/*    */ }
+				return file;
+				 }
+	 }
+	return null;
+	}
 		
-	/*    */ public void add(Class<? extends Config> content)
+ public void add(Class<? extends Config> content)
 	{
-		/*    */ try
+	 try
 		{
-			/* 65 */ this.contents.add(content.newInstance());
-			/* 66 */ }catch(InstantiationException e)
-		{
-			/* 67 */ e.printStackTrace();
-			/* 68 */ }catch(IllegalAccessException e)
-		{
-			/*    */
-			/* 70 */ e.printStackTrace();
-			/*    */ }
-		/*    */ }
+		 this.contents.add(content.newInstance());
+		 } catch (InstantiationException | IllegalAccessException e) {
+         throw new RuntimeException(e);
+     }
+    }
 		
-	/*    */
-	/*    */ public List<Config> getConfigs()
+	public List<Config> getConfigs()
 	{
 		/* 75 */ return this.contents;
 		/*    */ }
@@ -208,9 +195,10 @@ import static client.config.configs.SettingsConfig.getSettingbyName;
 			try
 			{
 				file.createNewFile();
-			}catch(IOException ignored)
-			{}
-		}
+			} catch (IOException e) {
+                throw new RuntimeException(e);
+            }
+        }
 		return file;
 	}
 	
@@ -242,16 +230,16 @@ import static client.config.configs.SettingsConfig.getSettingbyName;
 							{
 								((NumberSetting)setting)
 									.setValue(Double.parseDouble(arguments[2]));
-							}
+							} else
 							if(setting instanceof BooleanSetting)
 							{
 								((BooleanSetting)setting).setEnabled(
 									Boolean.parseBoolean(arguments[2]));
-							}
+							} else
 							if(setting instanceof ModeSetting)
 							{
 								((ModeSetting)setting).setModes(arguments[2]);
-							}
+							} else
 							
 							if(setting instanceof KeyBindSetting)
 							{
@@ -263,14 +251,10 @@ import static client.config.configs.SettingsConfig.getSettingbyName;
 					}
 				}
 			}
-		}catch(FileNotFoundException var6)
-		{
-			var6.printStackTrace();
-		}catch(IOException var71)
-		{
-			var71.printStackTrace();
-		}
-	}
+		} catch (IOException e) {
+            throw new RuntimeException(e);
+        }
+    }
 	
 	public void save(File file)
 	{
@@ -279,7 +263,7 @@ import static client.config.configs.SettingsConfig.getSettingbyName;
 			BufferedWriter var4 = new BufferedWriter(new FileWriter(file));
 			for(Module module : ModuleManager.modules)
 			{
-				for(Setting setting : module.settings)
+				for(Setting<?> setting : module.settings)
 				{
 					String text = "";
 					if(setting instanceof NumberSetting)
@@ -313,10 +297,9 @@ import static client.config.configs.SettingsConfig.getSettingbyName;
 				}
 			}
 			var4.close();
-		}catch(IOException var41)
-		{
-			var41.printStackTrace();
-		}
-	}
+		} catch (IOException e) {
+            throw new RuntimeException(e);
+        }
+    }
 	
 }

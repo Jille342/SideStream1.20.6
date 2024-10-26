@@ -53,17 +53,16 @@ public class SettingsConfig extends Config
 							{
 								((NumberSetting)setting)
 									.setValue(Double.parseDouble(arguments[2]));
-							}
+							} else
 							if(setting instanceof BooleanSetting)
 							{
 								((BooleanSetting)setting).setEnabled(
 									Boolean.parseBoolean(arguments[2]));
-							}
+							} else
 							if(setting instanceof ModeSetting)
 							{
 								((ModeSetting)setting).setModes(arguments[2]);
-							}
-							
+							}else
 							if(setting instanceof KeyBindSetting)
 							{
 								((KeyBindSetting)setting)
@@ -74,14 +73,10 @@ public class SettingsConfig extends Config
 					}
 				}
 			}
-		}catch(FileNotFoundException var6)
-		{
-			var6.printStackTrace();
-		}catch(IOException var71)
-		{
-			var71.printStackTrace();
-		}
-	}
+		} catch (IOException e) {
+            throw new RuntimeException(e);
+        }
+    }
 	
 	public void save()
 	{
@@ -124,9 +119,8 @@ public class SettingsConfig extends Config
 				}
 			}
 			var4.close();
-		}catch(IOException var41)
-		{
-			var41.printStackTrace();
-		}
-	}
+		} catch (IOException e) {
+            throw new RuntimeException(e);
+        }
+    }
 }

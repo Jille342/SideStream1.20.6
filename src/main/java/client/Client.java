@@ -18,7 +18,7 @@ public class Client
 {
 	public static boolean isNormalFabric;
 	public static final String NAME = "SideStream";
-	public static final String VERSION = "20241018";
+	public static final String VERSION = "20241025";
 	public static HUD2 hud2 = new HUD2();
 	public static String bgLocation = "client/bg.png";
 	public static AltManager altManager;
