@@ -1,5 +1,6 @@
 package client.utils.font;
 
+import lombok.Getter;
 import me.x150.renderer.font.FontRenderer;
 import me.x150.renderer.util.AlphaOverride;
 import net.minecraft.client.util.math.MatrixStack;
@@ -28,18 +29,14 @@ public class TTFFontRenderer
 	}
 	
 	private final FontRenderer fontRenderer;
+
+	@Getter
+	final float size;
 	
-	final float si;
-	
-	private TTFFontRenderer(Font fnt, float si)
+	private TTFFontRenderer(Font fnt, float size)
 	{
-		this.fontRenderer = new FontRenderer(new Font[]{fnt}, si);
-		this.si = si;
-	}
-	
-	public float getSize()
-	{
-		return si;
+		this.fontRenderer = new FontRenderer(new Font[]{fnt}, size);
+		this.size = size;
 	}
 	
 	public void drawString(String text, float x, float y, int color)

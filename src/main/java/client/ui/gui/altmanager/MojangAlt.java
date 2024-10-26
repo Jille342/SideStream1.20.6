@@ -11,14 +11,28 @@ import java.util.Objects;
 
 import com.google.gson.JsonObject;
 
+import lombok.Getter;
 import net.minecraft.client.MinecraftClient;
 
 public final class MojangAlt extends Alt
 {
+	/**
+	 * -- GETTER --
+	 *
+	 * @return The Alt's email address. Cannot be null or empty.
+	 */
+	@Getter
 	private final String email;
+	/**
+	 * -- GETTER --
+	 *
+	 * @return The Alt's password. Cannot be null or empty.
+	 */
+	@Getter
 	private final String password;
-	
-	private String name = "";
+
+	@Getter
+	private String name;
 	
 	/**
 	 * @param email
@@ -94,33 +108,11 @@ public final class MojangAlt extends Alt
 	}
 	
 	@Override
-	public String getName()
-	{
-		return name;
-	}
-	
-	@Override
 	public String getDisplayName()
 	{
 		return name.isEmpty() ? email : name;
 	}
-	
-	/**
-	 * @return The Alt's email address. Cannot be null or empty.
-	 */
-	public String getEmail()
-	{
-		return email;
-	}
-	
-	/**
-	 * @return The Alt's password. Cannot be null or empty.
-	 */
-	public String getPassword()
-	{
-		return password;
-	}
-	
+
 	@Override
 	public int hashCode()
 	{
@@ -133,10 +125,9 @@ public final class MojangAlt extends Alt
 		if(this == obj)
 			return true;
 		
-		if(!(obj instanceof MojangAlt))
+		if(!(obj instanceof MojangAlt other))
 			return false;
-		
-		MojangAlt other = (MojangAlt)obj;
+
 		return Objects.equals(email, other.email);
 	}
 }

@@ -1,11 +1,15 @@
 package client.event.listeners;
 
 import client.event.Event;
+import lombok.Getter;
+import lombok.Setter;
 import net.minecraft.client.util.math.MatrixStack;
 
+@Getter
 public class EventRenderWorld extends Event<EventRenderWorld>
 {
 	
+	@Setter
 	float partialTicks;
 	MatrixStack stack;
 	
@@ -14,19 +18,5 @@ public class EventRenderWorld extends Event<EventRenderWorld>
 		this.partialTicks = partialTicks;
 		this.stack = stack;
 	}
-	
-	public float getPartialTicks()
-	{
-		return partialTicks;
-	}
-	
-	public MatrixStack getStack()
-	{
-		return stack;
-	}
-	
-	public void setPartialTicks(float partialTicks)
-	{
-		this.partialTicks = partialTicks;
-	}
+
 }

@@ -1,31 +1,26 @@
 package client.utils.render.easing;
 
+import lombok.Getter;
+import lombok.Setter;
+
+@Getter
 public class Time
 {
 	
+	@Setter
 	private long lastMS;
-	private long time = 0l;
+	private long currentMS = 0L;
 	
 	public void update(long deltaTime)
 	{
-		time += deltaTime;
+		currentMS += deltaTime;
 	}
 	
 	public Time()
 	{
 		this.lastMS = 0L;
 	}
-	
-	public long getCurrentMS()
-	{
-		return time;
-	}
-	
-	public long getLastMS()
-	{
-		return this.lastMS;
-	}
-	
+
 	public boolean hasReached(float f)
 	{
 		return (float)(this.getCurrentMS() - this.lastMS) >= f;
@@ -43,12 +38,8 @@ public class Time
 	
 	public void reset()
 	{
-		this.time = 0L;
+		this.currentMS = 0L;
 		this.lastMS = 0L;
 	}
-	
-	public void setLastMS(long currentMS)
-	{
-		this.lastMS = currentMS;
-	}
+
 }

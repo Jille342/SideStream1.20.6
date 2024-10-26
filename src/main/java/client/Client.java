@@ -4,12 +4,11 @@ import client.alts.AltManager;
 import client.command.CommandManager;
 import client.config.ConfigManager;
 import client.event.Event;
-import client.event.listeners.EventMotion;
 import client.features.modules.ModuleManager;
 import client.mixin.mixininterface.IMinecraftClient;
 import client.ui.BackgroundManager;
 import client.ui.HUD2;
-import client.utils.RotationUtils;
+import lombok.Getter;
 import net.minecraft.client.MinecraftClient;
 
 import java.io.File;
@@ -22,12 +21,15 @@ public class Client
 	public static HUD2 hud2 = new HUD2();
 	public static String bgLocation = "client/bg.png";
 	public static AltManager altManager;
+	@Getter
 	public static ConfigManager configManager;
 	
 	public static MinecraftClient mc = MinecraftClient.getInstance();
 	public static IMinecraftClient IMC = (IMinecraftClient)mc;
 	public static final File FOLDER = new File(mc.runDirectory, NAME);
+	@Getter
 	public static CommandManager commandManager;
+	@Getter
 	public static ModuleManager moduleManager;
 	
 	public static void init()
@@ -49,20 +51,7 @@ public class Client
 	
 	public static void shutdown()
 	{}
-	
-	public static ModuleManager getModuleManager()
-	{
-		return moduleManager;
-	}
-	public static CommandManager getCommandManager(){
-		return commandManager;
-	}
-	
-	public static ConfigManager getConfigManager()
-	{
-		return configManager;
-	}
-	
+
 	public static void makeClientDirectory()
 	{
 		if(!FOLDER.exists())

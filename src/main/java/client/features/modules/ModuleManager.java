@@ -10,11 +10,12 @@ import client.features.modules.player.NoBreakDelay;
 import client.features.modules.render.*;
 import client.settings.*;
 import client.event.Event;
-
 import client.utils.MCUtil;
 
 import java.util.*;
 import java.util.concurrent.CopyOnWriteArrayList;
+
+import org.jetbrains.annotations.NotNull;
 
 public class ModuleManager implements MCUtil
 {
@@ -57,11 +58,7 @@ public class ModuleManager implements MCUtil
 		@Override
 		public int compare(Module o1, Module o2)
 		{
-			if(o1.priority > o2.priority)
-				return -1;
-			if(o1.priority < o2.priority)
-				return 1;
-			return 0;
+			return Integer.compare(o2.priority, o1.priority);
 		}
 	}
 	
@@ -69,7 +66,7 @@ public class ModuleManager implements MCUtil
 	{
 		if(e instanceof EventKey)
 		{
-			int i = ((EventKey)e).key;
+			int i = ((EventKey)e).code;
 			if(i != 0)
 			{
 				ModuleManager.modules.forEach(m -> {
@@ -88,11 +85,7 @@ public class ModuleManager implements MCUtil
 	
 	public static List<Module> getModulesbyCategory(Module.Category c)
 	{
-		List<Module> moduleList = new ArrayList<>();
-		for(Module m : modules)
-			if(m.getCategory() == c)
-				moduleList.add(m);
-		return moduleList;
+		return modules.stream().filter(m -> m.category == c).toList();
 	}
 	
 	public static Module getModulebyClass(Class<? extends Module> c)
@@ -101,9 +94,9 @@ public class ModuleManager implements MCUtil
 			.orElse(null);
 	}
 	
-	public static Module getModulebyName(String str)
+	public static Module getModulebyName(@NotNull String str)
 	{
-		return modules.stream().filter(m -> m.getName() == str).findFirst()
+		return modules.stream().filter(m -> m.getName().equals(str)).findFirst()
 			.orElse(null);
 	}
 	
@@ -115,10 +108,8 @@ public class ModuleManager implements MCUtil
 	
 	public static void toggle(Class<? extends Module> c)
 	{
-		Module module = modules.stream().filter(m -> m.getClass() == c)
-			.findFirst().orElse(null);
-		if(module != null)
-			module.toggle();
+		modules.stream().filter(m -> m.getClass() == c)
+			.findFirst().ifPresent(Module::toggle);
 	}
 	
 	public CopyOnWriteArrayList<Module> getModules()
@@ -136,5 +127,5 @@ public class ModuleManager implements MCUtil
 			return module.settings.getFirst();
 		}
 	}
-	
+
 }

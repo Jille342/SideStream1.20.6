@@ -1,5 +1,10 @@
 package client.utils;
 
+import lombok.Getter;
+import lombok.Setter;
+
+@Setter
+@Getter
 public class TimeHelper
 {
 	
@@ -9,12 +14,7 @@ public class TimeHelper
 	{
 		return System.currentTimeMillis();
 	}
-	
-	public long getLastMS()
-	{
-		return this.lastMS;
-	}
-	
+
 	public boolean hasReached(float f)
 	{
 		return (float)(this.getCurrentMS() - this.lastMS) >= f;
@@ -34,9 +34,5 @@ public class TimeHelper
 	{
 		this.lastMS = this.getCurrentMS();
 	}
-	
-	public void setLastMS(long currentMS)
-	{
-		this.lastMS = currentMS;
-	}
+
 }

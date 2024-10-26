@@ -1,8 +1,12 @@
 package client.event.listeners;
 
 import client.event.Event;
+import lombok.Getter;
+import lombok.Setter;
 import net.minecraft.network.packet.Packet;
 
+@Setter
+@Getter
 public class EventPacket extends Event<EventPacket>
 {
 	
@@ -12,14 +16,5 @@ public class EventPacket extends Event<EventPacket>
 	{
 		this.packet = packet;
 	}
-	
-	public Packet getPacket()
-	{
-		return packet;
-	}
-	
-	public void setPacket(Packet packet)
-	{
-		this.packet = packet;
-	}
+
 }

@@ -1,26 +1,21 @@
 package client.event.listeners;
 
 import client.event.Event;
+import lombok.Getter;
+import lombok.Setter;
 
 public class EventKey extends Event<EventKey>
 {
 	
-	public int key;
+	@Getter
+	@Setter
+	public int code;
 	public int action;
 	
-	public EventKey(int key, String scancode, int i, int j)
+	public EventKey(int code, String scancode, int action, int modifiers)
 	{
-		this.key = key;
-		this.action = i;
+		this.code = code;
+		this.action = action;
 	}
-	
-	public int getCode()
-	{
-		return key;
-	}
-	
-	public void setCode(int key)
-	{
-		this.key = key;
-	}
+
 }
