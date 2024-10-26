@@ -19,7 +19,7 @@ public class Module
 	@Getter
 	private final Translate translate = new Translate(0.0F, 0.0F);
 	
-	protected static MinecraftClient mc = MinecraftClient.getInstance();
+	public static MinecraftClient mc = MinecraftClient.getInstance();
 	
 	@Setter
 	@Getter

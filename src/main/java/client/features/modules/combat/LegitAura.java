@@ -45,6 +45,7 @@ public class LegitAura extends Module
 	BooleanSetting noInventoryAttack;
 	BooleanSetting moveFix;
 	BooleanSetting itemCheck;
+	BooleanSetting testMove;
 	
 	public LegitAura()
 	{
@@ -72,11 +73,11 @@ public class LegitAura extends Module
 		this.fov = new NumberSetting("FOV", 20D, 0D, 360D, 1.0D);
 		hitThroughWalls = new BooleanSetting("Hit Through Walls", false);
 		clickOnly = new BooleanSetting("Click Only", true);
-		
+		testMove = new BooleanSetting("Test Move", true);
 		addSetting(rotationmode, maxCPS, minCPS, targetAnimalsSetting,
 			targetMonstersSetting, ignoreTeamsSetting, sortmode,
 			targetInvisibles, fov, hitThroughWalls, rangeSetting, clickOnly,
-			noInventoryAttack, moveFix, itemCheck);
+			noInventoryAttack, moveFix, itemCheck, testMove);
 		super.init();
 	}
 	
@@ -177,6 +178,11 @@ public class LegitAura extends Module
 		if(e instanceof EventInput)
 		{
 			((EventInput)e).moveFix = moveFix.isEnabled();
+			if(testMove.isEnabled()) {
+				if (mc.player.age % 3 == 0) {
+					((EventInput) e).setSlowDownFactor(0);
+				}
+			}
 		}
 		
 	}

@@ -26,6 +26,7 @@ public class ChatUtils implements MCUtil
 	
 	public static void sendChat(String text)
 	{
-		mc.player.sendMessage(Text.of(text));
+        assert mc.player != null;
+        mc.player.sendMessage(Text.of(text));
 	}
 }

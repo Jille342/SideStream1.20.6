@@ -2,6 +2,7 @@ package client.event.listeners;
 
 import client.event.Event;
 import lombok.Getter;
+import lombok.Setter;
 import net.minecraft.client.input.Input;
 
 public class EventInput extends Event<EventInput>
@@ -10,7 +11,8 @@ public class EventInput extends Event<EventInput>
 	private final Input input;
 	
 	@Getter
-	private final float slowDownFactor;
+	@Setter
+	private float slowDownFactor;
 	public boolean moveFix = false;
 	
 	public EventInput(Input input, float slowDownFactor)
