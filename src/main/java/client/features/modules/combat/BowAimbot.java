@@ -164,7 +164,7 @@ public final class BowAimbot extends Module
 				if(!mc.player.canSee(entity))
 					continue;
 				
-				if(!PlayerHelper.fov(entity, fov.value))
+				if(PlayerHelper.isInFov(entity, fov.value))
 					continue;
 				if(entity instanceof PlayerEntity)
 				{

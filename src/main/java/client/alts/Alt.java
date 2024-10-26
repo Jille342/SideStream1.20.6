@@ -6,6 +6,8 @@ import client.ui.gui.altmanager.MicrosoftLoginManager;
 import lombok.Getter;
 import lombok.Setter;
 
+import java.util.Objects;
+
 @Getter
 public class Alt
 {
@@ -31,7 +33,7 @@ public class Alt
 	public void login()
 	{
 		
-		if(getPassword() != null)
+		if(!Objects.equals(getPassword(), ""))
 		{
 			try
 			{

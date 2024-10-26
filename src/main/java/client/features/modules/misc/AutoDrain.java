@@ -115,7 +115,7 @@ public class AutoDrain extends Module
 				{
 					continue;
 				}
-				if(!PlayerHelper.fov(entity, fov.value))
+				if(PlayerHelper.isInFov(entity, fov.value))
 					continue;
 				double focusRange =
 					mc.player.canSee(entity) ? range.value : 3.5;

@@ -2,18 +2,15 @@ package client.utils;
 
 import client.mixin.client.MinecraftClientAccessor;
 import client.mixin.client.RenderTickCounterAccessor;
+import lombok.Getter;
 
 public class MCTimerUtil implements MCUtil
 {
 	
-	private static float timerSpeed = 1f;
-	
-	public static float getTimerSpeed()
-	{
-		return timerSpeed;
-	}
-	
-	public static void setTimerSpeed(float timerSpeed)
+	@Getter
+    private static float timerSpeed = 1f;
+
+    public static void setTimerSpeed(float timerSpeed)
 	{
 		MCTimerUtil.timerSpeed = timerSpeed;
 		
