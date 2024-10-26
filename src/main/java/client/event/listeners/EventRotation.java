@@ -1,9 +1,13 @@
 package client.event.listeners;
 
 import client.event.Event;
+import lombok.Getter;
+import lombok.Setter;
 
 public class EventRotation extends Event<EventRotation>
 {
+	@Setter
+	@Getter
 	private float yaw, pitch;
 	private float yawSpeed, pitchSpeed;
 	
@@ -13,25 +17,5 @@ public class EventRotation extends Event<EventRotation>
 		this.pitch = pitch;
 		this.yawSpeed = 180;
 		this.pitchSpeed = 180;
-	}
-	
-	public float getYaw()
-	{
-		return yaw;
-	}
-	
-	public float getPitch()
-	{
-		return pitch;
-	}
-	
-	public void setYaw(float yaw)
-	{
-		this.yaw = yaw;
-	}
-	
-	public void setPitch(float pitch)
-	{
-		this.pitch = pitch;
 	}
 }

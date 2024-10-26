@@ -10,7 +10,9 @@ package client.ui.gui.altmanager;
 import java.util.Objects;
 
 import com.google.gson.JsonObject;
+import lombok.Getter;
 
+@Getter
 public final class CrackedAlt extends Alt
 {
 	private final String name;
@@ -60,12 +62,6 @@ public final class CrackedAlt extends Alt
 	
 	@Override
 	public String exportAsTXT()
-	{
-		return name;
-	}
-	
-	@Override
-	public String getName()
 	{
 		return name;
 	}

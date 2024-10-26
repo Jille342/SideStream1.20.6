@@ -1,7 +1,12 @@
 package client.settings;
 
+import lombok.Getter;
+import lombok.Setter;
+
 import java.util.function.Supplier;
 
+@Setter
+@Getter
 public class KeyBindSetting extends Setting
 {
 	
@@ -21,15 +26,5 @@ public class KeyBindSetting extends Setting
 		this.name = name;
 		this.keyCode = keyCode;
 	}
-	
-	public int getKeyCode()
-	{
-		return keyCode;
-	}
-	
-	public void setKeyCode(int keyCode)
-	{
-		this.keyCode = keyCode;
-	}
-	
+
 }

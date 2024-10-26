@@ -1,12 +1,19 @@
 package client.utils;
 
+import lombok.Getter;
+import lombok.Setter;
+
 /**
  * Created by cool1 on 4/9/2017.
  */
 public class Translate
 {
 	
+	@Setter
+	@Getter
 	private float x;
+	@Setter
+	@Getter
 	private float y;
 	private long lastMS;
 	
@@ -44,25 +51,5 @@ public class Translate
 		x = AnimationUtil.calculateCompensation(targetX, x, delta, deltaX);
 		y = AnimationUtil.calculateCompensation(targetY, y, delta, deltaY);
 	}
-	
-	public float getX()
-	{
-		return x;
-	}
-	
-	public void setX(float x)
-	{
-		this.x = x;
-	}
-	
-	public float getY()
-	{
-		return y;
-	}
-	
-	public void setY(float y)
-	{
-		this.y = y;
-	}
-	
+
 }

@@ -17,10 +17,13 @@
 
 package com.thealtening.auth.service;
 
+import lombok.Getter;
+
 /**
  * @author Vladymyr
  * @since 10/08/2019
  */
+@Getter
 public enum AlteningServiceType
 {
 	
@@ -37,14 +40,5 @@ public enum AlteningServiceType
 		this.authServer = authServer;
 		this.sessionServer = sessionServer;
 	}
-	
-	public String getAuthServer()
-	{
-		return this.authServer;
-	}
-	
-	public String getSessionServer()
-	{
-		return sessionServer;
-	}
+
 }

@@ -5,6 +5,8 @@ import client.settings.KeyBindSetting;
 import client.settings.Setting;
 import client.event.Event;
 import client.utils.Translate;
+import lombok.Getter;
+import lombok.Setter;
 import net.minecraft.client.MinecraftClient;
 
 import java.util.ArrayList;
@@ -14,18 +16,25 @@ import java.util.List;
 public class Module
 {
 	
+	@Getter
 	private final Translate translate = new Translate(0.0F, 0.0F);
 	
 	protected static MinecraftClient mc = MinecraftClient.getInstance();
-	
+
+	@Setter
+	@Getter
 	public Category category;
 	public KeyBindSetting keyBindSetting;
+	@Setter
+	@Getter
 	public String name;
+	@Setter
 	public String displayName;
 	public boolean enable;
 	
 	public int priority;
 	
+	@Getter
 	public List<Setting> settings = new ArrayList<Setting>();
 	
 	public Module(String name, Category category)
@@ -63,32 +72,12 @@ public class Module
 		this(name, keyCode, category);
 		this.priority = priority;
 	}
-	
-	public Translate getTranslate()
-	{
-		return translate;
-	}
-	
+
 	public void addSetting(Setting... settings)
 	{
 		this.settings.addAll(Arrays.asList(settings));
 	}
-	
-	public List<Setting> getSettings()
-	{
-		return settings;
-	}
-	
-	public Category getCategory()
-	{
-		return category;
-	}
-	
-	public void setCategory(Category category)
-	{
-		this.category = category;
-	}
-	
+
 	public int getKeyCode()
 	{
 		return keyBindSetting.getKeyCode();
@@ -113,27 +102,12 @@ public class Module
 	{
 		return displayName == null ? name : displayName;
 	}
-	
-	public void setDisplayName(String name)
-	{
-		this.displayName = name;
-	}
-	
-	public String getName()
-	{
-		return name;
-	}
-	
+
 	public void setTag(String string)
 	{
 		setDisplayName(name + " " + "§7" + string);
 	}
-	
-	public void setName(String name)
-	{
-		this.name = name;
-	}
-	
+
 	public void toggle()
 	{
 		enable = !enable;

@@ -7,33 +7,21 @@
  */
 package client.ui.gui.altmanager;
 
+import lombok.Getter;
+
 import java.util.UUID;
 
+@Getter
 public final class MinecraftProfile
 {
 	private final UUID uuid;
 	private final String name;
-	private final String mcAccessToken;
+	private final String accessToken;
 	
 	public MinecraftProfile(UUID uuid, String name, String mcAccessToken)
 	{
 		this.uuid = uuid;
 		this.name = name;
-		this.mcAccessToken = mcAccessToken;
-	}
-	
-	public UUID getUUID()
-	{
-		return uuid;
-	}
-	
-	public String getName()
-	{
-		return name;
-	}
-	
-	public String getAccessToken()
-	{
-		return mcAccessToken;
+		this.accessToken = mcAccessToken;
 	}
 }

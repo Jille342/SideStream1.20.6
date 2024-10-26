@@ -1,13 +1,18 @@
 package client.utils.render.easing;
 
 import client.utils.render.AnimationUtil;
+import lombok.Getter;
+import lombok.Setter;
 import org.jetbrains.annotations.Nullable;
 
+@Getter
 public class Value extends EaseValue
 {
 	
 	public float value;
+	@Setter
 	public float lastValue;
+	@Setter
 	public float easeTo;
 	
 	public Value(double value, @Nullable AnimationUtil.Mode easeMode)
@@ -35,12 +40,7 @@ public class Value extends EaseValue
 			this.easeMode = AnimationUtil.Mode.NONE;
 		}
 	}
-	
-	public float getValue()
-	{
-		return value;
-	}
-	
+
 	public void setValue(float value)
 	{
 		this.value = value;
@@ -50,7 +50,7 @@ public class Value extends EaseValue
 	@Override
 	public void updateEase()
 	{
-		long time = timer.getCurrentMS() - timer.getLastMS();
+		long time = this.time.getCurrentMS() - this.time.getLastMS();
 		this.value = lastValue + AnimationUtil.easing(easeMode, time / duration,
 			easeTo - lastValue);
 		if(Math.abs(value - easeTo) < 1 / duration)
@@ -63,7 +63,7 @@ public class Value extends EaseValue
 	{
 		if(this.easeTo != value)
 		{
-			timer.reset();
+			time.reset();
 			this.lastValue = this.value;
 		}
 		this.easeTo = value;
@@ -76,61 +76,11 @@ public class Value extends EaseValue
 		ONE(1),
 		TEN(10);
 		
-		public Value value;
+		public final Value value;
 		
-		private num(float value)
+		num(float value)
 		{
 			this.value = new Value(value, null);
 		}
-	}
-	
-	public float getLastValue()
-	{
-		return lastValue;
-	}
-	
-	public void setLastValue(float lastValue)
-	{
-		this.lastValue = lastValue;
-	}
-	
-	public float getEaseTo()
-	{
-		return easeTo;
-	}
-	
-	public void setEaseTo(float easeTo)
-	{
-		this.easeTo = easeTo;
-	}
-	
-	public float getDuration()
-	{
-		return duration;
-	}
-	
-	public void setDuration(float duration)
-	{
-		this.duration = duration;
-	}
-	
-	public Time getTimeHelper()
-	{
-		return timer;
-	}
-	
-	public void setTimeHelper(Time timeHelper)
-	{
-		this.timer = timeHelper;
-	}
-	
-	public AnimationUtil.Mode getEaseMode()
-	{
-		return easeMode;
-	}
-	
-	public void setEaseMode(AnimationUtil.Mode easeMode)
-	{
-		this.easeMode = easeMode;
 	}
 }

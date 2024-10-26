@@ -1,29 +1,19 @@
 package client.alts;
 
+import lombok.Getter;
+import lombok.Setter;
+
 import java.util.ArrayList;
 import java.util.List;
 
+@Getter
 public class AltManager
 {
-	public List<Alt> contents = new ArrayList<>();
+	public List<Alt> alts = new ArrayList<>();
 	
+	@Setter
 	private Alt lastAlt;
-	
-	public List<Alt> getAlts()
-	{
-		return this.contents;
-	}
-	
-	public Alt getLastAlt()
-	{
-		return this.lastAlt;
-	}
-	
-	public void setLastAlt(Alt alt)
-	{
-		this.lastAlt = alt;
-	}
-	
+
 	public void login(Alt alt)
 	{
 		
@@ -33,7 +23,7 @@ public class AltManager
 	
 	public void remove(int index)
 	{
-		contents.remove(index);
+		alts.remove(index);
 		
 	}
 }

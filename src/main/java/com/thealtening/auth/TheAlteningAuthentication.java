@@ -19,6 +19,7 @@ package com.thealtening.auth;
 
 import com.thealtening.auth.service.AlteningServiceType;
 import com.thealtening.auth.service.ServiceSwitcher;
+import lombok.Getter;
 
 /**
  * @author Vladymyr
@@ -30,6 +31,7 @@ public final class TheAlteningAuthentication
 	private final ServiceSwitcher serviceSwitcher = new ServiceSwitcher();
 	private final SSLController sslController = new SSLController();
 	private static TheAlteningAuthentication instance;
+	@Getter
 	private AlteningServiceType service;
 	
 	private TheAlteningAuthentication(AlteningServiceType service)
@@ -57,12 +59,7 @@ public final class TheAlteningAuthentication
 		
 		this.service = this.serviceSwitcher.switchToService(service);
 	}
-	
-	public AlteningServiceType getService()
-	{
-		return service;
-	}
-	
+
 	public static TheAlteningAuthentication mojang()
 	{
 		return withService(AlteningServiceType.MOJANG);

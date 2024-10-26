@@ -1,7 +1,10 @@
 package client.settings;
 
+import lombok.Getter;
+
 import java.util.function.Supplier;
 
+@Getter
 public class NumberSetting extends Setting
 {
 	
@@ -28,12 +31,7 @@ public class NumberSetting extends Setting
 		this.maximum = maximum;
 		this.increment = increment;
 	}
-	
-	public double getValue()
-	{
-		return value;
-	}
-	
+
 	public double getFlooredValue()
 	{
 		return(Math.floor(value * 100) / 100);
@@ -61,35 +59,5 @@ public class NumberSetting extends Setting
 	public void increment(boolean positive)
 	{
 		setValue(getValue() + (positive ? 1 : -1) * increment);
-	}
-	
-	public double getMinimum()
-	{
-		return minimum;
-	}
-	
-	public void setMinimum(double minimum)
-	{
-		this.minimum = minimum;
-	}
-	
-	public double getMaximum()
-	{
-		return maximum;
-	}
-	
-	public void setMaximum(double maximum)
-	{
-		this.maximum = maximum;
-	}
-	
-	public double getIncrement()
-	{
-		return increment;
-	}
-	
-	public void setIncrement(double increment)
-	{
-		this.increment = increment;
 	}
 }

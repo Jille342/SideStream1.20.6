@@ -10,6 +10,7 @@ package client.utils;
 import java.util.Collections;
 import java.util.List;
 
+import lombok.Getter;
 import org.joml.Matrix4f;
 import org.lwjgl.opengl.GL11;
 
@@ -46,6 +47,7 @@ public abstract class ListWidget extends AbstractParentElement
 	protected final int itemHeight;
 	protected boolean centerListVertically = true;
 	protected int yDrag = -2;
+	@Getter
 	protected double scrollAmount;
 	protected boolean visible = true;
 	protected boolean renderSelection = true;
@@ -450,11 +452,6 @@ public abstract class ListWidget extends AbstractParentElement
 		bufferBuilder.vertex(left, top, 0.0D).texture(0.0F, top / 32.0F)
 			.color(64, 64, 64, topAlpha).next();
 		tessellator.draw();
-	}
-	
-	public double getScrollAmount()
-	{
-		return scrollAmount;
 	}
 	
 	protected void drawSelectionOutline(MatrixStack matrixStack, int x, int y)

@@ -1,7 +1,11 @@
 package client.event.listeners;
 
 import client.event.Event;
+import lombok.Getter;
+import lombok.Setter;
 
+@Setter
+@Getter
 public class EventStep extends Event<EventStep>
 {
 	
@@ -13,24 +17,5 @@ public class EventStep extends Event<EventStep>
 		this.height = height;
 		this.canStep = canStep;
 	}
-	
-	public double getHeight()
-	{
-		return height;
-	}
-	
-	public void setHeight(double height)
-	{
-		this.height = height;
-	}
-	
-	public boolean isCanStep()
-	{
-		return canStep;
-	}
-	
-	public void setCanStep(boolean canStep)
-	{
-		this.canStep = canStep;
-	}
+
 }

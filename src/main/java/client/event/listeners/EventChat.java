@@ -1,7 +1,11 @@
 package client.event.listeners;
 
 import client.event.Event;
+import lombok.Getter;
+import lombok.Setter;
 
+@Setter
+@Getter
 public class EventChat extends Event<EventChat>
 {
 	
@@ -11,14 +15,5 @@ public class EventChat extends Event<EventChat>
 	{
 		this.message = message;
 	}
-	
-	public String getMessage()
-	{
-		return message;
-	}
-	
-	public void setMessage(String message)
-	{
-		this.message = message;
-	}
+
 }
