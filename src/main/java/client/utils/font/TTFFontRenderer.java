@@ -29,7 +29,7 @@ public class TTFFontRenderer
 	}
 	
 	private final FontRenderer fontRenderer;
-
+	
 	@Getter
 	final float size;
 	

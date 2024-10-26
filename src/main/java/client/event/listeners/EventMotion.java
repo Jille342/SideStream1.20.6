@@ -46,17 +46,17 @@ public class EventMotion extends Event<EventMotion>
 		this.lastPitch = pitch;
 		this.lastOnGround = onGround;
 	}
-
+	
 	public void setPosition(double x, double y, double z)
 	{
 		this.x = x;
 		this.y = y;
 		this.z = z;
 	}
-	public float[] getServerSideAngles(){
-		return new float[]{
-				yaw,pitch
-		};
+	
+	public float[] getServerSideAngles()
+	{
+		return new float[]{yaw, pitch};
 	}
 	
 	public void setPosition(BlockPos pos)

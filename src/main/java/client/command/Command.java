@@ -11,16 +11,16 @@ import java.util.List;
 
 public abstract class Command
 {
-
+	
 	protected MinecraftClient mc = Client.mc;
-
+	
 	@Setter
 	@Getter
 	public String name, description, syntax;
 	@Setter
 	@Getter
 	public List<String> aliases = new ArrayList<String>();
-
+	
 	public Command(String name, String description, String syntax,
 		String... aliases)
 	{
@@ -29,6 +29,6 @@ public abstract class Command
 		this.syntax = syntax;
 		this.aliases = Arrays.asList(aliases);
 	}
-
+	
 	public abstract boolean onCommand(String[] args, String command);
 }

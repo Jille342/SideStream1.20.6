@@ -129,15 +129,16 @@ public class CivBreak extends Module
 					
 					if(dist >= this.range.getValue())
 					{
-
+						
 						return;
 					}
 					mc.player.networkHandler
 						.sendPacket(new HandSwingC2SPacket(Hand.MAIN_HAND));
-					mc.interactionManager.updateBlockBreakingProgress(this.blockPos,facing);
-						this.hitResult = null;
-						this.blockPos = null;
-						this.attempt = 0;
+					mc.interactionManager
+						.updateBlockBreakingProgress(this.blockPos, facing);
+					this.hitResult = null;
+					this.blockPos = null;
+					this.attempt = 0;
 					break;
 				}
 			}

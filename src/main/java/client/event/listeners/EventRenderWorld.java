@@ -18,5 +18,5 @@ public class EventRenderWorld extends Event<EventRenderWorld>
 		this.partialTicks = partialTicks;
 		this.stack = stack;
 	}
-
+	
 }

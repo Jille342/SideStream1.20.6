@@ -15,5 +15,5 @@ public class EventChat extends Event<EventChat>
 	{
 		this.message = message;
 	}
-
+	
 }

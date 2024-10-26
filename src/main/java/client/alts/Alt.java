@@ -11,26 +11,26 @@ public class Alt
 {
 	@Setter
 	private String mask;
-
+	
 	private final String username;
-
+	
 	private final String password;
-
+	
 	public Alt(String username, String password)
 	{
 		this(username, password, "");
 	}
-
+	
 	public Alt(String username, String password, String mask)
 	{
 		this.username = username;
 		this.password = password;
 		this.mask = mask;
 	}
-
+	
 	public void login()
 	{
-
+		
 		if(getPassword() != null)
 		{
 			try
@@ -56,5 +56,5 @@ public class Alt
 			LoginManager.changeCrackedName(getUsername());
 		}
 	}
-
+	
 }

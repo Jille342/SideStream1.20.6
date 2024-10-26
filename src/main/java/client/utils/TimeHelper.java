@@ -14,7 +14,7 @@ public class TimeHelper
 	{
 		return System.currentTimeMillis();
 	}
-
+	
 	public boolean hasReached(float f)
 	{
 		return (float)(this.getCurrentMS() - this.lastMS) >= f;
@@ -34,5 +34,5 @@ public class TimeHelper
 	{
 		this.lastMS = this.getCurrentMS();
 	}
-
+	
 }

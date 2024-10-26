@@ -82,7 +82,7 @@ public class HUD2
 			name = name + " " + String.format("[%s] [%dFPS]",
 				new Object[]{time.substring(0, 5), mc.getCurrentFps()});
 		}
-
+		
 		if(namebackground.isEnabled())
 		{
 			RenderingUtils.renderRect(context.getMatrices(), nameX, nameY,
@@ -92,8 +92,7 @@ public class HUD2
 		}
 		MatrixStack matrixStack = context.getMatrices();
 		matrixStack.push();
-		Fonts.titleFont.drawString(matrixStack, name, nameX, nameY,
-				color);
+		Fonts.titleFont.drawString(matrixStack, name, nameX, nameY, color);
 		matrixStack.pop();
 		if(HUD.info.isEnabled())
 		{
@@ -170,7 +169,7 @@ public class HUD2
 				Module nextModule = null;
 				if(sortedList.size() > nextIndex)
 					nextModule = getNextEnabledModule(sortedList, nextIndex);
-
+				
 				if((Boolean)HUD.OUTLINE.enabled)
 				{
 					RenderingUtils.drawRect(context, translateX - 2.6D,
@@ -198,8 +197,8 @@ public class HUD2
 						width, (int)(translateY + listOffset - 1.0D),
 						Colors.getColor(0, 0, 0, 50));
 				matrixStack.push();
-				Fonts.font.drawString(matrixStack,moduleLabel, (float)translateX,
-						(float)translateY, color);
+				Fonts.font.drawString(matrixStack, moduleLabel,
+					(float)translateX, (float)translateY, color);
 				matrixStack.pop();
 				if(module.isEnabled())
 				{

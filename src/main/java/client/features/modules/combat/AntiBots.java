@@ -23,7 +23,8 @@ public final class AntiBots extends Module
 	public void init()
 	{
 		super.init();
-		mode = new ModeSetting("Mode ", "Shotbow", new String[]{"Hypixel", "Shotbow", "ShotbowTeams"});
+		mode = new ModeSetting("Mode ", "Shotbow",
+			new String[]{"Hypixel", "Shotbow", "ShotbowTeams"});
 		addSetting(mode);
 	}
 	
@@ -86,14 +87,15 @@ public final class AntiBots extends Module
 	{
 		if(!(ModuleManager.getModulebyClass(AntiBots.class).isEnabled()))
 			return false;
-        return switch (mode.getMode()) {
-            case "Shotbow" -> (e.getHealth() == 20
-                    || Objects.requireNonNull(mc.getNetworkHandler())
-                    .getPlayerListEntry(e.getUuid()) == null);
-            case "Hypixel" -> isHypixelBot(e);
-            case "ShotbowTeams" -> e.getTeamColorValue() == 0;
-            default -> false;
-        };
-    }
+		return switch(mode.getMode())
+		{
+			case "Shotbow" -> (e.getHealth() == 20
+				|| Objects.requireNonNull(mc.getNetworkHandler())
+					.getPlayerListEntry(e.getUuid()) == null);
+			case "Hypixel" -> isHypixelBot(e);
+			case "ShotbowTeams" -> e.getTeamColorValue() == 0;
+			default -> false;
+		};
+	}
 	
 }

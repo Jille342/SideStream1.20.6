@@ -13,7 +13,7 @@ public class AltManager
 	
 	@Setter
 	private Alt lastAlt;
-
+	
 	public void login(Alt alt)
 	{
 		

@@ -122,4 +122,3 @@ package client.config.configs;
 			/*    */ }
 		/*    */ }
 	/*    */ }
-

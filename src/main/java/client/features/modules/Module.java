@@ -20,7 +20,7 @@ public class Module
 	private final Translate translate = new Translate(0.0F, 0.0F);
 	
 	protected static MinecraftClient mc = MinecraftClient.getInstance();
-
+	
 	@Setter
 	@Getter
 	public Category category;
@@ -72,12 +72,12 @@ public class Module
 		this(name, keyCode, category);
 		this.priority = priority;
 	}
-
+	
 	public void addSetting(Setting... settings)
 	{
 		this.settings.addAll(Arrays.asList(settings));
 	}
-
+	
 	public int getKeyCode()
 	{
 		return keyBindSetting.getKeyCode();
@@ -102,12 +102,12 @@ public class Module
 	{
 		return displayName == null ? name : displayName;
 	}
-
+	
 	public void setTag(String string)
 	{
 		setDisplayName(name + " " + "§7" + string);
 	}
-
+	
 	public void toggle()
 	{
 		enable = !enable;

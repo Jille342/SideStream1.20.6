@@ -31,7 +31,7 @@ public class NumberSetting extends Setting
 		this.maximum = maximum;
 		this.increment = increment;
 	}
-
+	
 	public double getFlooredValue()
 	{
 		return(Math.floor(value * 100) / 100);

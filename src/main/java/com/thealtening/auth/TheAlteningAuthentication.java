@@ -59,7 +59,7 @@ public final class TheAlteningAuthentication
 		
 		this.service = this.serviceSwitcher.switchToService(service);
 	}
-
+	
 	public static TheAlteningAuthentication mojang()
 	{
 		return withService(AlteningServiceType.MOJANG);

@@ -40,5 +40,5 @@ public enum AlteningServiceType
 		this.authServer = authServer;
 		this.sessionServer = sessionServer;
 	}
-
+	
 }

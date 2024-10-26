@@ -44,8 +44,7 @@ public class NameTags extends Module
 	{
 		super("NameTags", 0, Category.RENDER);
 	}
-
-
+	
 	public void onEvent(Event<?> event)
 	{
 		if(event instanceof EventRender3D)
@@ -155,9 +154,9 @@ public class NameTags extends Module
 		float width = this.nameDrawer.getStringWidth(text) + 4;
 		width = Math.max(width, 60);
 		Color color = null;
-			color = (entity.isSneaking() || entity.isInvisible())
-					? new Color(100, 0, 0, 100) : new Color(0, 0, 5, 100);
-
+		color = (entity.isSneaking() || entity.isInvisible())
+			? new Color(100, 0, 0, 100) : new Color(0, 0, 5, 100);
+		
 		me.x150.renderer.render.Renderer2d.renderQuad(stack1, color,
 			actual.x - width / 2d, actual.y, actual.x + width / 2d,
 			actual.y + labelHeight);

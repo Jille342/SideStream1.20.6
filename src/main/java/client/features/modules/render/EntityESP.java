@@ -32,11 +32,12 @@ public class EntityESP extends Module
 	public void init()
 	{
 		super.init();
-		colorMode = new ModeSetting("Color Mode", "HurtTime", new String[]{"HurtTime", "Team"});
-
+		colorMode = new ModeSetting("Color Mode", "HurtTime",
+			new String[]{"HurtTime", "Team"});
+		
 		mode = new ModeSetting("Mode ", "BoundingBox",
 			new String[]{"BoundingBox"});
-		addSetting(mode,colorMode);
+		addSetting(mode, colorMode);
 	}
 	
 	@Override
@@ -60,13 +61,19 @@ public class EntityESP extends Module
 					if((entity != null) && entity != mc.player)
 					{
 						int color = 0;
-
-						if(colorMode.getMode().equalsIgnoreCase("Team")) {
-							color = (	ServerHelper.isTeammate((PlayerEntity)entity))
+						
+						if(colorMode.getMode().equalsIgnoreCase("Team"))
+						{
+							color =
+								(ServerHelper.isTeammate((PlayerEntity)entity))
 									? Colors.getColor(60, 255, 60)
 									: Colors.getColor(255, 60, 60);
-						} else if(colorMode.getMode().equalsIgnoreCase("HurtTime")) {
-							color = (entity.hurtTime==0) ? new Color(0,200,0,100).getRGB() :new Color(239, 235, 41, 255).getRGB();
+						}else if(colorMode.getMode()
+							.equalsIgnoreCase("HurtTime"))
+						{
+							color = (entity.hurtTime == 0)
+								? new Color(0, 200, 0, 100).getRGB()
+								: new Color(239, 235, 41, 255).getRGB();
 						}
 						
 						switch(mode.getMode())

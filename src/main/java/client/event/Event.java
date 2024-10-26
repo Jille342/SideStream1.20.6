@@ -16,7 +16,7 @@ public class Event<T>
 	{
 		this.cancelled = true;
 	}
-
+	
 	public boolean isPre()
 	{
 		if(type == null)

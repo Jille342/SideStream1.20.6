@@ -51,5 +51,5 @@ public class Translate
 		x = AnimationUtil.calculateCompensation(targetX, x, delta, deltaX);
 		y = AnimationUtil.calculateCompensation(targetY, y, delta, deltaY);
 	}
-
+	
 }

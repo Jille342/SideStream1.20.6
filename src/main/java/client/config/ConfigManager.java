@@ -1,7 +1,7 @@
 
 package client.config;
 
- import client.Client;
+import client.Client;
 import client.config.configs.AltConfig;
 /*    */
 import client.config.configs.ModuleConfig;
@@ -20,8 +20,8 @@ import java.util.ArrayList;
 import static client.config.configs.SettingsConfig.getSettingbyName;
 
 public class ConfigManager
- {
-	 public List<Config> contents;
+{
+	public List<Config> contents;
 	private List<File> customConfigs = new ArrayList<>();
 	
 	public static final File CONFIGS_DIR =
@@ -40,59 +40,59 @@ public class ConfigManager
 		{
 			config.load();
 		}
-	 Runtime.getRuntime().addShutdownHook(new Thread(() -> {
-		 for(Config config : getConfigs())
+		Runtime.getRuntime().addShutdownHook(new Thread(() -> {
+			for(Config config : getConfigs())
 			{
-			 config.save();
-			 }
-		 }));
+				config.save();
+			}
+		}));
 	}
-		
-
+	
 	public Config getFile(String name)
 	{
-	if(this.contents == null)
+		if(this.contents == null)
 		{
-		 return null;
-		 }
-		 Iterator<Config> var3 = this.contents.iterator();
- while(var3.hasNext())
-		{
-		Config file = var3.next();
-		 if(file.getName().equalsIgnoreCase(name))
-			{
-			return file;
-		 }
+			return null;
 		}
-	return null;
-	 }
-		
-	 public Config getFile(Class<? extends Config> theFile)
-	{
-		 if(this.contents == null)
+		Iterator<Config> var3 = this.contents.iterator();
+		while(var3.hasNext())
 		{
-		 return null;
-		}
-		 for(Config file : this.contents)
-		{
-		 if(file.getClass() == theFile)
+			Config file = var3.next();
+			if(file.getName().equalsIgnoreCase(name))
 			{
 				return file;
-				 }
-	 }
-	return null;
+			}
+		}
+		return null;
 	}
-		
- public void add(Class<? extends Config> content)
+	
+	public Config getFile(Class<? extends Config> theFile)
 	{
-	 try
+		if(this.contents == null)
 		{
-		 this.contents.add(content.newInstance());
-		 } catch (InstantiationException | IllegalAccessException e) {
-         throw new RuntimeException(e);
-     }
-    }
-		
+			return null;
+		}
+		for(Config file : this.contents)
+		{
+			if(file.getClass() == theFile)
+			{
+				return file;
+			}
+		}
+		return null;
+	}
+	
+	public void add(Class<? extends Config> content)
+	{
+		try
+		{
+			this.contents.add(content.newInstance());
+		}catch(InstantiationException | IllegalAccessException e)
+		{
+			throw new RuntimeException(e);
+		}
+	}
+	
 	public List<Config> getConfigs()
 	{
 		/* 75 */ return this.contents;
@@ -195,10 +195,11 @@ public class ConfigManager
 			try
 			{
 				file.createNewFile();
-			} catch (IOException e) {
-                throw new RuntimeException(e);
-            }
-        }
+			}catch(IOException e)
+			{
+				throw new RuntimeException(e);
+			}
+		}
 		return file;
 	}
 	
@@ -230,16 +231,14 @@ public class ConfigManager
 							{
 								((NumberSetting)setting)
 									.setValue(Double.parseDouble(arguments[2]));
-							} else
-							if(setting instanceof BooleanSetting)
+							}else if(setting instanceof BooleanSetting)
 							{
 								((BooleanSetting)setting).setEnabled(
 									Boolean.parseBoolean(arguments[2]));
-							} else
-							if(setting instanceof ModeSetting)
+							}else if(setting instanceof ModeSetting)
 							{
 								((ModeSetting)setting).setModes(arguments[2]);
-							} else
+							}else
 							
 							if(setting instanceof KeyBindSetting)
 							{
@@ -251,10 +250,11 @@ public class ConfigManager
 					}
 				}
 			}
-		} catch (IOException e) {
-            throw new RuntimeException(e);
-        }
-    }
+		}catch(IOException e)
+		{
+			throw new RuntimeException(e);
+		}
+	}
 	
 	public void save(File file)
 	{
@@ -297,9 +297,10 @@ public class ConfigManager
 				}
 			}
 			var4.close();
-		} catch (IOException e) {
-            throw new RuntimeException(e);
-        }
-    }
+		}catch(IOException e)
+		{
+			throw new RuntimeException(e);
+		}
+	}
 	
 }

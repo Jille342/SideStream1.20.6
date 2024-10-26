@@ -51,7 +51,7 @@ public class Client
 	
 	public static void shutdown()
 	{}
-
+	
 	public static void makeClientDirectory()
 	{
 		if(!FOLDER.exists())

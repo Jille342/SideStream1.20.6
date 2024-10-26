@@ -17,5 +17,5 @@ public class EventKey extends Event<EventKey>
 		this.code = code;
 		this.action = action;
 	}
-
+	
 }

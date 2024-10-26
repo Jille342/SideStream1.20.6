@@ -74,7 +74,8 @@ public class TPBreaker extends Module
 					zPos = tpPos.getZ();
 					// ChatUtils.printChat(block.getName().getString());
 					placeBlock(tpPos);
-					rotations = getBlockRotations(tpPos.getX(), tpPos.getY(), tpPos.getZ());
+					rotations = getBlockRotations(tpPos.getX(), tpPos.getY(),
+						tpPos.getZ());
 				}else
 				{
 					setTag(mode.getMode());
@@ -82,13 +83,15 @@ public class TPBreaker extends Module
 				
 			}
 		}
-		 if (event instanceof EventMotion) {
-			 if (rotations != null) {
-				 EventMotion emm = (EventMotion) event;
-				 emm.setYaw(rotations[0]);
-				 emm.setPitch(rotations[1]);
-			 }
-		 }
+		if(event instanceof EventMotion)
+		{
+			if(rotations != null)
+			{
+				EventMotion emm = (EventMotion)event;
+				emm.setYaw(rotations[0]);
+				emm.setPitch(rotations[1]);
+			}
+		}
 	}
 	
 	// private boolean blockChecks(Block block) {
@@ -138,19 +141,25 @@ public class TPBreaker extends Module
 	private void placeBlock(BlockPos pos)
 	{
 		
-
-		  for(Direction side : Direction.values())
-		 {
-		  Direction side2 = side.getOpposite();
-		  BlockHitResult blockHitResult=
-
-		  new BlockHitResult(pos.toCenterPos(), side2, pos, false).withBlockPos(pos);
-             assert mc.player != null;
-             Objects.requireNonNull(mc.getNetworkHandler()).sendPacket(new BlockBreakingProgressS2CPacket(mc.player.getId(),pos,100));
-		  Objects.requireNonNull(mc.getNetworkHandler()).sendPacket(new  HandSwingC2SPacket(Hand.MAIN_HAND));
-		  Objects.requireNonNull(mc.player).interactAt(mc.player,pos.toCenterPos(),Hand.MAIN_HAND);
-		 Objects.requireNonNull(mc.player).networkHandler.sendPacket(new PlayerInteractBlockC2SPacket(Hand.MAIN_HAND, blockHitResult,0));
-		 }
+		for(Direction side : Direction.values())
+		{
+			Direction side2 = side.getOpposite();
+			BlockHitResult blockHitResult =
+				
+				new BlockHitResult(pos.toCenterPos(), side2, pos, false)
+					.withBlockPos(pos);
+			assert mc.player != null;
+			Objects.requireNonNull(mc.getNetworkHandler()).sendPacket(
+				new BlockBreakingProgressS2CPacket(mc.player.getId(), pos,
+					100));
+			Objects.requireNonNull(mc.getNetworkHandler())
+				.sendPacket(new HandSwingC2SPacket(Hand.MAIN_HAND));
+			Objects.requireNonNull(mc.player).interactAt(mc.player,
+				pos.toCenterPos(), Hand.MAIN_HAND);
+			Objects.requireNonNull(mc.player).networkHandler
+				.sendPacket(new PlayerInteractBlockC2SPacket(Hand.MAIN_HAND,
+					blockHitResult, 0));
+		}
 	}
 	
 	protected void sendSequencedPacket(SequencedPacketCreator packetCreator)

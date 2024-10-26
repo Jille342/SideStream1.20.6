@@ -30,7 +30,7 @@ public final class MojangAlt extends Alt
 	 */
 	@Getter
 	private final String password;
-
+	
 	@Getter
 	private String name;
 	
@@ -112,7 +112,7 @@ public final class MojangAlt extends Alt
 	{
 		return name.isEmpty() ? email : name;
 	}
-
+	
 	@Override
 	public int hashCode()
 	{
@@ -127,7 +127,7 @@ public final class MojangAlt extends Alt
 		
 		if(!(obj instanceof MojangAlt other))
 			return false;
-
+		
 		return Objects.equals(email, other.email);
 	}
 }

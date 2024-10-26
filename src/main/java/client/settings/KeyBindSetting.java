@@ -26,5 +26,5 @@ public class KeyBindSetting extends Setting
 		this.name = name;
 		this.keyCode = keyCode;
 	}
-
+	
 }

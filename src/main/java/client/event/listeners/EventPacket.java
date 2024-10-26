@@ -16,5 +16,5 @@ public class EventPacket extends Event<EventPacket>
 	{
 		this.packet = packet;
 	}
-
+	
 }

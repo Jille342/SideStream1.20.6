@@ -108,8 +108,8 @@ public class ModuleManager implements MCUtil
 	
 	public static void toggle(Class<? extends Module> c)
 	{
-		modules.stream().filter(m -> m.getClass() == c)
-			.findFirst().ifPresent(Module::toggle);
+		modules.stream().filter(m -> m.getClass() == c).findFirst()
+			.ifPresent(Module::toggle);
 	}
 	
 	public CopyOnWriteArrayList<Module> getModules()
@@ -127,5 +127,5 @@ public class ModuleManager implements MCUtil
 			return module.settings.getFirst();
 		}
 	}
-
+	
 }

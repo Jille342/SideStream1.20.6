@@ -22,5 +22,5 @@ public class EventRender3D extends Event
 		this.partialTicks = partialTicks;
 		this.frustum = frustum;
 	}
-
+	
 }

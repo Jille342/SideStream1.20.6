@@ -63,12 +63,14 @@ public class AutoClicker extends Module
 	
 	private void doLeftClick()
 	{
-		if (this.currentCPS == 0) {
+		if(this.currentCPS == 0)
+		{
 			this.currentCPS = 1;
 		}
-		if(timer.hasReached(1000/currentCPS))
+		if(timer.hasReached(1000 / currentCPS))
 		{
-			currentCPS = RandomUtils.nextDouble(this.minCPS.getValue(), this.maxCPS.getValue());
+			currentCPS = RandomUtils.nextDouble(this.minCPS.getValue(),
+				this.maxCPS.getValue());
 			timer.reset();
 			legitAttack();
 		}
@@ -76,8 +78,9 @@ public class AutoClicker extends Module
 	
 	public void legitAttack()
 	{
-
-		if(mc.crosshairTarget == null || Objects.requireNonNull(mc.player).isRiding()
+		
+		if(mc.crosshairTarget == null
+			|| Objects.requireNonNull(mc.player).isRiding()
 			|| mc.crosshairTarget.getType() == null)
 		{
 			return;
@@ -89,7 +92,7 @@ public class AutoClicker extends Module
 		}
 		mc.player.swingHand(Hand.MAIN_HAND);
 	}
-
+	
 	public boolean shouldClick()
 	{
 		if(!mc.isWindowFocused())
@@ -102,7 +105,7 @@ public class AutoClicker extends Module
 			return false;
 		}
 		
-		if(mc.crosshairTarget != null )
+		if(mc.crosshairTarget != null)
 		{
 			if(mc.crosshairTarget
 				.getType() == net.minecraft.util.hit.HitResult.Type.BLOCK)

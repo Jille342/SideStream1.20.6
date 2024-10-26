@@ -7,7 +7,6 @@ import client.settings.*;
 
 import java.io.BufferedReader;
 import java.io.BufferedWriter;
-import java.io.FileNotFoundException;
 import java.io.FileReader;
 import java.io.FileWriter;
 import java.io.IOException;
@@ -53,17 +52,14 @@ public class SettingsConfig extends Config
 							{
 								((NumberSetting)setting)
 									.setValue(Double.parseDouble(arguments[2]));
-							} else
-							if(setting instanceof BooleanSetting)
+							}else if(setting instanceof BooleanSetting)
 							{
 								((BooleanSetting)setting).setEnabled(
 									Boolean.parseBoolean(arguments[2]));
-							} else
-							if(setting instanceof ModeSetting)
+							}else if(setting instanceof ModeSetting)
 							{
 								((ModeSetting)setting).setModes(arguments[2]);
-							}else
-							if(setting instanceof KeyBindSetting)
+							}else if(setting instanceof KeyBindSetting)
 							{
 								((KeyBindSetting)setting)
 									.setKeyCode(Integer.parseInt(arguments[2]));
@@ -73,10 +69,11 @@ public class SettingsConfig extends Config
 					}
 				}
 			}
-		} catch (IOException e) {
-            throw new RuntimeException(e);
-        }
-    }
+		}catch(IOException e)
+		{
+			throw new RuntimeException(e);
+		}
+	}
 	
 	public void save()
 	{
@@ -119,8 +116,9 @@ public class SettingsConfig extends Config
 				}
 			}
 			var4.close();
-		} catch (IOException e) {
-            throw new RuntimeException(e);
-        }
-    }
+		}catch(IOException e)
+		{
+			throw new RuntimeException(e);
+		}
+	}
 }

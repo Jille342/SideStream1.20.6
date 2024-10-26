@@ -17,5 +17,5 @@ public class EventStep extends Event<EventStep>
 		this.height = height;
 		this.canStep = canStep;
 	}
-
+	
 }

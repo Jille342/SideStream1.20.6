@@ -1,7 +1,6 @@
 package client.command.impl;
 
 import client.command.Command;
-import client.Client;
 import client.command.CommandManager;
 
 public class Prefix extends Command
