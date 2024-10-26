@@ -8,15 +8,15 @@
     "Jill"
   ],
   "contact": {
-    "homepage": "https://www.wurstclient.net/?utm_source=Wurst+Client&utm_medium=ModMenu&utm_content=Website",
-    "issues": "https://www.wurstclient.net/wurst7issues/",
-    "sources": "https://www.wurstclient.net/wurst7sources/"
+    "homepage": "https://discord.gg/Y3yMUSWc5s",
+    "sources": "https://github.com/Jille342/SideStream1.20.6",
+    "discord": "ji12444"
   },
   "license": "GPL-3.0-or-later",
   "environment": "client",
   "entrypoints": {},
   "mixins": [
-    "sidestreamv2.mixins.json"
+    "sidestream.mixins.json"
   ],
   "depends": {
     "fabricloader": ">=0.15.9",
