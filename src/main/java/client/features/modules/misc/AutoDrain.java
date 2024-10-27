@@ -15,6 +15,7 @@ import net.minecraft.item.ItemStack;
 
 import net.minecraft.item.Items;
 import net.minecraft.scoreboard.*;
+import net.minecraft.util.Hand;
 
 import java.util.ArrayList;
 import java.util.Comparator;
@@ -64,6 +65,7 @@ public class AutoDrain extends Module
 						scoreboardObjective);
 					int targetHealth = Objects.requireNonNull(score).getScore();
 					int bestItemIndex = -1;
+					int oldSlot =-1;
 					if(targetHealth <= 5 && !did)
 					{
 						current = Objects.requireNonNull(mc.player)
@@ -79,6 +81,7 @@ public class AutoDrain extends Module
 							if(itemStack.getItem() == Items.RED_DYE && itemStack
 								.getName().toString().contains("READY"))
 							{
+								oldSlot = mc.player.getInventory().selectedSlot;
 								bestItemIndex = b1;
 							}
 						}
@@ -86,9 +89,8 @@ public class AutoDrain extends Module
 						{
 							mc.player.getInventory().selectedSlot =
 								bestItemIndex;
-							KeyBinding.setKeyPressed(
-								mc.options.useKey.getDefaultKey(), true);
-							did = true;
+							mc.interactionManager.interactEntity(mc.player, target, Hand.MAIN_HAND);
+							mc.player.getInventory().selectedSlot = oldSlot;
 						}
 						
 					}else
