@@ -6,6 +6,7 @@ import client.features.modules.misc.*;
 import client.features.modules.movement.DebugSpeed;
 import client.features.modules.movement.InventoryMove;
 import client.features.modules.movement.Sprint;
+import client.features.modules.player.InvManager;
 import client.features.modules.player.NoBreakDelay;
 import client.features.modules.render.*;
 import client.settings.*;
@@ -45,7 +46,7 @@ public class ModuleManager implements MCUtil
 		modules.add(new EntityESP());
 		modules.add(new NoHurtcam());
 		modules.add(new AntiVelocity());
-		
+		modules.add(new InvManager());
 		modules.add(new Debug());
 		modules.add(new InventoryMove());
 		modules.add(new NoFov());

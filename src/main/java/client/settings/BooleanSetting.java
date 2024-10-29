@@ -31,6 +31,9 @@ public class BooleanSetting extends Setting
 	{
 		this.enabled = enable;
 	}
+	public boolean getValue(){
+		return enabled;
+	}
 	
 	public void toggle()
 	{
