@@ -30,6 +30,7 @@ public class LegitAura extends Module
 {
    float[] fixed;
    float[] angles = null;
+	private double currentCPS;
 	BooleanSetting targetMonstersSetting;
 	BooleanSetting targetAnimalsSetting;
 	BooleanSetting ignoreTeamsSetting;
@@ -115,10 +116,14 @@ public class LegitAura extends Module
 						
 						if(target != null)
 						{
-							if(attackTimer.hasReached(calculateTime(
-								minCPS.getValue(), maxCPS.getValue()))
-								&& target.isAlive())
+							if(this.currentCPS == 0)
 							{
+								this.currentCPS = 1;
+							}
+							if(attackTimer.hasReached(1000/currentCPS))
+							{
+								currentCPS = RandomUtils.nextDouble(this.minCPS.getValue(),
+										this.maxCPS.getValue());
 								attack(target);
 								attackTimer.reset();
 							}
@@ -179,7 +184,7 @@ public class LegitAura extends Module
 				} else
 				if(rotationmode.getMode().equalsIgnoreCase("Legit"))
 				{
-					angles = RotationUtils.calcRotation(target , (float) legitSwitchSpeed.getValue() *0.1f);
+					angles = RotationUtils.calcRotation(target , (float) legitSwitchSpeed.getValue() *0.1f * RandomUtils.nextFloat(0.9f,1.1f),(float) rangeSetting.getValue());
 				}
 				if(angles != null){
 					fixed = RotationUtils.fixedSensitivity(angles, mc.options
@@ -198,9 +203,15 @@ public class LegitAura extends Module
 	{
 if( fixed != null) {
 	if (!RaytraceUtils.rayCastByRotation(fixed[0], fixed[1], (float) rangeSetting.getValue()).isEmpty()) {
+
+		for (EntityHitResult position : RaytraceUtils.rayCastByRotation(fixed[0], fixed[1], (float) rangeSetting.getValue())) {
+			if (position.getEntity() != mc.player && position.getEntity() == target) {
 				Objects.requireNonNull(mc.getNetworkHandler())
 						.sendPacket(PlayerInteractEntityC2SPacket.attack(target,
 								Objects.requireNonNull(mc.player).isSneaking()));
+			}
+			}
+
 	}
 }
 		Objects.requireNonNull(mc.player).swingHand(Hand.MAIN_HAND);

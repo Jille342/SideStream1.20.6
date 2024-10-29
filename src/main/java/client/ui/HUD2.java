@@ -163,6 +163,12 @@ public class HUD2
 						Math.abs(System.currentTimeMillis() / 10L) / 100.0
 							+ 3.0F * (counter[0] * 2.55) / 60).getRGB();
 					break;
+					case "Orange":
+						color = TwoColoreffect(Color.orange,
+								new Color(200, 200, 0),
+								Math.abs(System.currentTimeMillis() / 10L) / 100.0
+										+ 3.0F * (counter[0] * 2.55) / 60).getRGB();
+						break;
 				}
 				MatrixStack matrixStack = context.getMatrices();
 				int nextIndex = sortedList.indexOf(module) + 1;
