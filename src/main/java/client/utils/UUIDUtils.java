@@ -1,6 +1,5 @@
 package client.utils;
 
-import client.utils.json.JsonException;
 
 import java.util.UUID;
 
