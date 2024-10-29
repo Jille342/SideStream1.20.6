@@ -150,9 +150,9 @@ public class ClickGuiWindow
 					final ModeSetting ms = (ModeSetting)s;
 					drawRect(context, outlineColor2.getRGB(), x, currentY,
 						x + 120, currentY + 18);
-					Fonts.font.drawString(((ModeSetting)s).getMode(), x + 4,
+					Fonts.font.drawString(ms.name, x + 4,
 						currentY + 4, settingTextColor);
-					Fonts.font.drawString(ms.name,
+					Fonts.font.drawString(ms.getMode(),
 						x + 116 - Fonts.font.getStringWidth(ms.getMode()),
 						currentY + 4, -1);
 					if(ms.expand)
