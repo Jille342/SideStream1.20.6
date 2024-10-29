@@ -68,6 +68,7 @@ public class AimAssist extends Module
 	{
 		if(e instanceof EventRender2D)
 		{
+			float tickDelta = mc.getTickDelta();
 			setTag("" + validated.size());
 			primary = findTarget();
 			if(e.isPost() || primary == null || !canAssist())
@@ -87,11 +88,11 @@ public class AimAssist extends Module
 			if(diff < -6)
 			{
 				aimSpeed -= diff / 12f;
-				mc.player.setYaw(mc.player.getYaw() - aimSpeed);
+				mc.player.setYaw(mc.player.getYaw(tickDelta) - aimSpeed);
 			}else if(diff > 6)
 			{
 				aimSpeed += diff / 12f;
-				mc.player.setYaw(mc.player.getYaw() + aimSpeed);
+				mc.player.setYaw(mc.player.getYaw(tickDelta) + aimSpeed);
 				
 			}
 		}

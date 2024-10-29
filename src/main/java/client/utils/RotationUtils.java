@@ -32,15 +32,12 @@ public final class RotationUtils
 		virtualPrevPitch;
 	static MinecraftClient mc = MinecraftClient.getInstance();
 	public static final double DEG_TO_RAD = Math.PI / 180.0;
-	
+
 	public static final double RAD_TO_DEG = 180.0 / Math.PI;
 	
 	private RotationUtils()
 	{}
-	
-	private static float serverYaw;
-	private static float serverPitch;
-	
+
 	public static Vec3d getEyesPos()
 	{
 		assert mc.player != null;
@@ -48,32 +45,15 @@ public final class RotationUtils
 			mc.player.getY() + mc.player.getEyeHeight(mc.player.getPose()),
 			mc.player.getZ());
 	}
-	
-	public static Vec3d getServerLookVec()
-	{
-		float f = MathHelper.cos(-serverYaw * 0.017453292F - (float)Math.PI);
-		float f1 = MathHelper.sin(-serverYaw * 0.017453292F - (float)Math.PI);
-		float f2 = -MathHelper.cos(-serverPitch * 0.017453292F);
-		float f3 = MathHelper.sin(-serverPitch * 0.017453292F);
-		return new Vec3d(f1 * f2, f3, f * f2);
+
+	public static Vec3d getVectorForRotation(float yaw, float pitch) {
+		float var2 = MathHelper.cos(-yaw * 0.017453292F - 3.1415927F);
+		float var3 = MathHelper.sin(-yaw * 0.017453292F - 3.1415927F);
+		float var4 = -MathHelper.cos(-pitch * 0.017453292F);
+		float var5 = MathHelper.sin(-pitch * 0.017453292F);
+		return new Vec3d((double)(var3 * var4), (double)var5, (double)(var2 * var4));
 	}
-	
-	private static float[] getNeededRotations(Vec3d vec)
-	{
-		Vec3d eyesPos = getEyesPos();
-		
-		double diffX = vec.x - eyesPos.x;
-		double diffY = vec.y - eyesPos.y;
-		double diffZ = vec.z - eyesPos.z;
-		
-		double diffXZ = Math.sqrt(diffX * diffX + diffZ * diffZ);
-		
-		float yaw = (float)Math.toDegrees(Math.atan2(diffZ, diffX)) - 90F;
-		float pitch = (float)-Math.toDegrees(Math.atan2(diffY, diffXZ));
-		
-		return new float[]{MathHelper.wrapDegrees(yaw),
-			MathHelper.wrapDegrees(pitch)};
-	}
+
 	
 	public static float limitAngleChange(float current, float intended,
 		float maxChange)
@@ -84,8 +64,6 @@ public final class RotationUtils
 		
 		return MathHelper.wrapDegrees(current + change);
 	}
-
-
 
 	
 	/**
@@ -120,25 +98,24 @@ public final class RotationUtils
 		
 	}
 	
-	public static boolean faceEntityClient(Entity entity)
+	public static void faceEntityClient(Entity entity)
 	{
 		// get position & rotation
 		Vec3d eyesPos = getEyesPos();
-		Vec3d lookVec = getServerLookVec();
+		Vec3d lookVec = getVectorForRotation(virtualYaw, virtualPitch);
 		
 		// try to face center of boundingBox
 		Box bb = entity.getBoundingBox();
 		if(faceVectorClient(bb.getCenter()))
-			return true;
+			return;
 		
 		// if not facing center, check if facing anything in boundingBox
-		return bb.intersects(eyesPos, eyesPos.add(lookVec.multiply(6)));
+		bb.intersects(eyesPos, eyesPos.add(lookVec.multiply(6)));
 	}
 	
 	public static boolean faceVectorClient(Vec3d vec)
 	{
-		float[] rotations = getNeededRotations(vec);
-		
+		float[] rotations = getRotations(vec.getX(),vec.getY(),vec.getZ());
 		float oldYaw = mc.player.prevYaw;
 		float oldPitch = mc.player.prevPitch;
 		
@@ -183,6 +160,16 @@ public final class RotationUtils
 					+ (double)entity.getEyeHeight(entity.getPose()) - 0.4D,
 				entity.getZ());
 	}
+
+	private double limitAngleChange(double current, double intended, double speed) {
+		double change = intended - current;
+		if (change > speed) {
+			change = speed;
+		} else if (change < -speed) {
+			change = -speed;
+		}
+		return current + change;
+	}
 	
 	public static float fovToEntity(Entity ent)
 	{
@@ -206,22 +193,24 @@ public final class RotationUtils
 			MathHelper.clamp(vec.y, box.minY, box.maxY),
 			MathHelper.clamp(vec.z, box.minZ, box.maxZ));
 	}
-	
-	public static float[] calcRotation(Entity entity)
+
+	public static float[] calcRotation(Entity entity ,float speed)
 	{
+		float tickDelta = mc.getTickDelta();
+		TimeHelper timer = new TimeHelper();
 		float aYaw = 0, aPitch = 0;
-		long next = 0;
 		Vec3d eye = Objects.requireNonNull(mc.player).getEyePos();
 		Box bb = entity.getBoundingBox();
 		Vec3d nearest = nearest(bb, eye);
 		if(bb.intersects(eye,
-			eye.add(mc.player.getRotationVec(1f).multiply(6))))
+			eye.add(mc.player.getRotationVec(1).multiply(6))))
 		{
-			if(System.currentTimeMillis() > next)
+			if(timer.hasReached(RandomUtils.nextInt(50)))
 			{
+				timer.reset();
 				final float[] center =
 					rotation(entity.getEyePos().add(0, -0.3, 0), eye);
-				next = System.currentTimeMillis() + RandomUtils.nextInt(50);
+
 				aYaw = RandomUtils.nextFloat(0.3f)
 					* MathHelper.wrapDegrees(center[0] - mc.player.getYaw());
 				aPitch = RandomUtils.nextFloat(0.3f)
@@ -231,11 +220,33 @@ public final class RotationUtils
 				mc.player.getYaw() + aYaw * RandomUtils.nextFloat(1),
 				mc.player.getPitch() + aPitch * RandomUtils.nextFloat(1)};
 		}
-		return rotation(nearest.add(RandomUtils.nextDouble(-0.1f, 0.1),
-			RandomUtils.nextDouble(-0.1f, 0.1),
-			RandomUtils.nextDouble(-0.1f, 0.1)), eye);
+
+		float[] newRotation = wrapAngleArray(mc.player.getYaw(),mc.player.getPitch(), 	rotation(nearest.add(RandomUtils.nextDouble(-0.1f, 0.1),
+				RandomUtils.nextDouble(-0.1f, 0.1),
+				RandomUtils.nextDouble(-0.1f, 0.1)), eye));
+		return lerpArray(new float[]{mc.player.getYaw(), mc.player.getPitch()},newRotation,speed);
+
 	}
-	
+	public static float[] wrapAngleArray(float playerYaw , float playerPitch, float[] targetAngle){
+		float yaw = targetAngle[0];
+		float pitch = targetAngle[1];
+		final float finishedYaw =
+				playerYaw + MathHelper.wrapDegrees(yaw - playerYaw);
+		final float finishedPitch = playerPitch
+				+ MathHelper.wrapDegrees(pitch - playerPitch);
+		return new float[]{
+				finishedYaw,finishedPitch
+		};
+	}
+
+	private static float lerp(float a, float b, float t) {
+		return a + (b - a) * t;
+	}
+	private static float[] lerpArray (float[]from, float[] target, float ticks){
+		return new float[] {
+				lerp(from[0],target[0],ticks), lerp(from[1],target[1],ticks)
+		};
+	}
 	public static float[] rotation(double x, double y, double z, double ax,
 		double ay, double az)
 	{
