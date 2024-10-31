@@ -1,6 +1,7 @@
 package client.alts;
 
 import client.Client;
+import client.utils.AlteningUtils;
 import client.utils.UUIDUtils;
 import fr.litarvan.openauth.microsoft.MicrosoftAuthResult;
 import fr.litarvan.openauth.microsoft.MicrosoftAuthenticationException;
@@ -55,7 +56,7 @@ public class Alt
             }
         }else if(getUsername().contains("@alt.com"))
 		{
-
+			AlteningUtils.login(getUsername());
 		}else
 		{
 			Session session =

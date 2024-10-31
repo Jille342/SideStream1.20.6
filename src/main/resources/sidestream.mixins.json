@@ -10,7 +10,8 @@
     "MixinGameRenderer",
     "MixinIngameHud",
     "MixinKeyboard",
-    "MixinPlayerEntity"
+    "MixinPlayerEntity",
+    "YggdrasilMinecraftSessionServiceAccessor"
   ],
   "client": [
     "KeyboardInputMixin",

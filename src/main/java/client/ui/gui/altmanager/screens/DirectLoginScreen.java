@@ -8,6 +8,7 @@
 package client.ui.gui.altmanager.screens;
 
 import client.Client;
+import client.utils.AlteningUtils;
 import client.utils.UUIDUtils;
 import com.mojang.authlib.Environment;
 import com.mojang.authlib.yggdrasil.YggdrasilAuthenticationService;
@@ -47,7 +48,7 @@ public final class DirectLoginScreen extends AltEditorScreen {
 
 		if (password.isEmpty())
 			if (nameOrEmail.contains("@alt.com")) {
-
+				AlteningUtils.login(nameOrEmail);
             }
 		else
 			{
