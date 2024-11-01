@@ -52,6 +52,7 @@ public class ModuleManager implements MCUtil
 		modules.add(new NoFov());
 		modules.add(new DebugSpeed());
 		modules.add(new CivBreak());
+		modules.add(new AutoSword());
 	}
 	
 	public static class ModuleComparator implements Comparator<Module>

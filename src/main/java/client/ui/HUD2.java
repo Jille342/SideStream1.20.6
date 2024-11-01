@@ -26,6 +26,7 @@ import java.util.Comparator;
 
 import static client.features.modules.render.HUD.namebackground;
 import static client.features.modules.render.HUD.nameinfo;
+import static client.utils.font.Fonts.titleFont;
 
 public class HUD2
 {
@@ -86,20 +87,20 @@ public class HUD2
 		if(namebackground.isEnabled())
 		{
 			RenderingUtils.renderRect(context.getMatrices(), nameX, nameY,
-				(int)Fonts.titleFont.getStringWidth(name) + 5,
-				(int)Fonts.titleFont.getFontHeight() + 5,
+				(int) titleFont.getStringWidth(name) + 5,
+				(int) titleFont.getFontHeight() + 5,
 				Colors.getColor(0, 0, 0, 50));
 		}
 		MatrixStack matrixStack = context.getMatrices();
 		matrixStack.push();
-		Fonts.titleFont.drawString(matrixStack, name, nameX, nameY, color);
+		titleFont.drawString(matrixStack, name, nameX, nameY, color);
 		matrixStack.pop();
 		if(HUD.info.isEnabled())
 		{
 			Fonts.font.drawString(blockps, 3,
 				scaledResolution.getScaledHeight() - height, -1);
 		}
-		Fonts.font.drawString(build, 5, 16, -1);
+		Fonts.font.drawString(build, 5 , 16+titleFont.getFontHeight(), -1);
 		
 		if(HUD.armor.isEnabled())
 		{

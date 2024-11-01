@@ -5,7 +5,6 @@ import client.settings.NumberSetting;
 
 public class NoFov extends Module
 {
-	public static NumberSetting fov;
 	
 	public NoFov()
 	{
@@ -15,9 +14,6 @@ public class NoFov extends Module
 	public void init()
 	{
 		super.init();
-		fov = new NumberSetting("Fov", 110, 0, 170, 1);
-		
-		addSetting(fov);
 	}
 	
 	@Override

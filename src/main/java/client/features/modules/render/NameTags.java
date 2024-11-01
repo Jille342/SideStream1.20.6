@@ -152,7 +152,6 @@ public class NameTags extends Module
 		final Vec3d actual =
 			new Vec3d(screenPos.x, screenPos.y - labelHeight, screenPos.z);
 		float width = this.nameDrawer.getStringWidth(text) + 4;
-		width = Math.max(width, 60);
 		Color color = null;
 		color = (entity.isSneaking() || entity.isInvisible())
 			? new Color(100, 0, 0, 100) : new Color(0, 0, 5, 100);

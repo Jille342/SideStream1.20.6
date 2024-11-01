@@ -41,7 +41,7 @@ public class Alt
 	public void login()
 	{
 		
-		if(!Objects.equals(getPassword(), ""))
+		if(!getPassword().isEmpty())
 		{
 			try
 			{
