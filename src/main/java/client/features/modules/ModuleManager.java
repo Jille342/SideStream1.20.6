@@ -27,6 +27,7 @@ public class ModuleManager implements MCUtil
 	public ModuleManager()
 	{
 		modules.add(new LegitAura());
+		modules.add(new LegitAura2());
 		modules.add(new ClickGUI());
 		modules.add(new Fullbright());
 		modules.add(new AutoClicker());

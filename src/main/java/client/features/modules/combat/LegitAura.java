@@ -116,14 +116,14 @@ public class LegitAura extends Module
 						
 						if(target != null)
 						{
-							if(this.currentCPS == 0)
+							if(currentCPS == 0)
 							{
-								this.currentCPS = 1;
+								currentCPS = 1;
 							}
 							if(attackTimer.hasReached(1000/currentCPS))
 							{
-								currentCPS = RandomUtils.nextDouble(this.minCPS.getValue(),
-										this.maxCPS.getValue());
+								currentCPS = RandomUtils.nextDouble(minCPS.getValue(),
+										maxCPS.getValue());
 								attack(target);
 								attackTimer.reset();
 							}
@@ -203,7 +203,6 @@ public class LegitAura extends Module
 	{
 if( fixed != null) {
 	if (!RaytraceUtils.rayCastByRotation(fixed[0], fixed[1], (float) rangeSetting.getValue()).isEmpty()) {
-
 		for (EntityHitResult position : RaytraceUtils.rayCastByRotation(fixed[0], fixed[1], (float) rangeSetting.getValue())) {
 			if (position.getEntity() != mc.player && position.getEntity() == target) {
 				Objects.requireNonNull(mc.getNetworkHandler())
@@ -213,9 +212,7 @@ if( fixed != null) {
 			}
 
 	}
-}
-		Objects.requireNonNull(mc.player).swingHand(Hand.MAIN_HAND);
-		
+}Objects.requireNonNull(mc.player).swingHand(Hand.MAIN_HAND);
 	}
 	
 	private LivingEntity findTarget()
@@ -278,23 +275,9 @@ if( fixed != null) {
 				.comparingDouble(RotationUtils::calculateYawChangeToDst));
 		}
 		this.targets.sort(Comparator.comparingInt(o -> o.hurtTime));
-		return targets.get(0);
+		return targets.getFirst();
 	}
-	
-	private double calculateTime(double mincps, double maxcps)
-	{
-		double cps;
-		if(mincps > maxcps)
-			mincps = maxcps;
-		cps = (client.utils.RandomUtils.nextInt((int)mincps, (int)maxcps)
-			+ client.utils.RandomUtils.nextInt(-3, 3));
-		if(cps > maxcps)
-			cps = (int)maxcps;
-		
-		return((Math.random() * (1000 / (cps - 2) - 1000 / cps + 1))
-			+ 1000 / cps);
-	}
-	
+
 	@Override
 	public void onEnabled()
 	{
