@@ -6,6 +6,7 @@ import client.features.modules.misc.*;
 import client.features.modules.movement.DebugSpeed;
 import client.features.modules.movement.InventoryMove;
 import client.features.modules.movement.Sprint;
+import client.features.modules.player.AutoTool;
 import client.features.modules.player.InvManager;
 import client.features.modules.player.NoBreakDelay;
 import client.features.modules.render.*;
@@ -53,6 +54,7 @@ public class ModuleManager implements MCUtil
 		modules.add(new DebugSpeed());
 		modules.add(new CivBreak());
 		modules.add(new AutoSword());
+		modules.add(new AutoTool());
 	}
 	
 	public static class ModuleComparator implements Comparator<Module>
@@ -78,7 +80,8 @@ public class ModuleManager implements MCUtil
 			}
 		}
 		modules.sort(new ModuleComparator());
-		
+		if(mc.player == null || mc.world == null)
+			return;
 		modules.forEach(m -> {
 			if(m.isEnabled())
 				m.onEvent(e);
