@@ -147,7 +147,7 @@ public class HUD2
 				switch(HUD.colormode.getMode())
 				{
 					case "Default":
-					color = new Color(50, 100, 255).getRGB();
+					color = new Color(50, 200, 255).getRGB();
 					break;
 					case "Rainbow":
 					color = Colors.rainbow((counter[0] * 15) * 7, 0.8f, 1.0f);

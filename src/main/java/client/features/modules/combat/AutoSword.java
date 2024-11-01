@@ -22,14 +22,19 @@ public class AutoSword extends Module
             if(eventPacket.isOutgoing()) {
                 if (eventPacket.getPacket() instanceof PlayerInteractEntityC2SPacket) {
                     if (e.isPre()) {
+                        float n = 0.0f;
                         for (int b1 = 0; b1 < 9; b1++) {
                             ItemStack itemStack =
                                     mc.player.getInventory().getStack(b1);
                             if (itemStack == null) {
                                 continue;
                             }
-                            if (itemStack.getItem() instanceof SwordItem swordItem) {
-                       mc.player.getInventory().selectedSlot= b1;
+                            if (itemStack.getItem() instanceof SwordItem swordItem ) {
+                                final float a =getSwordValue(swordItem);
+                                if (a >= n) {
+                                    n = a;
+                                    mc.player.getInventory().selectedSlot= b1;
+                                }
                             }
                         }
                     }
@@ -37,4 +42,9 @@ public class AutoSword extends Module
             }
         }
     }
+
+    private static float getSwordValue(SwordItem item) {
+        return item.getMaterial().getAttackDamage();
+    }
+
 }
