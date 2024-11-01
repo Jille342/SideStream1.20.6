@@ -113,7 +113,6 @@ public class InventoryMove extends Module
 							(CloseHandledScreenC2SPacket)ep.getPacket();
 						if(this.isClicked)
 						{
-							ep.setCancelled(true);
 							this.isClicked = false;
 						}
 					}
