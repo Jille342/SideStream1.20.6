@@ -73,6 +73,7 @@ public class InvManager extends Module {
                     continue;
                 }
 
+
                 // armor
                 if (item instanceof ArmorItem armorItem) {
                     float armorValue = getArmorValue(stack, armorItem);
@@ -143,6 +144,7 @@ public class InvManager extends Module {
                         bestTools[9].right = bowValue;
                     }
                 }
+
 
             }
 
@@ -239,6 +241,9 @@ public class InvManager extends Module {
                         }
                     }
                 }
+                if(isTrash(stack) && dropTrash.getValue()){
+                    drop(i < 9 ? 36 + i : i);
+                }
 
             }
         }
@@ -252,6 +257,35 @@ public class InvManager extends Module {
             Items.GOLDEN_APPLE,
             Items.ENCHANTED_GOLDEN_APPLE
     };
+    private static  boolean isTrash(ItemStack stack){
+        return (stack.getItem().getTranslationKey().contains("tnt")) ||
+                (stack.getItem().getTranslationKey().contains("stick")) ||
+                (stack.getItem().getTranslationKey().contains("egg")) ||
+                (stack.getItem().getTranslationKey().contains("string")) ||
+                (stack.getItem().getTranslationKey().contains("cake")) ||
+                (stack.getItem().getTranslationKey().contains("mushroom")) ||
+                (stack.getItem().getTranslationKey().contains("flint")) ||
+                (stack.getItem().getTranslationKey().contains("compass")) ||
+                (stack.getItem().getTranslationKey().contains("dyePowder")) ||
+                (stack.getItem().getTranslationKey().contains("feather")) ||
+                (stack.getItem().getTranslationKey().contains("bucket")) ||
+                (stack.getItem().getTranslationKey().contains("chest") && !stack.getName().getString().toLowerCase().contains("collect")) ||
+                (stack.getItem().getTranslationKey().contains("snow")) ||
+                (stack.getItem().getTranslationKey().contains("fish")) ||
+                (stack.getItem().getTranslationKey().contains("enchant")) ||
+                (stack.getItem().getTranslationKey().contains("exp")) ||
+                (stack.getItem().getTranslationKey().contains("shears")) ||
+                (stack.getItem().getTranslationKey().contains("anvil")) ||
+                (stack.getItem().getTranslationKey().contains("torch")) ||
+                (stack.getItem().getTranslationKey().contains("seeds")) ||
+                (stack.getItem().getTranslationKey().contains("leather")) ||
+                (stack.getItem().getTranslationKey().contains("reeds")) ||
+                (stack.getItem().getTranslationKey().contains("skull")) ||
+                (stack.getItem().getTranslationKey().contains("record")) ||
+                (stack.getItem().getTranslationKey().contains("snowball")) ||
+                (stack.getItem() instanceof GlassBottleItem) ||
+                (stack.getItem().getTranslationKey().contains("piston"));
+    }
 
     private static float getSwordValue(ItemStack stack, SwordItem item) {
         return item.getMaterial().getAttackDamage();
