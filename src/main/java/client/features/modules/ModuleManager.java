@@ -4,6 +4,7 @@ import client.event.listeners.EventKey;
 import client.features.modules.combat.*;
 import client.features.modules.misc.*;
 import client.features.modules.movement.DebugSpeed;
+import client.features.modules.movement.Flight;
 import client.features.modules.movement.InventoryMove;
 import client.features.modules.movement.Sprint;
 import client.features.modules.player.AutoTool;
@@ -56,6 +57,7 @@ public class ModuleManager implements MCUtil
 		modules.add(new CivBreak());
 		modules.add(new AutoSword());
 		modules.add(new AutoTool());
+		modules.add(new Flight());
 	}
 	
 	public static class ModuleComparator implements Comparator<Module>
