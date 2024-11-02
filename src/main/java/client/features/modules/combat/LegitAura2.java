@@ -31,6 +31,7 @@ public class LegitAura2 extends Module
     float[] serverSideAngles;
     float[] fixed;
     float[] angles = null;
+    boolean isSilent  =false;
     private double currentCPS;
     BooleanSetting targetMobs;
     BooleanSetting ignoreTeamsSetting;
@@ -51,7 +52,8 @@ public class LegitAura2 extends Module
     NumberSetting legitAimSpeed;
     NumberSetting swingRange;
     BooleanSetting legitInstant;
-    NumberSetting legitAimDelay;
+    BooleanSetting smartSilent;
+
     public LegitAura2()
     {
         super("LegitAura2", 0, Category.COMBAT);
@@ -81,10 +83,10 @@ public class LegitAura2 extends Module
         silent = new BooleanSetting("Silent", true);
         legitAimSpeed = new NumberSetting("Legit Aim Speed", 0.1D, 0.05D,1.0, 0.01D);
         legitInstant = new BooleanSetting("Legit Instant", true);
-        legitAimDelay = new NumberSetting("Legit Aim Delay", 50,0, 300,1);
+        smartSilent = new BooleanSetting("Smart Silent",false);
         addSetting(rotationmode, maxCPS, minCPS
                 , ignoreTeamsSetting, sortmode,
-                targetInvisibles, fov, hitThroughWalls, rangeSetting, clickOnly, moveFix, itemCheck, testMove,silent, legitAimSpeed,swingRange,legitInstant,legitAimDelay);
+                targetInvisibles, fov, hitThroughWalls, rangeSetting, clickOnly, moveFix, itemCheck, testMove,silent, legitAimSpeed,swingRange,legitInstant,smartSilent);
         super.init();
     }
     ArrayList<LivingEntity> targets = new ArrayList<LivingEntity>();
@@ -101,6 +103,15 @@ public class LegitAura2 extends Module
             if(clickOnly.enabled && !mc.options.attackKey.isPressed())
                 return;
             target = findTarget();
+            if(smartSilent.getValue()){
+                if(targets.size() >= 2){
+                    isSilent =true;
+                } else {
+                    isSilent = false;
+                }
+            }else {
+                isSilent = silent.getValue();
+            }
             setTag(sortmode.getMode() + " " + targets.size());
             if(target != null)
             {
@@ -141,7 +152,7 @@ public class LegitAura2 extends Module
                 EventMotion event = (EventMotion)e;
                 serverSideAngles = event.getServerSideAngles();
                 if(fixed != null){
-                    if(silent.isEnabled()) {
+                    if(isSilent) {
                         event.setYaw(fixed[0]);
                         event.setPitch(fixed[1]);
                     }
@@ -184,7 +195,7 @@ public class LegitAura2 extends Module
                 if(angles != null){
                     fixed = rotationUtils.fixedSensitivity(angles, 0.1F);
                 }
-                if (!silent.isEnabled() && fixed != null) {
+                if (!isSilent && fixed != null) {
                     mc.player.setYaw(fixed[0]);
                     mc.player.setPitch(fixed[1]);
                 }

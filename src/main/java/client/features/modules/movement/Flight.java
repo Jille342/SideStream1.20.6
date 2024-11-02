@@ -48,4 +48,10 @@ ModeSetting mode;
           }
       }
   }
+
+    @Override
+    public void onDisabled() {
+        mc.player.getAbilities().flying = false;
+        super.onDisabled();
+    }
 }
