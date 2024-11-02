@@ -88,6 +88,7 @@ public class LegitAura extends Module
 			noInventoryAttack, moveFix, itemCheck, testMove,silent,legitSwitchSpeed);
 		super.init();
 	}
+	RaytraceUtils raytraceUtils = new RaytraceUtils();
 	
 	ArrayList<LivingEntity> targets = new ArrayList<LivingEntity>();
 	private final TimeHelper attackTimer = new TimeHelper();
@@ -170,10 +171,11 @@ public class LegitAura extends Module
 		}
 		if(e instanceof EventRender2D){
 			if( target != null) {
+				RotationUtils rotationUtils = new RotationUtils();
 				if(rotationmode.getMode().equalsIgnoreCase("Normal"))
 				{
 					angles =
-							RotationUtils.getRotationsEntity(target);
+							rotationUtils.getRotationsEntity(target);
 
 				} else
 				if(rotationmode.getMode().equalsIgnoreCase("Normal2"))
@@ -184,10 +186,10 @@ public class LegitAura extends Module
 				} else
 				if(rotationmode.getMode().equalsIgnoreCase("Legit"))
 				{
-					angles = RotationUtils.calcRotation(target , (float) legitSwitchSpeed.getValue() *0.1f * RandomUtils.nextFloat(0.9f,1.1f),(float) rangeSetting.getValue(),false, 0);
+					angles = rotationUtils.calcRotation(target , (float) legitSwitchSpeed.getValue() *0.1f * RandomUtils.nextFloat(0.9f,1.1f),(float) rangeSetting.getValue(),false, false, null);
 				}
 				if(angles != null){
-					fixed = RotationUtils.fixedSensitivity(angles, mc.options
+					fixed = rotationUtils.fixedSensitivity(angles, mc.options
 							.getMouseSensitivity().getValue().floatValue());
 				}
 				if (!silent.isEnabled() && fixed != null) {
@@ -199,17 +201,13 @@ public class LegitAura extends Module
 		
 	}
 	
-	public void attack(Entity target)
-	{
-if( fixed != null) {
-	if (!RaytraceUtils.rayCastByRotation(fixed[0], fixed[1], (float) rangeSetting.getValue()).isEmpty()) {
-		for (EntityHitResult position : RaytraceUtils.rayCastByRotation(fixed[0], fixed[1], (float) rangeSetting.getValue())) {
-			if (position.getEntity() != mc.player && position.getEntity() == target) {
+	public void attack(Entity target) {
+		if (fixed != null) {
+			EntityHitResult hitResult = raytraceUtils.rayCastByRotation(fixed[0], fixed[1], (float) rangeSetting.getValue());
+			if (hitResult.getEntity() != mc.player && hitResult.getEntity() == target) {
 				Objects.requireNonNull(mc.getNetworkHandler())
 						.sendPacket(PlayerInteractEntityC2SPacket.attack(target,
 								Objects.requireNonNull(mc.player).isSneaking()));
-			}
-			}
 
 	}
 }Objects.requireNonNull(mc.player).swingHand(Hand.MAIN_HAND);

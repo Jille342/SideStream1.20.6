@@ -20,8 +20,8 @@ public class AutoSword extends Module
     public void onEvent(Event<?> e) {
         if (e instanceof EventPacket eventPacket) {
             if(eventPacket.isOutgoing()) {
-                if (eventPacket.getPacket() instanceof PlayerInteractEntityC2SPacket) {
-                    if (e.isPre()) {
+                if (eventPacket.getPacket() instanceof PlayerInteractEntityC2SPacket packet) {
+
                         float n = 0.0f;
                         for (int b1 = 0; b1 < 9; b1++) {
                             ItemStack itemStack =
@@ -35,7 +35,6 @@ public class AutoSword extends Module
                                     n = a;
                                     mc.player.getInventory().selectedSlot= b1;
                                 }
-                            }
                         }
                     }
                 }

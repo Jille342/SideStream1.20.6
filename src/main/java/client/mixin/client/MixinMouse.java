@@ -19,7 +19,7 @@ public class MixinMouse
 			target = "Lnet/minecraft/client/network/ClientPlayerEntity;changeLookDirection(DD)V"))
 	public void injectUpdateMouse(final Args args)
 	{
-		final float f = RotationUtils.virtualPitch;
+	/*	final float f = RotationUtils.virtualPitch;
 		final float f1 = RotationUtils.virtualYaw;
 		RotationUtils.virtualYaw = (float)((double)RotationUtils.virtualYaw
 			+ (double)args.get(0) * 0.15D);
@@ -29,10 +29,12 @@ public class MixinMouse
 			MathHelper.clamp(RotationUtils.virtualPitch, -90.0F, 90.0F);
 		RotationUtils.virtualPrevPitch += RotationUtils.virtualPitch - f;
 		RotationUtils.virtualPrevYaw += RotationUtils.virtualYaw - f1;
-		
+
 		final EventRotation rotationEvent = new EventRotation(
 			RotationUtils.virtualYaw, RotationUtils.virtualPitch);
 		Client.onEvent(rotationEvent);
+
+	 */
 		
 	}
 }

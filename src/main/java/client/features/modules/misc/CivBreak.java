@@ -59,8 +59,9 @@ public class CivBreak extends Module
 			if(Objects.requireNonNull(mc.interactionManager).isBreakingBlock()
 				&& this.hitResult == null)
 			{
+				RaycastUtils raycastUtils = new RaycastUtils();
 				this.hitResult =
-					RaycastUtils.rayCast(new float[]{RotationUtils.virtualYaw,
+					raycastUtils.rayCast(new float[]{RotationUtils.virtualYaw,
 						RotationUtils.virtualPitch}, 3.0, 0);
 			}
 			if(hitResult == null)

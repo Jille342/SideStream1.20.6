@@ -1,6 +1,7 @@
 package client.event.listeners;
 
 import client.event.Event;
+import client.utils.RotationUtils;
 import lombok.Getter;
 import lombok.Setter;
 import net.minecraft.util.math.BlockPos;
@@ -13,7 +14,7 @@ public class EventMotion extends Event<EventMotion>
 	public double x, y, z;
 	@Setter
 	@Getter
-	public float yaw, pitch;
+	public float  yaw, pitch ;
 	@Setter
 	@Getter
 	public boolean onGround;
@@ -38,7 +39,7 @@ public class EventMotion extends Event<EventMotion>
 		this.yaw = yaw;
 		this.pitch = pitch;
 		this.onGround = onGround;
-		
+
 		this.lastX = x;
 		this.lastY = y;
 		this.lastZ = z;
@@ -58,7 +59,7 @@ public class EventMotion extends Event<EventMotion>
 	{
 		return new float[]{yaw, pitch};
 	}
-	
+
 	public void setPosition(BlockPos pos)
 	{
 		this.x = pos.getX() + .5;

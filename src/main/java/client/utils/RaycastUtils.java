@@ -5,7 +5,7 @@ import net.minecraft.util.hit.HitResult;
 public class RaycastUtils implements MCUtil
 {
 	
-	public static HitResult rayCast(float[] rot, double dist, float delta)
+	public HitResult rayCast(float[] rot, double dist, float delta)
 	{
         assert mc.player != null;
         float prevYaw = mc.player.prevYaw, prevPitch = mc.player.prevPitch,

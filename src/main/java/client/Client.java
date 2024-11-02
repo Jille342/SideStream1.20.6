@@ -4,10 +4,12 @@ import client.alts.AltManager;
 import client.command.CommandManager;
 import client.config.ConfigManager;
 import client.event.Event;
+import client.event.listeners.EventMotion;
 import client.features.modules.ModuleManager;
 import client.mixin.mixininterface.IMinecraftClient;
 import client.ui.BackgroundManager;
 import client.ui.HUD2;
+import client.utils.RotationUtils;
 import lombok.Getter;
 import net.minecraft.client.MinecraftClient;
 
@@ -44,6 +46,10 @@ public class Client
 	
 	public static Event<?> onEvent(Event<?> e)
 	{
+		if( e instanceof EventMotion){
+			RotationUtils.virtualYaw = ((EventMotion) e).getServerSideAngles()[0];
+			RotationUtils.virtualPitch = ((EventMotion) e).getServerSideAngles()[1];
+		}
 		moduleManager.onEvent(e);
 		return e;
 	}

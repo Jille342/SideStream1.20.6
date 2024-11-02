@@ -19,13 +19,16 @@ import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.network.packet.c2s.play.PlayerInteractEntityC2SPacket;
 import net.minecraft.util.Hand;
 import net.minecraft.util.hit.EntityHitResult;
+import net.minecraft.util.hit.HitResult;
 
 import java.util.ArrayList;
 import java.util.Comparator;
+import java.util.List;
 import java.util.Objects;
 
 public class LegitAura2 extends Module
 {
+    float[] serverSideAngles;
     float[] fixed;
     float[] angles = null;
     private double currentCPS;
@@ -83,11 +86,11 @@ public class LegitAura2 extends Module
                 , ignoreTeamsSetting, sortmode,
                 targetInvisibles, fov, hitThroughWalls, rangeSetting, clickOnly, moveFix, itemCheck, testMove,silent, legitAimSpeed,swingRange,legitInstant,legitAimDelay);
         super.init();
-    } 
-
+    }
     ArrayList<LivingEntity> targets = new ArrayList<LivingEntity>();
     private final TimeHelper attackTimer = new TimeHelper();
     LivingEntity target = null;
+    RaytraceUtils raytraceUtils = new RaytraceUtils();
 
     @Override
     public void onEvent(Event<?> e)
@@ -136,6 +139,7 @@ public class LegitAura2 extends Module
             if(target != null)
             {
                 EventMotion event = (EventMotion)e;
+                serverSideAngles = event.getServerSideAngles();
                 if(fixed != null){
                     if(silent.isEnabled()) {
                         event.setYaw(fixed[0]);
@@ -159,6 +163,7 @@ public class LegitAura2 extends Module
         }
         if(e instanceof EventRender2D){
             if( target != null) {
+                RotationUtils rotationUtils = new RotationUtils();
                 if(rotationmode.getMode().equalsIgnoreCase("Normal"))
                 {
                     angles =
@@ -173,16 +178,20 @@ public class LegitAura2 extends Module
                 } else
                 if(rotationmode.getMode().equalsIgnoreCase("Legit"))
                 {
-                    double aimDelay = legitAimDelay.getValue() + RandomUtils.nextDouble(-10, 10);
-                    angles = RotationUtils.calcRotation(target , (float) legitAimSpeed.getValue() *0.1f * RandomUtils.nextFloat(0.9f,1.1f),(float) rangeSetting.getValue(),legitInstant.getValue(), aimDelay);
+
+                        angles = rotationUtils.calcRotation(target, (float) legitAimSpeed.getValue() * 0.1f * RandomUtils.nextFloat(0.9f, 1.1f), (float) rangeSetting.getValue(), legitInstant.getValue(), silent.getValue(), angles);
                 }
                 if(angles != null){
-                    fixed = RotationUtils.fixedSensitivity(angles, 0.1F);
+                    fixed = rotationUtils.fixedSensitivity(angles, 0.1F);
                 }
                 if (!silent.isEnabled() && fixed != null) {
                     mc.player.setYaw(fixed[0]);
                     mc.player.setPitch(fixed[1]);
                 }
+            } else {
+                angles = new float[]{
+                        mc.player.getYaw(), mc.player.getPitch()
+                };
             }
         }
 
@@ -191,15 +200,13 @@ public class LegitAura2 extends Module
     public void attack(Entity target)
     {
         if( fixed != null) {
-            if (!RaytraceUtils.rayCastByRotation(fixed[0], fixed[1], (float) rangeSetting.getValue()).isEmpty()) {
-                for (EntityHitResult position : RaytraceUtils.rayCastByRotation(fixed[0], fixed[1], (float) rangeSetting.getValue())) {
-                    if (position.getEntity() != mc.player && position.getEntity() == target) {
+                EntityHitResult hitResult = raytraceUtils.rayCastByRotation(fixed[0], fixed[1], (float) rangeSetting.getValue());
+                if (hitResult != null) {
+                    if (hitResult.getEntity() != mc.player && hitResult.getEntity() == target) {
                         Objects.requireNonNull(mc.getNetworkHandler())
                                 .sendPacket(PlayerInteractEntityC2SPacket.attack(target,
                                         Objects.requireNonNull(mc.player).isSneaking()));
-                    }
                 }
-
             }
         }Objects.requireNonNull(mc.player).swingHand(Hand.MAIN_HAND);
     }

@@ -5,6 +5,7 @@ import client.event.EventType;
 import client.event.listeners.EventMotion;
 import client.event.listeners.EventUpdate;
 import client.utils.RotationUtils;
+import net.minecraft.client.MinecraftClient;
 import net.minecraft.client.network.ClientPlayerEntity;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.injection.At;
@@ -34,7 +35,7 @@ public class MixinClientPlayerEntity
 			new EventMotion(instance.getX(), instance.getY(), instance.getZ(),
 				instance.getYaw(), instance.getPitch(), instance.isOnGround());
 		Client.onEvent(event);
-		RotationUtils.virtualYaw = instance.getYaw();
+		RotationUtils.virtualYaw = event.getYaw();
 		return event.getYaw();
 	}
 	
@@ -47,7 +48,7 @@ public class MixinClientPlayerEntity
 			new EventMotion(instance.getX(), instance.getY(), instance.getZ(),
 				instance.getYaw(), instance.getPitch(), instance.isOnGround());
 		Client.onEvent(event);
-		RotationUtils.virtualPitch = instance.getPitch();
+		RotationUtils.virtualPitch = event.getPitch();
 		return event.getPitch();
 	}
 	
