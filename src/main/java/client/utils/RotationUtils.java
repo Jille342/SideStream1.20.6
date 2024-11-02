@@ -194,14 +194,15 @@ public final class RotationUtils
 			MathHelper.clamp(vec.z, box.minZ, box.maxZ));
 	}
 
-	public static float[] calcRotation(Entity entity ,float speed, float range)
+	public static float[] calcRotation(Entity entity ,float speed, float range, boolean instant, double delay)
 	{
-		float tickDelta = mc.getTickDelta();
+		float tickDelta = instant ?  0.2F: speed;
 		float aYaw = 0, aPitch = 0;
 		Vec3d eye = Objects.requireNonNull(mc.player).getEyePos();
 		Box bb = entity.getBoundingBox();
 		Vec3d nearest = nearest(bb, eye);
-		if(!RaytraceUtils.rayCastByRotation(mc.player.getYaw(),mc.player.getPitch(), range).isEmpty())
+		TimeHelper timeHelper = new TimeHelper();
+		if(!RaytraceUtils.rayCastByRotation(virtualYaw,virtualPitch, range).isEmpty())
 		{
 				final float[] center =
 					rotation(entity.getEyePos(), eye);
@@ -212,10 +213,17 @@ public final class RotationUtils
 			lerp(mc.player.getPitch(),aPitch , speed *0.1f )
 			};
 		}
-		float[] newRotation = wrapAngleArray(mc.player.getYaw(),mc.player.getPitch(), 	rotation(nearest.add(RandomUtils.nextDouble(-0.1f, 0.1),
-				RandomUtils.nextDouble(-0.1f, 0.1),
-				RandomUtils.nextDouble(-0.1f, 0.1)), eye));
-		return lerpArray(new float[]{mc.player.getYaw(), mc.player.getPitch()},newRotation,speed);
+		if(timeHelper.hasReached(delay)){
+			timeHelper.reset();
+			float[] newRotation = wrapAngleArray(mc.player.getYaw(), mc.player.getPitch(), rotation(nearest.add(RandomUtils.nextDouble(-0.1f, 0.1),
+					RandomUtils.nextDouble(-0.1f, 0.1),
+					RandomUtils.nextDouble(-0.1f, 0.1)), eye));
+
+			return lerpArray(new float[]{mc.player.getYaw(), mc.player.getPitch()},newRotation,tickDelta);
+		}
+		return  new float[]{
+				virtualYaw,virtualPitch
+		};
 
 	}
 	public static float[] wrapAngleArray(float playerYaw , float playerPitch, float[] targetAngle){

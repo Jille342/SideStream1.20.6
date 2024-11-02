@@ -184,7 +184,7 @@ public class LegitAura extends Module
 				} else
 				if(rotationmode.getMode().equalsIgnoreCase("Legit"))
 				{
-					angles = RotationUtils.calcRotation(target , (float) legitSwitchSpeed.getValue() *0.1f * RandomUtils.nextFloat(0.9f,1.1f),(float) rangeSetting.getValue());
+					angles = RotationUtils.calcRotation(target , (float) legitSwitchSpeed.getValue() *0.1f * RandomUtils.nextFloat(0.9f,1.1f),(float) rangeSetting.getValue(),false, 0);
 				}
 				if(angles != null){
 					fixed = RotationUtils.fixedSensitivity(angles, mc.options

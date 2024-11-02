@@ -32,6 +32,9 @@ public class ModeSetting extends Setting
 	{
 		return modes.get(index);
 	}
+	public String getValue(){
+		return modes.get(index);
+	}
 	
 	public void setModes(String a)
 	{

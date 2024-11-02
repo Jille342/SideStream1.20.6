@@ -29,8 +29,7 @@ public class LegitAura2 extends Module
     float[] fixed;
     float[] angles = null;
     private double currentCPS;
-    BooleanSetting targetMonstersSetting;
-    BooleanSetting targetAnimalsSetting;
+    BooleanSetting targetMobs;
     BooleanSetting ignoreTeamsSetting;
 
     NumberSetting rangeSetting;
@@ -45,12 +44,11 @@ public class LegitAura2 extends Module
     BooleanSetting moveFix;
     BooleanSetting itemCheck;
     BooleanSetting testMove;
-    BooleanSetting rayTrace;
     BooleanSetting silent;
     NumberSetting legitAimSpeed;
     NumberSetting swingRange;
-
-
+    BooleanSetting legitInstant;
+    NumberSetting legitAimDelay;
     public LegitAura2()
     {
         super("LegitAura2", 0, Category.COMBAT);
@@ -60,16 +58,15 @@ public class LegitAura2 extends Module
     public void init()
     {
         this.rangeSetting = new NumberSetting("Range", 3.0, 0, 4.2, 0.1);
-        this.targetMonstersSetting =
-                new BooleanSetting("Target Monsters", true);
+        this.targetMobs =
+                new BooleanSetting("Target Mobs", true);
         swingRange = new NumberSetting("Swing Range",4.2, 3.0, 6.0, 0.1);
         this.targetInvisibles = new BooleanSetting("Target Invisibles", false);
-        this.targetAnimalsSetting = new BooleanSetting("Target Animals", false);
         this.ignoreTeamsSetting = new BooleanSetting("Ignore Teams", true);
         this.maxCPS = new NumberSetting("MaxCPS", 7, 2, 20, 1f);
         minCPS = new NumberSetting("MinCPS", 6, 1, 19, 1f);
         sortmode = new ModeSetting("SortMode", "Angle",
-                new String[]{"Distance", "Angle"});
+                new String[]{"Distance", "Angle","HurtTime"});
         rotationmode = new ModeSetting("Rotation Mode", "Normal",
                 new String[]{"None", "Normal", "Normal2", "Legit"});
         moveFix = new BooleanSetting("Move Fix", true);
@@ -80,9 +77,11 @@ public class LegitAura2 extends Module
         testMove = new BooleanSetting("Test Move", true);
         silent = new BooleanSetting("Silent", true);
         legitAimSpeed = new NumberSetting("Legit Aim Speed", 0.1D, 0.05D,1.0, 0.01D);
-        addSetting(rotationmode, maxCPS, minCPS, targetAnimalsSetting,
-                targetMonstersSetting, ignoreTeamsSetting, sortmode,
-                targetInvisibles, fov, hitThroughWalls, rangeSetting, clickOnly, moveFix, itemCheck, testMove,silent, legitAimSpeed,swingRange);
+        legitInstant = new BooleanSetting("Legit Instant", true);
+        legitAimDelay = new NumberSetting("Legit Aim Delay", 50,0, 300,1);
+        addSetting(rotationmode, maxCPS, minCPS
+                , ignoreTeamsSetting, sortmode,
+                targetInvisibles, fov, hitThroughWalls, rangeSetting, clickOnly, moveFix, itemCheck, testMove,silent, legitAimSpeed,swingRange,legitInstant,legitAimDelay);
         super.init();
     } 
 
@@ -174,11 +173,11 @@ public class LegitAura2 extends Module
                 } else
                 if(rotationmode.getMode().equalsIgnoreCase("Legit"))
                 {
-                    angles = RotationUtils.calcRotation(target , (float) legitAimSpeed.getValue() *0.1f * RandomUtils.nextFloat(0.9f,1.1f),(float) rangeSetting.getValue());
+                    double aimDelay = legitAimDelay.getValue() + RandomUtils.nextDouble(-10, 10);
+                    angles = RotationUtils.calcRotation(target , (float) legitAimSpeed.getValue() *0.1f * RandomUtils.nextFloat(0.9f,1.1f),(float) rangeSetting.getValue(),legitInstant.getValue(), aimDelay);
                 }
                 if(angles != null){
-                    fixed = RotationUtils.fixedSensitivity(angles, mc.options
-                            .getMouseSensitivity().getValue().floatValue());
+                    fixed = RotationUtils.fixedSensitivity(angles, 0.1F);
                 }
                 if (!silent.isEnabled() && fixed != null) {
                     mc.player.setYaw(fixed[0]);
@@ -240,12 +239,8 @@ public class LegitAura2 extends Module
                         continue;
 
                     targets.add((LivingEntity)entity);
-                }else if(entity instanceof AnimalEntity
-                        && targetAnimalsSetting.enabled)
-                {
-                    targets.add((LivingEntity)entity);
                 }else if(entity instanceof MobEntity
-                        && targetMonstersSetting.enabled)
+                        && targetMobs.enabled)
                 {
                     targets.add((LivingEntity)entity);
                 }
@@ -263,8 +258,11 @@ public class LegitAura2 extends Module
             case "Angle":
                 targets.sort(Comparator
                         .comparingDouble(RotationUtils::calculateYawChangeToDst));
+                break;
+            case"HurtTime":
+                targets.sort(Comparator.comparingInt(o -> o.hurtTime));
+                break;
         }
-        this.targets.sort(Comparator.comparingInt(o -> o.hurtTime));
         return targets.getFirst();
     }
 
