@@ -38,7 +38,7 @@ public class NameTags extends Module
 		GL30.glGetInteger(GL30C.GL_MAX_SAMPLES);
 	private final TTFFontRenderer font = TTFFontRenderer.of("ElliotSans", 8);
 	private final TTFFontRenderer nameDrawer =
-		TTFFontRenderer.of("ElliotSans", 14);
+		TTFFontRenderer.of("ElliotSans", 10);
 	
 	public NameTags()
 	{

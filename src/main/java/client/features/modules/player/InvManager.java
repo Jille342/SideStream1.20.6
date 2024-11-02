@@ -259,7 +259,6 @@ public class InvManager extends Module {
     };
     private static  boolean isTrash(ItemStack stack){
         return (stack.getItem().getTranslationKey().contains("tnt")) ||
-                (stack.getItem().getTranslationKey().contains("stick")) ||
                 (stack.getItem().getTranslationKey().contains("egg")) ||
                 (stack.getItem().getTranslationKey().contains("string")) ||
                 (stack.getItem().getTranslationKey().contains("cake")) ||
@@ -274,7 +273,6 @@ public class InvManager extends Module {
                 (stack.getItem().getTranslationKey().contains("fish")) ||
                 (stack.getItem().getTranslationKey().contains("enchant")) ||
                 (stack.getItem().getTranslationKey().contains("exp")) ||
-                (stack.getItem().getTranslationKey().contains("shears")) ||
                 (stack.getItem().getTranslationKey().contains("anvil")) ||
                 (stack.getItem().getTranslationKey().contains("torch")) ||
                 (stack.getItem().getTranslationKey().contains("seeds")) ||
@@ -284,6 +282,7 @@ public class InvManager extends Module {
                 (stack.getItem().getTranslationKey().contains("record")) ||
                 (stack.getItem().getTranslationKey().contains("snowball")) ||
                 (stack.getItem() instanceof GlassBottleItem) ||
+                (stack.getItem().getTranslationKey().contains("fence"))||
                 (stack.getItem().getTranslationKey().contains("piston"));
     }
 

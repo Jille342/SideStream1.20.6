@@ -151,7 +151,7 @@ public class TPBreaker extends Module
 			assert mc.player != null;
 			Objects.requireNonNull(mc.getNetworkHandler()).sendPacket(
 				new BlockBreakingProgressS2CPacket(mc.player.getId(), pos,
-					100));
+					0));
 			Objects.requireNonNull(mc.getNetworkHandler())
 				.sendPacket(new HandSwingC2SPacket(Hand.MAIN_HAND));
 			Objects.requireNonNull(mc.player).interactAt(mc.player,
