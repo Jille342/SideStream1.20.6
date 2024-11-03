@@ -202,9 +202,9 @@ public final class RotationUtils
 					mc.player.getYaw(), mc.player.getPitch()
 			};
 		}
-		float mcTickDelta = 0.01F;
-		float currentYaw = silent ? serverSideAngles[0] : mc.player.getYaw(mcTickDelta);
-		float currentPitch = silent ? serverSideAngles[1] : mc.player.getPitch(mcTickDelta);
+		float tick = 0.01f;
+		float currentYaw = silent ? serverSideAngles[0] : mc.player.getYaw(tick);
+		float currentPitch = silent ? serverSideAngles[1] : mc.player.getPitch(tick);
 		float tickDelta = instant ? speed * 2 : speed;
 		float aYaw = 0, aPitch = 0;
 		Vec3d eye = Objects.requireNonNull(mc.player).getEyePos();
@@ -220,12 +220,11 @@ public final class RotationUtils
 						lerp(currentYaw, aYaw, speed * 0.1f),
 						lerp(currentPitch, aPitch, speed * 0.1f)
 				};
-		} else {
-			float[] newRotation = wrapAngleArray(currentYaw, currentPitch, rotation(nearest.add(RandomUtils.nextDouble(-0.001f, 0.001),
-					RandomUtils.nextDouble(-0.001f, 0.001),
-					RandomUtils.nextDouble(-0.001f, 0.001)), eye));
-			return lerpArray(new float[]{currentYaw, currentPitch}, newRotation, tickDelta);
 		}
+			float[] newRotation = wrapAngleArray(currentYaw, currentPitch, rotation(nearest.add(RandomUtils.nextDouble(-0.0001f, 0.0001),
+					RandomUtils.nextDouble(-0.0010f, 0.0001),
+					RandomUtils.nextDouble(-0.0001f, 0.0001)), eye));
+			return lerpArray(new float[]{currentYaw, currentPitch}, newRotation, tickDelta);
 	}
 	public float[] calcRotation(Entity entity) {
 		float aYaw = 0, aPitch = 0;
