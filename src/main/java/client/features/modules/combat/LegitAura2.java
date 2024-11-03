@@ -20,6 +20,7 @@ import net.minecraft.network.packet.c2s.play.PlayerInteractEntityC2SPacket;
 import net.minecraft.util.Hand;
 import net.minecraft.util.hit.EntityHitResult;
 import net.minecraft.util.hit.HitResult;
+import net.minecraft.util.math.MathHelper;
 
 import java.util.ArrayList;
 import java.util.Comparator;
@@ -86,12 +87,12 @@ public class LegitAura2 extends Module
         smartSilent = new BooleanSetting("Smart Silent",false);
         addSetting(rotationmode, maxCPS, minCPS
                 , ignoreTeamsSetting, sortmode,
-                targetInvisibles, fov, hitThroughWalls, rangeSetting, clickOnly, moveFix, itemCheck, testMove,silent, legitAimSpeed,swingRange,legitInstant,smartSilent);
+                targetInvisibles, fov, hitThroughWalls, rangeSetting, clickOnly, moveFix, itemCheck, testMove,silent, legitAimSpeed,swingRange,legitInstant,smartSilent,targetMobs);
         super.init();
     }
-    ArrayList<LivingEntity> targets = new ArrayList<LivingEntity>();
+    public static ArrayList<LivingEntity> targets = new ArrayList<LivingEntity>();
     private final TimeHelper attackTimer = new TimeHelper();
-    LivingEntity target = null;
+   public static LivingEntity target = null;
     RaytraceUtils raytraceUtils = new RaytraceUtils();
 
     @Override
@@ -189,8 +190,12 @@ public class LegitAura2 extends Module
                 } else
                 if(rotationmode.getMode().equalsIgnoreCase("Legit"))
                 {
+                    float aimSpeed = (float) legitAimSpeed.getValue();
+                     aimSpeed = (float) MathHelper.clamp(
+                            RandomUtils.nextFloat(aimSpeed - 0.2f, aimSpeed + 1.8f),
+                            legitAimSpeed.minimum, legitAimSpeed.maximum)*0.1f;
 
-                        angles = rotationUtils.calcRotation(target, (float) legitAimSpeed.getValue() * 0.1f * RandomUtils.nextFloat(0.9f, 1.1f), (float) rangeSetting.getValue(), legitInstant.getValue(), silent.getValue(), angles);
+                        angles = rotationUtils.calcRotation(target, aimSpeed, (float) rangeSetting.getValue(), legitInstant.getValue(), isSilent, angles);
                 }
                 if(angles != null){
                     fixed = rotationUtils.fixedSensitivity(angles, 0.1F);

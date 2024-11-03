@@ -50,55 +50,44 @@ public class AutoDrain extends Module
 		if(event instanceof EventUpdate)
 		{
 			target = findTarget();
-			if(target != null && target instanceof PlayerEntity)
-			{
+			if(target != null && target instanceof PlayerEntity) {
 				Scoreboard scoreboard =
-					Objects.requireNonNull(mc.world).getScoreboard();
+						Objects.requireNonNull(mc.world).getScoreboard();
 				ScoreboardObjective scoreboardObjective = scoreboard
-					.getObjectiveForSlot(ScoreboardDisplaySlot.BELOW_NAME);
-				if(scoreboardObjective != null)
-				{
+						.getObjectiveForSlot(ScoreboardDisplaySlot.BELOW_NAME);
+				if (scoreboardObjective != null) {
 					GameProfile gameProfile =
-						((PlayerEntity)target).getGameProfile();
+							((PlayerEntity) target).getGameProfile();
 					ReadableScoreboardScore score = scoreboard.getScore(
-						ScoreHolder.fromProfile(gameProfile),
-						scoreboardObjective);
-					int targetHealth = Objects.requireNonNull(score).getScore();
-					int bestItemIndex = -1;
-					int oldSlot =-1;
-					if(targetHealth <= 5 && !did)
-					{
-						current = Objects.requireNonNull(mc.player)
-							.getInventory().selectedSlot;
-						for(int b1 = 0; b1 < 9; b1++)
-						{
-							ItemStack itemStack =
-								mc.player.getInventory().getStack(b1);
-							if(itemStack == null)
-							{
-								continue;
+							ScoreHolder.fromProfile(gameProfile),
+							scoreboardObjective);
+					if (score != null) {
+						int targetHealth = Objects.requireNonNull(score).getScore();
+						int bestItemIndex = -1;
+						int oldSlot = -1;
+						if (targetHealth <= 5 && !did) {
+							current = Objects.requireNonNull(mc.player)
+									.getInventory().selectedSlot;
+							for (int b1 = 0; b1 < 9; b1++) {
+								ItemStack itemStack =
+										mc.player.getInventory().getStack(b1);
+								if (itemStack == null) {
+									continue;
+								}
+								if (itemStack.getItem() == Items.RED_DYE && itemStack
+										.getName().toString().contains("READY")) {
+									oldSlot = mc.player.getInventory().selectedSlot;
+									bestItemIndex = b1;
+								}
 							}
-							if(itemStack.getItem() == Items.RED_DYE && itemStack
-								.getName().toString().contains("READY"))
-							{
-								oldSlot = mc.player.getInventory().selectedSlot;
-								bestItemIndex = b1;
+							if (bestItemIndex != -1) {
+								mc.player.getInventory().selectedSlot = bestItemIndex;
+								mc.interactionManager.interactEntity(mc.player, target, Hand.MAIN_HAND);
+								mc.player.getInventory().selectedSlot = oldSlot;
 							}
+
+						} else {
 						}
-						if(bestItemIndex != -1)
-						{
-							mc.player.getInventory().selectedSlot =
-								bestItemIndex;
-							mc.interactionManager.interactEntity(mc.player, target, Hand.MAIN_HAND);
-							mc.player.getInventory().selectedSlot = oldSlot;
-						}
-						
-					}else
-					{
-						KeyBinding.setKeyPressed(
-							mc.options.useKey.getDefaultKey(), false);
-						
-						did = false;
 					}
 				}
 			}

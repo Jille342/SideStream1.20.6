@@ -24,7 +24,7 @@ public class AimAssist extends Module
 {
 	
 	private final List<LivingEntity> validated = new ArrayList<>();
-	private Entity primary;
+	public static Entity primary;
 	BooleanSetting ignoreTeamsSetting;
 	BooleanSetting notHolding;
 	NumberSetting aimSpeedSetting;

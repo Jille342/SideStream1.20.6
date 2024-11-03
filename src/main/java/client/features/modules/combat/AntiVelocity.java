@@ -18,6 +18,7 @@ public class AntiVelocity extends Module
 	NumberSetting horizontal;
 	NumberSetting chance;
 	BooleanSetting clickOnly;
+	BooleanSetting targetCheck;
 	
 	public AntiVelocity()
 	{
@@ -34,8 +35,9 @@ public class AntiVelocity extends Module
 			new NumberSetting("Horizontal", 90.0, 0.0, 100.0, 1.0);
 		this.chance = new NumberSetting("Chance", 90.0, 0.0, 100.0, 1.0);
 		this.clickOnly = new BooleanSetting("Click Only", false);
+		targetCheck = new BooleanSetting( "Target Check",true);
 		this.addSetting(this.mode, this.vertical, this.horizontal, this.chance,
-			this.clickOnly);
+			this.clickOnly,targetCheck);
 	}
 	
 	@Override
@@ -49,44 +51,41 @@ public class AntiVelocity extends Module
 		{
 			if(this.mode.getMode().equalsIgnoreCase("Simple"))
 			{
-				if(this.clickOnly.isEnabled() && !mc.options.useKey.isPressed())
-				{
-					return;
-				}
-				if(this.chance.getValue() != 100.0)
-				{
-					final double ch = Math.random();
-					if(ch >= this.chance.getValue() / 100.0)
-					{
+				if(targetCheck.isEnabled() && (LegitAura2.target != null || AimAssist.primary !=null)) {
+					if (this.clickOnly.isEnabled() && !mc.options.useKey.isPressed()) {
 						return;
 					}
-				}
-				
-				if(event
-					.getPacket() instanceof EntityVelocityUpdateS2CPacket packet)
-				{
-					assert mc.player != null;
-					if(packet.getId() == mc.player.getId())
-					{
-						
-						double velX = ((double)packet.getVelocityX() / 8000); // don't
-																				// ask
-																				// me
-																				// why
-																				// they
-																				// did
-																				// this
-						double velY = ((double)packet.getVelocityY() / 8000);
-						double velZ = ((double)packet.getVelocityZ() / 8000);
-						velX *= horizontal.getValue() / 100;
-						velY *= vertical.getValue() / 100;
-						velZ *= horizontal.getValue() / 100;
-						IEntityVelocityUpdateS2CPacketMixin jesusFuckingChrist =
-							(IEntityVelocityUpdateS2CPacketMixin)packet;
-						jesusFuckingChrist.setVelocityX((int)(velX * 8000));
-						jesusFuckingChrist.setVelocityY((int)(velY * 8000));
-						jesusFuckingChrist.setVelocityZ((int)(velZ * 8000));
-						
+					if (this.chance.getValue() != 100.0) {
+						final double ch = Math.random();
+						if (ch >= this.chance.getValue() / 100.0) {
+							return;
+						}
+					}
+
+					if (event
+							.getPacket() instanceof EntityVelocityUpdateS2CPacket packet) {
+						assert mc.player != null;
+						if (packet.getId() == mc.player.getId()) {
+
+							double velX = ((double) packet.getVelocityX() / 8000); // don't
+							// ask
+							// me
+							// why
+							// they
+							// did
+							// this
+							double velY = ((double) packet.getVelocityY() / 8000);
+							double velZ = ((double) packet.getVelocityZ() / 8000);
+							velX *= horizontal.getValue() / 100;
+							velY *= vertical.getValue() / 100;
+							velZ *= horizontal.getValue() / 100;
+							IEntityVelocityUpdateS2CPacketMixin jesusFuckingChrist =
+									(IEntityVelocityUpdateS2CPacketMixin) packet;
+							jesusFuckingChrist.setVelocityX((int) (velX * 8000));
+							jesusFuckingChrist.setVelocityY((int) (velY * 8000));
+							jesusFuckingChrist.setVelocityZ((int) (velZ * 8000));
+
+						}
 					}
 				}
 			}
