@@ -196,41 +196,37 @@ public final class RotationUtils
 			MathHelper.clamp(vec.z, box.minZ, box.maxZ));
 	}
 
-	public  float[] calcRotation(Entity entity ,float speed, float range, boolean instant, boolean silent, float[]serverSideAngles)
-	{
-		if(serverSideAngles == null){
+	public  float[] calcRotation(Entity entity ,float speed, float range, boolean instant, boolean silent, float[]serverSideAngles) {
+		if (serverSideAngles == null) {
 			serverSideAngles = new float[]{
-			mc.player.getYaw(),mc.player.getPitch()
+					mc.player.getYaw(), mc.player.getPitch()
 			};
 		}
-		float mcTickDelta =0.01F;
-		float currentYaw  = silent ? serverSideAngles[0]: mc.player.getYaw(mcTickDelta);
-		float currentPitch  =silent ? serverSideAngles[1]: mc.player.getPitch(mcTickDelta);
-		float tickDelta = instant ? speed *2 : speed;
+		float mcTickDelta = 0.01F;
+		float currentYaw = silent ? serverSideAngles[0] : mc.player.getYaw(mcTickDelta);
+		float currentPitch = silent ? serverSideAngles[1] : mc.player.getPitch(mcTickDelta);
+		float tickDelta = instant ? speed * 2 : speed;
 		float aYaw = 0, aPitch = 0;
-		TimeHelper timeHelper = new TimeHelper();
 		Vec3d eye = Objects.requireNonNull(mc.player).getEyePos();
 		Box bb = entity.getBoundingBox();
 		Vec3d nearest = nearest(bb, eye);
 		RaytraceUtils raytraceUtils = new RaytraceUtils();
-			EntityHitResult hitResult = raytraceUtils.rayCastByRotation(currentYaw, currentPitch, range);
-			if (hitResult != null) {
-				if (hitResult.getEntity() != mc.player && hitResult.getEntity() == entity) {
-					final float[] center =
-							rotation(entity.getEyePos(), eye);
-					aYaw = currentYaw + MathHelper.wrapDegrees(center[0] - currentYaw);
-					aPitch = currentPitch + MathHelper.wrapDegrees(center[1] - currentPitch);
-					return new float[]{
-							lerp(currentYaw, aYaw, speed * 0.1f),
-							lerp(currentPitch, aPitch, speed * 0.1f)
-					};
-				}
+		EntityHitResult hitResult = raytraceUtils.rayCastByRotation(currentYaw, currentPitch, range);
+		if (hitResult != null && hitResult.getEntity() != mc.player && hitResult.getEntity() == entity) {
+				final float[] center = rotation(entity.getEyePos().add(0, -0.3, 0), eye);
+				aYaw = currentYaw + MathHelper.wrapDegrees(center[0] - currentYaw);
+				aPitch = currentPitch + MathHelper.wrapDegrees(center[1] - currentPitch);
+				return new float[]{
+						lerp(currentYaw, aYaw, speed * 0.1f),
+						lerp(currentPitch, aPitch, speed * 0.1f)
+				};
+		} else {
+			float[] newRotation = wrapAngleArray(currentYaw, currentPitch, rotation(nearest.add(RandomUtils.nextDouble(-0.001f, 0.001),
+					RandomUtils.nextDouble(-0.001f, 0.001),
+					RandomUtils.nextDouble(-0.001f, 0.001)), eye));
+			return lerpArray(new float[]{currentYaw, currentPitch}, newRotation, tickDelta);
 		}
-				float[] newRotation = wrapAngleArray(currentYaw, currentPitch, rotation(nearest.add(RandomUtils.nextDouble(-0.001f, 0.001),
-						RandomUtils.nextDouble(-0.001f, 0.001),
-						RandomUtils.nextDouble(-0.001f, 0.001)), eye));
-				return lerpArray(new float[]{currentYaw, currentPitch}, newRotation, tickDelta);
-			}
+	}
 	public float[] calcRotation(Entity entity) {
 		float aYaw = 0, aPitch = 0;
 		long next = 0;

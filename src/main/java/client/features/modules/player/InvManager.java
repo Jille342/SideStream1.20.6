@@ -11,6 +11,7 @@ import net.minecraft.component.type.FoodComponent;
 import net.minecraft.enchantment.EnchantmentHelper;
 import net.minecraft.enchantment.Enchantments;
 import net.minecraft.item.*;
+import net.minecraft.recipe.Ingredient;
 import net.minecraft.screen.slot.SlotActionType;
 import org.apache.commons.lang3.tuple.MutablePair;
 
@@ -272,13 +273,8 @@ public class InvManager extends Module {
                 (stack.getItem().getTranslationKey().contains("anvil")) ||
                 (stack.getItem().getTranslationKey().contains("torch")) ||
                 (stack.getItem().getTranslationKey().contains("seeds")) ||
-                (stack.getItem().getTranslationKey().contains("leather")) ||
-                (stack.getItem().getTranslationKey().contains("reeds")) ||
-                (stack.getItem().getTranslationKey().contains("skull")) ||
                 (stack.getItem().getTranslationKey().contains("record")) ||
-                (stack.getItem().getTranslationKey().contains("snowball")) ||
-                (stack.getItem() instanceof GlassBottleItem) ||
-                (stack.getItem().getTranslationKey().contains("piston"));
+                (stack.getItem().getTranslationKey().contains("snowball"));
     }
 
     private static float getSwordValue(ItemStack stack, SwordItem item) {

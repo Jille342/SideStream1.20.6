@@ -74,7 +74,7 @@ public class LegitAura2 extends Module
         this.maxCPS = new NumberSetting("MaxCPS", 7, 2, 20, 1f);
         minCPS = new NumberSetting("MinCPS", 6, 1, 19, 1f);
         sortmode = new ModeSetting("SortMode", "Angle",
-                new String[]{"Distance", "Angle","HurtTime"});
+                new String[]{"Angle","HurtTime"});
         rotationmode = new ModeSetting("Rotation Mode", "Normal",
                 new String[]{"None", "Normal", "Normal2", "Legit"});
         moveFix = new BooleanSetting("Move Fix", true);
@@ -207,7 +207,6 @@ public class LegitAura2 extends Module
                      aimSpeed = (float) MathHelper.clamp(
                             RandomUtils.nextFloat(aimSpeed - 0.2f, aimSpeed + 1.8f),
                             legitAimSpeed.minimum, legitAimSpeed.maximum)*0.1f;
-
                         angles = rotationUtils.calcRotation(target, aimSpeed, (float) rangeSetting.getValue(), isInstant, isSilent, angles);
                 }
                 if(angles != null){
@@ -228,16 +227,13 @@ public class LegitAura2 extends Module
 
     public void attack(Entity target)
     {
-        if( fixed != null) {
-                EntityHitResult hitResult = raytraceUtils.rayCastByRotation(fixed[0], fixed[1], (float) rangeSetting.getValue());
-                if (hitResult != null) {
-                    if (hitResult.getEntity() != mc.player && hitResult.getEntity() == target) {
-                        Objects.requireNonNull(mc.getNetworkHandler())
-                                .sendPacket(PlayerInteractEntityC2SPacket.attack(target,
-                                        Objects.requireNonNull(mc.player).isSneaking()));
-                }
+        if(angles != null) {
+                EntityHitResult hitResult = raytraceUtils.rayCastByRotation(angles[0], angles[1], (float) rangeSetting.getValue());
+                if (hitResult != null && hitResult.getEntity() != mc.player && hitResult.getEntity() == target) {
+                        Objects.requireNonNull(mc.getNetworkHandler()).sendPacket(PlayerInteractEntityC2SPacket.attack(target, Objects.requireNonNull(mc.player).isSneaking()));
             }
-        }Objects.requireNonNull(mc.player).swingHand(Hand.MAIN_HAND);
+        }
+        Objects.requireNonNull(mc.player).swingHand(Hand.MAIN_HAND);
     }
 
     private LivingEntity findTarget()
@@ -287,10 +283,6 @@ public class LegitAura2 extends Module
             return null;
         switch(sortmode.getMode())
         {
-            case "Distance":
-                this.targets.sort(Comparator.comparingDouble(
-                        (entity) -> (double)mc.player.distanceTo((Entity)entity)));
-                break;
             case "Angle":
                 targets.sort(Comparator
                         .comparingDouble(RotationUtils::calculateYawChangeToDst));
@@ -299,6 +291,8 @@ public class LegitAura2 extends Module
                 targets.sort(Comparator.comparingInt(o -> o.hurtTime));
                 break;
         }
+        targets.sort(Comparator.comparingDouble(
+                (entity) -> (double)mc.player.distanceTo((Entity)entity)));
         return targets.getFirst();
     }
 
