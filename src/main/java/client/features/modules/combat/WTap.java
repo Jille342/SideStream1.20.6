@@ -14,6 +14,7 @@ import client.event.Event;
 import client.event.listeners.EventRender2D;
 import client.features.modules.Module;
 import client.settings.NumberSetting;
+import net.minecraft.client.option.KeyBinding;
 import net.minecraft.entity.LivingEntity;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.util.hit.HitResult;
@@ -93,13 +94,14 @@ public class WTap
 
     private static void finishCombo() {
         if (mc.options.forwardKey.isPressed()) {
-            mc.options.forwardKey.setPressed(true);
+            KeyBinding.setKeyPressed(mc.options.forwardKey.getDefaultKey(), true);
         }
     }
 
     private static void startCombo() {
         if (mc.options.forwardKey.isPressed()) {
-            mc.options.forwardKey.setPressed(false);
+            KeyBinding.setKeyPressed(mc.options.forwardKey.getDefaultKey(), false);
+            KeyBinding.updatePressedStates();
         }
     }
 

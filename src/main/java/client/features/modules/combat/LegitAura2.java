@@ -33,6 +33,7 @@ public class LegitAura2 extends Module
     float[] fixed;
     float[] angles = null;
     boolean isSilent  =false;
+    boolean isInstant = false;
     private double currentCPS;
     BooleanSetting targetMobs;
     BooleanSetting ignoreTeamsSetting;
@@ -54,6 +55,7 @@ public class LegitAura2 extends Module
     NumberSetting swingRange;
     BooleanSetting legitInstant;
     BooleanSetting smartSilent;
+    BooleanSetting smartLegitInstant;
 
     public LegitAura2()
     {
@@ -85,9 +87,10 @@ public class LegitAura2 extends Module
         legitAimSpeed = new NumberSetting("Legit Aim Speed", 0.1D, 0.05D,1.0, 0.01D);
         legitInstant = new BooleanSetting("Legit Instant", true);
         smartSilent = new BooleanSetting("Smart Silent",false);
+        smartLegitInstant = new BooleanSetting("Smart Legit Instant", false);
         addSetting(rotationmode, maxCPS, minCPS
                 , ignoreTeamsSetting, sortmode,
-                targetInvisibles, fov, hitThroughWalls, rangeSetting, clickOnly, moveFix, itemCheck, testMove,silent, legitAimSpeed,swingRange,legitInstant,smartSilent,targetMobs);
+                targetInvisibles, fov, hitThroughWalls, rangeSetting, clickOnly, moveFix, itemCheck, testMove,silent, legitAimSpeed,swingRange,legitInstant,smartSilent,smartLegitInstant,targetMobs);
         super.init();
     }
     public static ArrayList<LivingEntity> targets = new ArrayList<LivingEntity>();
@@ -113,6 +116,16 @@ public class LegitAura2 extends Module
             }else {
                 isSilent = silent.getValue();
             }
+            if(smartLegitInstant.getValue()){
+                if(targets.size() >= 2){
+                    isInstant =true;
+                } else {
+                    isSilent = false;
+                }
+            }else {
+                isSilent = legitInstant.getValue();
+            }
+
             setTag(sortmode.getMode() + " " + targets.size());
             if(target != null)
             {
@@ -195,7 +208,7 @@ public class LegitAura2 extends Module
                             RandomUtils.nextFloat(aimSpeed - 0.2f, aimSpeed + 1.8f),
                             legitAimSpeed.minimum, legitAimSpeed.maximum)*0.1f;
 
-                        angles = rotationUtils.calcRotation(target, aimSpeed, (float) rangeSetting.getValue(), legitInstant.getValue(), isSilent, angles);
+                        angles = rotationUtils.calcRotation(target, aimSpeed, (float) rangeSetting.getValue(), isInstant, isSilent, angles);
                 }
                 if(angles != null){
                     fixed = rotationUtils.fixedSensitivity(angles, 0.1F);
