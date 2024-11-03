@@ -24,7 +24,7 @@ package com.thealtening.auth.service;
 public enum AlteningServiceType {
 
     MOJANG("https://authserver.mojang.com", "https://api.mojang.com", "https://sessionserver.mojang.com"),
-    THEALTENING("http://authserver.thealtening.com","http://api.thealtening.com" , "http://sessionserver.thealtening.com");
+    THEALTENING("http://authserver.thealtening.com", "http://api.thealtening.com", "http://sessionserver.thealtening.com");
 
     private final String authServer;
     private final String sessionServer;

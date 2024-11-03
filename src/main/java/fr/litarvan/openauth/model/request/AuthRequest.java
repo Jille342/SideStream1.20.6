@@ -23,8 +23,8 @@ import fr.litarvan.openauth.model.AuthAgent;
 /**
  * JSON Model of an authentication request
  *
- * @version 1.0.4
  * @author Litarvan
+ * @version 1.0.4
  */
 public class AuthRequest {
 
@@ -51,30 +51,16 @@ public class AuthRequest {
     /**
      * Authentication Request
      *
-     * @param agent
-     *            The authentication agent (Optional, the game you want to use, Minecraft, Scrolls, etc...)
-     * @param username
-     *            The username (The username of the player you want to authenticate)
-     * @param password
-     *            The password (The password of the player you want to authenticate)
-     * @param clientToken
-     *            The client token (Optional, It's like a password for the access token)
+     * @param agent       The authentication agent (Optional, the game you want to use, Minecraft, Scrolls, etc...)
+     * @param username    The username (The username of the player you want to authenticate)
+     * @param password    The password (The password of the player you want to authenticate)
+     * @param clientToken The client token (Optional, It's like a password for the access token)
      */
     public AuthRequest(AuthAgent agent, String username, String password, String clientToken) {
         this.agent = agent;
         this.username = username;
         this.password = password;
         this.clientToken = clientToken;
-    }
-
-    /**
-     * Sets a new authentication agent (Optional, the game you want to use, Minecraft, Scrolls, etc...)
-     *
-     * @param agent
-     *            The new agent
-     */
-    public void setAgent(AuthAgent agent) {
-        this.agent = agent;
     }
 
     /**
@@ -87,13 +73,12 @@ public class AuthRequest {
     }
 
     /**
-     * Sets a new username (The username of the player you want to authenticate)
+     * Sets a new authentication agent (Optional, the game you want to use, Minecraft, Scrolls, etc...)
      *
-     * @param username
-     *            The new username
+     * @param agent The new agent
      */
-    public void setUsername(String username) {
-        this.username = username;
+    public void setAgent(AuthAgent agent) {
+        this.agent = agent;
     }
 
     /**
@@ -106,13 +91,12 @@ public class AuthRequest {
     }
 
     /**
-     * Sets a new password (The password of the player you want to authenticate)
+     * Sets a new username (The username of the player you want to authenticate)
      *
-     * @param password
-     *            The new password
+     * @param username The new username
      */
-    public void setPassword(String password) {
-        this.password = password;
+    public void setUsername(String username) {
+        this.username = username;
     }
 
     /**
@@ -125,13 +109,12 @@ public class AuthRequest {
     }
 
     /**
-     * Sets a new client token (It's like a password for the access token)
+     * Sets a new password (The password of the player you want to authenticate)
      *
-     * @param clientToken
-     *            The new client token
+     * @param password The new password
      */
-    public void setClientToken(String clientToken) {
-        this.clientToken = clientToken;
+    public void setPassword(String password) {
+        this.password = password;
     }
 
     /**
@@ -141,6 +124,15 @@ public class AuthRequest {
      */
     public String getClientToken() {
         return clientToken;
+    }
+
+    /**
+     * Sets a new client token (It's like a password for the access token)
+     *
+     * @param clientToken The new client token
+     */
+    public void setClientToken(String clientToken) {
+        this.clientToken = clientToken;
     }
 
 }

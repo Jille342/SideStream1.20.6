@@ -6,14 +6,12 @@ import lombok.Setter;
 
 @Setter
 @Getter
-public class EventChat extends Event<EventChat>
-{
-	
-	String message;
-	
-	public EventChat(String message)
-	{
-		this.message = message;
-	}
-	
+public class EventChat extends Event<EventChat> {
+
+    String message;
+
+    public EventChat(String message) {
+        this.message = message;
+    }
+
 }

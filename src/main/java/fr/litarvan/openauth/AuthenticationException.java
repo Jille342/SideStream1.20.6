@@ -23,8 +23,8 @@ import fr.litarvan.openauth.model.AuthError;
 /**
  * Authentication exceptions
  *
- * @version 1.0.4
  * @author Litarvan
+ * @version 1.0.4
  */
 public class AuthenticationException extends Exception {
 
@@ -36,8 +36,7 @@ public class AuthenticationException extends Exception {
     /**
      * Create a new Authentication Exception
      *
-     * @param model
-     *            The given JSON model instance of the error
+     * @param model The given JSON model instance of the error
      */
     public AuthenticationException(AuthError model) {
         super(model.getErrorMessage());

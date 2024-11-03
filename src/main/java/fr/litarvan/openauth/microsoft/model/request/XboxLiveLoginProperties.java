@@ -18,31 +18,26 @@
  */
 package fr.litarvan.openauth.microsoft.model.request;
 
-public class XboxLiveLoginProperties
-{
+public class XboxLiveLoginProperties {
     private final String AuthMethod;
     private final String SiteName;
     private final String RpsTicket;
 
-    public XboxLiveLoginProperties(String AuthMethod, String SiteName, String RpsTicket)
-    {
+    public XboxLiveLoginProperties(String AuthMethod, String SiteName, String RpsTicket) {
         this.AuthMethod = AuthMethod;
         this.SiteName = SiteName;
         this.RpsTicket = RpsTicket;
     }
 
-    public String getAuthMethod()
-    {
+    public String getAuthMethod() {
         return AuthMethod;
     }
 
-    public String getSiteName()
-    {
+    public String getSiteName() {
         return SiteName;
     }
 
-    public String getRpsTicket()
-    {
+    public String getRpsTicket() {
         return RpsTicket;
     }
 }

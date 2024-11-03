@@ -24,23 +24,21 @@ import fr.litarvan.openauth.microsoft.model.response.MinecraftProfile;
  * Microsoft authentication result
  *
  * <p>
- *     This class contains the result of a successful Microsoft authentication: a player profile and its tokens (both
- *     access and refresh token).
+ * This class contains the result of a successful Microsoft authentication: a player profile and its tokens (both
+ * access and refresh token).
  * </p>
  *
  * @author Litarvan
  * @version 1.1.5
  */
-public class MicrosoftAuthResult
-{
+public class MicrosoftAuthResult {
     private final MinecraftProfile profile;
     private final String accessToken;
     private final String refreshToken;
     private final String xuid;
     private final String clientId;
 
-    public MicrosoftAuthResult(MinecraftProfile profile, String accessToken, String refreshToken, String xuid, String clientId)
-    {
+    public MicrosoftAuthResult(MinecraftProfile profile, String accessToken, String refreshToken, String xuid, String clientId) {
         this.profile = profile;
         this.accessToken = accessToken;
         this.refreshToken = refreshToken;
@@ -51,16 +49,14 @@ public class MicrosoftAuthResult
     /**
      * @return The player Minecraft profile (contains its UUID and username)
      */
-    public MinecraftProfile getProfile()
-    {
+    public MinecraftProfile getProfile() {
         return profile;
     }
 
     /**
      * @return The Minecraft access token
      */
-    public String getAccessToken()
-    {
+    public String getAccessToken() {
         return accessToken;
     }
 
@@ -68,24 +64,21 @@ public class MicrosoftAuthResult
      * @return The Microsoft refresh token that can be used to log the user back silently using
      * {@link MicrosoftAuthenticator#loginWithRefreshToken(String)}
      */
-    public String getRefreshToken()
-    {
+    public String getRefreshToken() {
         return refreshToken;
     }
 
     /**
      * @return The XUID of the player
      */
-    public String getXuid()
-    {
+    public String getXuid() {
         return this.xuid;
     }
 
     /**
      * @return The client ID of the player
      */
-    public String getClientId()
-    {
+    public String getClientId() {
         return this.clientId;
     }
 }

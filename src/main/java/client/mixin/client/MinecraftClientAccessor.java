@@ -4,6 +4,7 @@ import com.mojang.authlib.minecraft.MinecraftSessionService;
 import com.mojang.authlib.minecraft.UserApiService;
 import com.mojang.authlib.yggdrasil.ProfileResult;
 import com.mojang.authlib.yggdrasil.YggdrasilAuthenticationService;
+import java.util.concurrent.CompletableFuture;
 import net.minecraft.client.MinecraftClient;
 import net.minecraft.client.network.SocialInteractionsManager;
 import net.minecraft.client.render.RenderTickCounter;
@@ -16,56 +17,54 @@ import org.spongepowered.asm.mixin.Mutable;
 import org.spongepowered.asm.mixin.gen.Accessor;
 import org.spongepowered.asm.mixin.gen.Invoker;
 
-import java.util.concurrent.CompletableFuture;
-
 @Mixin(MinecraftClient.class)
-public interface MinecraftClientAccessor
-{
-	
-	@Mutable
-	@Accessor("session")
-	void setSession(Session session);
-	
-	@Invoker("doAttack")
-	boolean accessDoAttack();
-	
-	@Invoker("doItemUse")
-	void accessDoUseItem();
-	
-	@Accessor("renderTickCounter")
-	RenderTickCounter getRenderTickCounter();
-	@Mutable
-	@Accessor("profileKeys")
-	void setProfileKeys(ProfileKeys keys);
+public interface MinecraftClientAccessor {
 
-	@Accessor("authenticationService")
-	YggdrasilAuthenticationService getAuthenticationService();
+    @Mutable
+    @Accessor("session")
+    void setSession(Session session);
 
-	@Mutable
-	@Accessor
-	void setUserApiService(UserApiService apiService);
+    @Invoker("doAttack")
+    boolean accessDoAttack();
 
-	@Mutable
-	@Accessor("sessionService")
-	void setSessionService(MinecraftSessionService sessionService);
+    @Invoker("doItemUse")
+    void accessDoUseItem();
 
-	@Mutable
-	@Accessor("authenticationService")
-	void setAuthenticationService(YggdrasilAuthenticationService authenticationService);
+    @Accessor("renderTickCounter")
+    RenderTickCounter getRenderTickCounter();
 
-	@Mutable
-	@Accessor("skinProvider")
-	void setSkinProvider(PlayerSkinProvider skinProvider);
+    @Mutable
+    @Accessor("profileKeys")
+    void setProfileKeys(ProfileKeys keys);
 
-	@Mutable
-	@Accessor("socialInteractionsManager")
-	void setSocialInteractionsManager(SocialInteractionsManager socialInteractionsManager);
+    @Accessor("authenticationService")
+    YggdrasilAuthenticationService getAuthenticationService();
 
-	@Mutable
-	@Accessor("abuseReportContext")
-	void setAbuseReportContext(AbuseReportContext abuseReportContext);
+    @Mutable
+    @Accessor("authenticationService")
+    void setAuthenticationService(YggdrasilAuthenticationService authenticationService);
 
-	@Mutable
-	@Accessor("gameProfileFuture")
-	void setGameProfileFuture(CompletableFuture<ProfileResult> future);
+    @Mutable
+    @Accessor
+    void setUserApiService(UserApiService apiService);
+
+    @Mutable
+    @Accessor("sessionService")
+    void setSessionService(MinecraftSessionService sessionService);
+
+    @Mutable
+    @Accessor("skinProvider")
+    void setSkinProvider(PlayerSkinProvider skinProvider);
+
+    @Mutable
+    @Accessor("socialInteractionsManager")
+    void setSocialInteractionsManager(SocialInteractionsManager socialInteractionsManager);
+
+    @Mutable
+    @Accessor("abuseReportContext")
+    void setAbuseReportContext(AbuseReportContext abuseReportContext);
+
+    @Mutable
+    @Accessor("gameProfileFuture")
+    void setGameProfileFuture(CompletableFuture<ProfileResult> future);
 }

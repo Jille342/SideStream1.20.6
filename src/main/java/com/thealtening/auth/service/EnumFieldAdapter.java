@@ -17,11 +17,8 @@
 
 package com.thealtening.auth.service;
 
-import com.mojang.authlib.yggdrasil.YggdrasilEnvironment;
-
 import java.lang.invoke.MethodHandle;
 import java.lang.invoke.MethodHandles;
-import java.lang.invoke.MethodType;
 import java.lang.reflect.Field;
 import java.lang.reflect.Modifier;
 import java.util.HashMap;
@@ -33,16 +30,37 @@ import java.util.Optional;
  */
 public final class EnumFieldAdapter {
 
-    private final HashMap<String, MethodHandle> fields = new HashMap<>();
     private static final MethodHandles.Lookup LOOKUP;
     private static Field MODIFIERS;
+
+    static {
+        try {
+            MODIFIERS = Field.class.getDeclaredField("modifiers");
+            MODIFIERS.setAccessible(true);
+        } catch (NoSuchFieldException e) {
+            e.printStackTrace();
+        }
+
+        MethodHandles.Lookup lookupObject;
+        try {
+            Field lookupImplField = MethodHandles.Lookup.class.getDeclaredField("IMPL_LOOKUP");
+            lookupImplField.setAccessible(true);
+            lookupObject = (MethodHandles.Lookup) lookupImplField.get(null);
+        } catch (ReflectiveOperationException e) {
+            lookupObject = MethodHandles.lookup();
+        }
+
+        LOOKUP = lookupObject;
+    }
+
+    private final HashMap<String, MethodHandle> fields = new HashMap<>();
 
     public EnumFieldAdapter(String parent, String enumPath) {
         try {
             Class cls = Class.forName(parent);
             Field modifiers = EnumFieldAdapter.MODIFIERS;
             for (Field field : cls.getDeclaredFields()) {
-                if(field.getName().equals(enumPath)) {
+                if (field.getName().equals(enumPath)) {
                     Object accessedEnum = field.get(null);
                     for (Field innerEnumField : accessedEnum.getClass().getDeclaredFields()) {
                         innerEnumField.setAccessible(true);
@@ -70,25 +88,5 @@ public final class EnumFieldAdapter {
                 e.printStackTrace();
             }
         });
-    }
-
-    static {
-        try {
-            MODIFIERS = Field.class.getDeclaredField("modifiers");
-            MODIFIERS.setAccessible(true);
-        } catch (NoSuchFieldException e) {
-            e.printStackTrace();
-        }
-
-        MethodHandles.Lookup lookupObject;
-        try {
-            Field lookupImplField = MethodHandles.Lookup.class.getDeclaredField("IMPL_LOOKUP");
-            lookupImplField.setAccessible(true);
-            lookupObject = (MethodHandles.Lookup) lookupImplField.get(null);
-        } catch (ReflectiveOperationException e) {
-            lookupObject = MethodHandles.lookup();
-        }
-
-        LOOKUP = lookupObject;
     }
 }

@@ -9,17 +9,15 @@ import net.minecraft.client.util.Window;
  * 2DRenderのEvent
  */
 @Getter
-public class EventRender2D extends Event
-{
-	private Window resolution;
-	private final float partialTicks;
-	DrawContext context;
-	
-	public EventRender2D(float partialTicks, DrawContext context)
-	{
-		this.resolution = resolution;
-		this.partialTicks = partialTicks;
-		this.context = context;
-	}
-	
+public class EventRender2D extends Event {
+    private final float partialTicks;
+    DrawContext context;
+    private Window resolution;
+
+    public EventRender2D(float partialTicks, DrawContext context) {
+        this.resolution = resolution;
+        this.partialTicks = partialTicks;
+        this.context = context;
+    }
+
 }

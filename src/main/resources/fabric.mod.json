@@ -1,26 +1,26 @@
 {
-  "schemaVersion": 1,
-  "id": "sidestream",
-  "version": "${version}",
-  "name": "SideStream Client",
-  "description": "Destory Bow Server!",
-  "authors": [
-    "Jill"
-  ],
-  "contact": {
-    "homepage": "https://discord.gg/Y3yMUSWc5s",
-    "sources": "https://github.com/Jille342/SideStream1.20.6",
-    "discord": "ji12444"
-  },
-  "license": "GPL-3.0-or-later",
-  "environment": "client",
-  "entrypoints": {},
-  "mixins": [
-    "sidestream.mixins.json"
-  ],
-  "depends": {
-    "fabricloader": ">=0.15.9",
-    "minecraft": "~1.20.6",
-    "java": ">=21"
-  }
+    "schemaVersion": 1,
+    "id": "sidestream",
+    "version": "${version}",
+    "name": "SideStream Client",
+    "description": "Destory Bow Server!",
+    "authors": [
+        "Jill"
+    ],
+    "contact": {
+        "homepage": "https://discord.gg/Y3yMUSWc5s",
+        "sources": "https://github.com/Jille342/SideStream1.20.6",
+        "discord": "ji12444"
+    },
+    "license": "GPL-3.0-or-later",
+    "environment": "client",
+    "entrypoints": {},
+    "mixins": [
+        "sidestream.mixins.json"
+    ],
+    "depends": {
+        "fabricloader": ">=0.15.9",
+        "minecraft": "~1.20.6",
+        "java": ">=21"
+    }
 }

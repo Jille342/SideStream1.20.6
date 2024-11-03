@@ -1,4 +1,3 @@
-
 package client.features.modules.player;
 
 import client.event.Event;
@@ -12,11 +11,11 @@ import net.minecraft.util.math.Vec3d;
 
 public class AutoTool extends Module {
     public AutoTool() {
-        super("AutoTool",0 ,Category.PLAYER);
+        super("AutoTool", 0, Category.PLAYER);
     }
 
-    public void onEvent(Event<?> event){
-        if(event instanceof EventUpdate){
+    public void onEvent(Event<?> event) {
+        if (event instanceof EventUpdate) {
             if (!mc.options.attackKey.isPressed())
                 return;
             if (mc.crosshairTarget == null || mc.crosshairTarget.getType() == HitResult.Type.ENTITY)

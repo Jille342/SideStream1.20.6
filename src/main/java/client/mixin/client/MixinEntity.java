@@ -1,4 +1,3 @@
-
 package client.mixin.client;
 
 import client.features.modules.ModuleManager;
@@ -13,14 +12,11 @@ import org.spongepowered.asm.mixin.injection.callback.CallbackInfoReturnable;
 
 @Environment(EnvType.CLIENT)
 @Mixin(Entity.class)
-public class MixinEntity
-{
-	@Inject(method = "getTargetingMargin", at = @At("HEAD"), cancellable = true)
-	private void onGetTargetingMargin(CallbackInfoReturnable<Float> cir)
-	{
-		if(ModuleManager.getModulebyClass(HitBoxes.class).isEnabled())
-		{
-			cir.setReturnValue(HitBoxes.getSize((Entity)(Object)this));
-		}
-	}
+public class MixinEntity {
+    @Inject(method = "getTargetingMargin", at = @At("HEAD"), cancellable = true)
+    private void onGetTargetingMargin(CallbackInfoReturnable<Float> cir) {
+        if (ModuleManager.getModulebyClass(HitBoxes.class).isEnabled()) {
+            cir.setReturnValue(HitBoxes.getSize((Entity) (Object) this));
+        }
+    }
 }

@@ -7,13 +7,11 @@
  */
 package client.features.modules.combat;
 
-import java.util.HashMap;
-import java.util.concurrent.ThreadLocalRandom;
-
 import client.event.Event;
 import client.event.listeners.EventRender2D;
 import client.features.modules.Module;
 import client.settings.NumberSetting;
+import java.util.concurrent.ThreadLocalRandom;
 import net.minecraft.client.option.KeyBinding;
 import net.minecraft.entity.LivingEntity;
 import net.minecraft.entity.player.PlayerEntity;
@@ -21,7 +19,7 @@ import net.minecraft.util.hit.HitResult;
 import org.lwjgl.glfw.GLFW;
 
 public class WTap
-        extends Module {
+    extends Module {
     public static double comboLasts;
     public static boolean comboing;
     public static boolean hitCoolDown;
@@ -36,31 +34,31 @@ public class WTap
 
     public WTap() {
         super("WTap", 0, Category.COMBAT);
-        addSetting(minActionTicks,maxActionTicks,minOnceEvery,maxOnceEvery,range);
+        addSetting(minActionTicks, maxActionTicks, minOnceEvery, maxOnceEvery, range);
     }
-    
-    
-  public void onEvent(Event<?> event){
-        if(event instanceof EventRender2D){
+
+
+    public void onEvent(Event<?> event) {
+        if (event instanceof EventRender2D) {
             if (mc.player == null) {
                 return;
             }
             if (comboing) {
-                if ((double)System.currentTimeMillis() >= comboLasts) {
+                if ((double) System.currentTimeMillis() >= comboLasts) {
                     comboing = false;
                     finishCombo();
                     return;
                 }
                 return;
             }
-            if ((mc.crosshairTarget != null && mc.crosshairTarget.getType() == HitResult.Type.ENTITY&& mc.options.attackKey.isPressed())||(  LegitAura2.target!= null && LegitAura2.targets.size()==1)) {
-                LivingEntity target = mc.crosshairTarget== null? LegitAura2.target: (LivingEntity) mc.targetedEntity;
+            if ((mc.crosshairTarget != null && mc.crosshairTarget.getType() == HitResult.Type.ENTITY && mc.options.attackKey.isPressed()) || (LegitAura2.target != null && LegitAura2.targets.size() == 1)) {
+                LivingEntity target = mc.crosshairTarget == null ? LegitAura2.target : (LivingEntity) mc.targetedEntity;
                 if (target == null) {
                     return;
                 }
-                if ((double)mc.player.distanceTo(target) <= this.range.getValue()) {
+                if ((double) mc.player.distanceTo(target) <= this.range.getValue()) {
                     if (target.hurtTime >= 10) {
-                        if ( !(target instanceof PlayerEntity)) {
+                        if (!(target instanceof PlayerEntity)) {
                             return;
                         }
                         if (hitCoolDown && !alreadyHit) {
@@ -73,10 +71,10 @@ public class WTap
                             }
                         }
                         if (!alreadyHit) {
-                            hitTimeout = this.minOnceEvery.getValue() == this.maxOnceEvery.getValue() ? (int)this.minOnceEvery.getValue() : ThreadLocalRandom.current().nextInt((int)this.minOnceEvery.getValue(), (int)this.maxOnceEvery.getValue());
+                            hitTimeout = this.minOnceEvery.getValue() == this.maxOnceEvery.getValue() ? (int) this.minOnceEvery.getValue() : ThreadLocalRandom.current().nextInt((int) this.minOnceEvery.getValue(), (int) this.maxOnceEvery.getValue());
                             hitCoolDown = true;
                             hitsWaited = 0;
-                            comboLasts = ThreadLocalRandom.current().nextDouble(this.minActionTicks.getValue(), this.maxActionTicks.getValue() + 0.01) + (double)System.currentTimeMillis();
+                            comboLasts = ThreadLocalRandom.current().nextDouble(this.minActionTicks.getValue(), this.maxActionTicks.getValue() + 0.01) + (double) System.currentTimeMillis();
                             comboing = true;
                             startCombo();
                             alreadyHit = true;
@@ -90,7 +88,7 @@ public class WTap
                 }
             }
         }
-  }
+    }
 
 
     private static void finishCombo() {
