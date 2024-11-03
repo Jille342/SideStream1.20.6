@@ -53,8 +53,7 @@ public class WTap
             }
             if ((mc.crosshairTarget != null && mc.crosshairTarget.getType() == HitResult.Type.ENTITY&& mc.options.attackKey.isPressed())||(  LegitAura2.target!= null && LegitAura2.targets.size()==1)) {
                 LivingEntity target = mc.crosshairTarget== null? LegitAura2.target: (LivingEntity) mc.targetedEntity;
-                assert target != null;
-                if (!target.isAlive()) {
+                if (target == null) {
                     return;
                 }
                 if ((double)mc.player.distanceTo(target) <= this.range.getValue()) {
