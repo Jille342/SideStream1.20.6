@@ -18,6 +18,7 @@ import net.minecraft.client.option.KeyBinding;
 import net.minecraft.entity.LivingEntity;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.util.hit.HitResult;
+import org.lwjgl.glfw.GLFW;
 
 public class WTap
         extends Module {
@@ -93,13 +94,13 @@ public class WTap
 
 
     private static void finishCombo() {
-        if (mc.options.forwardKey.isPressed()) {
+        if (GLFW.glfwGetKey(0, GLFW.GLFW_KEY_W) == GLFW.GLFW_PRESS) {
             KeyBinding.setKeyPressed(mc.options.forwardKey.getDefaultKey(), true);
         }
     }
 
     private static void startCombo() {
-        if (mc.options.forwardKey.isPressed()) {
+        if (GLFW.glfwGetKey(0, GLFW.GLFW_KEY_W) == GLFW.GLFW_PRESS) {
             KeyBinding.setKeyPressed(mc.options.forwardKey.getDefaultKey(), false);
             KeyBinding.updatePressedStates();
         }
