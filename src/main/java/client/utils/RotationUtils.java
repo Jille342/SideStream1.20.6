@@ -17,6 +17,7 @@
 
 package client.utils;
 
+import lombok.experimental.UtilityClass;
 import net.minecraft.client.MinecraftClient;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.LivingEntity;
@@ -28,6 +29,7 @@ import java.util.List;
 import java.util.Objects;
 import java.util.concurrent.ThreadLocalRandom;
 
+@UtilityClass
 public final class RotationUtils
 {
 	public static float virtualYaw, virtualPitch, virtualPrevYaw,
@@ -36,9 +38,6 @@ public final class RotationUtils
 	public static final double DEG_TO_RAD = Math.PI / 180.0;
 
 	public static final double RAD_TO_DEG = 180.0 / Math.PI;
-	
-	public RotationUtils()
-	{}
 
 	public static Vec3d getEyesPos()
 	{
@@ -181,7 +180,7 @@ public final class RotationUtils
 		return (float)(yaw * -1.0D);
 	}
 	
-	public float[] fixedSensitivity(float[] rotations, float sens)
+	public static float[] fixedSensitivity(float[] rotations, float sens)
 	{
 		float f = sens * 0.6F + 0.2F;
 		float gcd = f * f * f * 1.2F;
@@ -196,7 +195,7 @@ public final class RotationUtils
 			MathHelper.clamp(vec.z, box.minZ, box.maxZ));
 	}
 
-	public  float[] calcRotation(Entity entity ,float speed, float range, boolean instant, boolean silent, float[]serverSideAngles) {
+	public static float[] calcRotation(Entity entity ,float speed, float range, boolean instant, boolean silent, float[]serverSideAngles) {
 		if (serverSideAngles == null) {
 			serverSideAngles = new float[]{
 					mc.player.getYaw(), mc.player.getPitch()
@@ -210,8 +209,7 @@ public final class RotationUtils
 		Vec3d eye = Objects.requireNonNull(mc.player).getEyePos();
 		Box bb = entity.getBoundingBox();
 		Vec3d nearest = nearest(bb, eye);
-		RaytraceUtils raytraceUtils = new RaytraceUtils();
-		EntityHitResult hitResult = raytraceUtils.rayCastByRotation(currentYaw, currentPitch, range);
+		EntityHitResult hitResult = RaytraceUtils.rayCastByRotation(currentYaw, currentPitch, range);
 		if (hitResult != null && hitResult.getEntity() != mc.player && hitResult.getEntity() == entity) {
 				final float[] center = rotation(entity.getEyePos().add(0, -0.3, 0), eye);
 				aYaw = currentYaw + MathHelper.wrapDegrees(center[0] - currentYaw);
@@ -227,7 +225,7 @@ public final class RotationUtils
 			return lerpArray(new float[]{currentYaw, currentPitch}, newRotation, tickDelta);
 		}
 	}
-	public float[] calcRotation(Entity entity) {
+	public static float[] calcRotation(Entity entity) {
 		float aYaw = 0, aPitch = 0;
 		long next = 0;
 		Vec3d eye = Objects.requireNonNull(mc.player).getEyePos();
@@ -255,7 +253,7 @@ public final class RotationUtils
 				RandomUtils.nextDouble(-0.1f, 0.1)
 		), eye);
 	}
-	public  float[] wrapAngleArray(float playerYaw , float playerPitch, float[] targetAngle){
+	public static float[] wrapAngleArray(float playerYaw , float playerPitch, float[] targetAngle){
 		float yaw = targetAngle[0];
 		float pitch = targetAngle[1];
 		final float finishedYaw =
@@ -267,10 +265,10 @@ public final class RotationUtils
 		};
 	}
 
-	private float lerp(float a, float b, float t) {
+	private static float lerp(float a, float b, float t) {
 		return a + (b - a) * t;
 	}
-	private float[] lerpArray (float[]from, float[] target, float ticks){
+	private static float[] lerpArray (float[]from, float[] target, float ticks){
 		return new float[] {
 				lerp(from[0],target[0],ticks), lerp(from[1],target[1],ticks)
 		};

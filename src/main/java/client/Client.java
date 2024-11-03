@@ -11,10 +11,12 @@ import client.ui.BackgroundManager;
 import client.ui.HUD2;
 import client.utils.RotationUtils;
 import lombok.Getter;
+import lombok.experimental.UtilityClass;
 import net.minecraft.client.MinecraftClient;
 
 import java.io.File;
 
+@UtilityClass
 public class Client
 {
 	public static final String NAME = "SideStream";

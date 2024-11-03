@@ -2,7 +2,9 @@ package client.utils;
 
 import java.math.BigDecimal;
 import java.math.RoundingMode;
+import lombok.experimental.UtilityClass;
 
+@UtilityClass
 public class MathUtils
 {
 	

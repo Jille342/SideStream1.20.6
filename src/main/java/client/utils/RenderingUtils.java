@@ -1,6 +1,7 @@
 package client.utils;
 
 import com.mojang.blaze3d.systems.RenderSystem;
+import lombok.experimental.UtilityClass;
 import me.x150.renderer.util.BufferUtils;
 import net.minecraft.client.gui.DrawContext;
 import net.minecraft.client.render.*;
@@ -19,6 +20,7 @@ import static me.x150.renderer.util.RendererUtils.endRender;
 import static me.x150.renderer.util.RendererUtils.setupRender;
 import static org.lwjgl.opengl.GL11.*;
 
+@UtilityClass
 public class RenderingUtils implements MCUtil
 {
 	private static final Matrix4f model = new Matrix4f();

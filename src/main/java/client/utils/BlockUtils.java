@@ -1,5 +1,6 @@
 package client.utils;
 
+import lombok.experimental.UtilityClass;
 import net.minecraft.block.BlockState;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.shape.VoxelShape;
@@ -8,6 +9,7 @@ import net.minecraft.util.shape.VoxelShapes;
 import java.util.Objects;
 import java.util.stream.Stream;
 
+@UtilityClass
 public class BlockUtils implements MCUtil
 {
 	public static Stream<BlockPos> getAllInBoxStream(BlockPos from, BlockPos to)

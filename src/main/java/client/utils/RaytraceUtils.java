@@ -1,6 +1,7 @@
 package client.utils;
 
 import com.google.common.base.Predicates;
+import lombok.experimental.UtilityClass;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.projectile.ProjectileUtil;
 import net.minecraft.util.hit.EntityHitResult;
@@ -12,8 +13,9 @@ import net.minecraft.util.math.Vec3d;
 import java.util.ArrayList;
 import java.util.List;
 
+@UtilityClass
 public class RaytraceUtils implements  MCUtil {
-    public  EntityHitResult rayCastByRotation(float yaw, float pitch ,float reach) {
+    public static EntityHitResult rayCastByRotation(float yaw, float pitch ,float reach) {
         Entity cameraEntity = mc.getCameraEntity();
         double e = MathHelper.square(reach);
         if (cameraEntity != null && mc.world != null) {

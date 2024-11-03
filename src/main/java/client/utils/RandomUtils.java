@@ -2,7 +2,9 @@
 package client.utils;
 
 import java.util.concurrent.ThreadLocalRandom;
+import lombok.experimental.UtilityClass;
 
+@UtilityClass
 public class RandomUtils
 {
 	public static ThreadLocalRandom random = ThreadLocalRandom.current();

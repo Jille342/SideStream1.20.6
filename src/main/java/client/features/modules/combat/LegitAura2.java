@@ -96,7 +96,6 @@ public class LegitAura2 extends Module
     public static ArrayList<LivingEntity> targets = new ArrayList<LivingEntity>();
     private final TimeHelper attackTimer = new TimeHelper();
    public static LivingEntity target = null;
-    RaytraceUtils raytraceUtils = new RaytraceUtils();
 
     @Override
     public void onEvent(Event<?> e)
@@ -188,7 +187,6 @@ public class LegitAura2 extends Module
         }
         if(e instanceof EventRender2D){
             if( target != null) {
-                RotationUtils rotationUtils = new RotationUtils();
                 if(rotationmode.getMode().equalsIgnoreCase("Normal"))
                 {
                     angles =
@@ -207,10 +205,10 @@ public class LegitAura2 extends Module
                      aimSpeed = (float) MathHelper.clamp(
                             RandomUtils.nextFloat(aimSpeed - 0.2f, aimSpeed + 1.8f),
                             legitAimSpeed.minimum, legitAimSpeed.maximum)*0.1f;
-                        angles = rotationUtils.calcRotation(target, aimSpeed, (float) rangeSetting.getValue(), isInstant, isSilent, angles);
+                        angles = RotationUtils.calcRotation(target, aimSpeed, (float) rangeSetting.getValue(), isInstant, isSilent, angles);
                 }
                 if(angles != null){
-                    fixed = rotationUtils.fixedSensitivity(angles, 0.1F);
+                    fixed = RotationUtils.fixedSensitivity(angles, 0.1F);
                 }
                 if (!isSilent && fixed != null) {
                     mc.player.setYaw(fixed[0]);
@@ -228,7 +226,7 @@ public class LegitAura2 extends Module
     public void attack(Entity target)
     {
         if(angles != null) {
-                EntityHitResult hitResult = raytraceUtils.rayCastByRotation(angles[0], angles[1], (float) rangeSetting.getValue());
+                EntityHitResult hitResult = RaytraceUtils.rayCastByRotation(angles[0], angles[1], (float) rangeSetting.getValue());
                 if (hitResult != null && hitResult.getEntity() != mc.player && hitResult.getEntity() == target) {
                         Objects.requireNonNull(mc.getNetworkHandler()).sendPacket(PlayerInteractEntityC2SPacket.attack(target, Objects.requireNonNull(mc.player).isSneaking()));
             }
