@@ -202,10 +202,9 @@ public class LegitAura2 extends Module
                 if(rotationmode.getMode().equalsIgnoreCase("Legit"))
                 {
                     float aimSpeed = (float) legitAimSpeed.getValue();
-                     aimSpeed = (float) MathHelper.clamp(
-                            RandomUtils.nextFloat(aimSpeed - 0.2f, aimSpeed + 1.8f),
-                            legitAimSpeed.minimum, legitAimSpeed.maximum)*0.1f;
-                        angles = RotationUtils.calcRotation(target, aimSpeed, (float) rangeSetting.getValue(), isInstant, isSilent, angles);
+                     aimSpeed = (float)
+                            RandomUtils.nextFloat(aimSpeed - 0.2f, aimSpeed + 0.2f)*0.1f;
+                        angles = rotationUtils.calcRotation(target, aimSpeed, (float) rangeSetting.getValue(), isInstant, isSilent, angles);
                 }
                 if(angles != null){
                     fixed = RotationUtils.fixedSensitivity(angles, 0.1F);

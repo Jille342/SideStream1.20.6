@@ -94,13 +94,13 @@ public class WTap
 
 
     private static void finishCombo() {
-        if (GLFW.glfwGetKey(0, GLFW.GLFW_KEY_W) == GLFW.GLFW_PRESS) {
+        if (GLFW.glfwGetKey(GLFW.glfwGetCurrentContext(), GLFW.GLFW_KEY_W) == GLFW.GLFW_PRESS) {
             KeyBinding.setKeyPressed(mc.options.forwardKey.getDefaultKey(), true);
         }
     }
 
     private static void startCombo() {
-        if (GLFW.glfwGetKey(0, GLFW.GLFW_KEY_W) == GLFW.GLFW_PRESS) {
+        if (GLFW.glfwGetKey(GLFW.glfwGetCurrentContext(), GLFW.GLFW_KEY_W) == GLFW.GLFW_PRESS) {
             KeyBinding.setKeyPressed(mc.options.forwardKey.getDefaultKey(), false);
             KeyBinding.updatePressedStates();
         }
