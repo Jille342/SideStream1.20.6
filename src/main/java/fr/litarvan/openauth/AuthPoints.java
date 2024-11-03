@@ -22,11 +22,11 @@ package fr.litarvan.openauth;
  * The server Auth Points
  *
  * <p>
- *     Contains the pages url of a server
+ * Contains the pages url of a server
  * </p>
  *
- * @version 1.0.4
  * @author Litarvan
+ * @version 1.0.4
  */
 public class AuthPoints {
 
@@ -63,16 +63,11 @@ public class AuthPoints {
     /**
      * AuthPoints constructor
      *
-     * @param authenticatePoint
-     *            Authenticate point
-     * @param refreshPoint
-     *            Refresh point
-     * @param validatePoint
-     *            Validate point
-     * @param signoutPoint
-     *            Signout point
-     * @param invalidatePoint
-     *            Invalidate point
+     * @param authenticatePoint Authenticate point
+     * @param refreshPoint      Refresh point
+     * @param validatePoint     Validate point
+     * @param signoutPoint      Signout point
+     * @param invalidatePoint   Invalidate point
      */
     public AuthPoints(String authenticatePoint, String refreshPoint, String validatePoint, String signoutPoint, String invalidatePoint) {
         this.authenticatePoint = authenticatePoint;

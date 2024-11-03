@@ -7,14 +7,12 @@ import net.minecraft.network.packet.Packet;
 
 @Setter
 @Getter
-public class EventPacket extends Event<EventPacket>
-{
-	
-	Packet packet;
-	
-	public EventPacket(Packet packet)
-	{
-		this.packet = packet;
-	}
-	
+public class EventPacket extends Event<EventPacket> {
+
+    Packet packet;
+
+    public EventPacket(Packet packet) {
+        this.packet = packet;
+    }
+
 }

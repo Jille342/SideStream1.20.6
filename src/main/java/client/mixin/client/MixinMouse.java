@@ -1,24 +1,22 @@
 package client.mixin.client;
 
-import client.Client;
-import client.event.listeners.EventRotation;
-import client.utils.RotationUtils;
 import net.minecraft.client.Mouse;
-import net.minecraft.util.math.MathHelper;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.injection.At;
 import org.spongepowered.asm.mixin.injection.ModifyArgs;
 import org.spongepowered.asm.mixin.injection.invoke.arg.Args;
 
 @Mixin(Mouse.class)
-public class MixinMouse
-{
-	
-	@ModifyArgs(method = "updateMouse",
-		at = @At(value = "INVOKE",
-			target = "Lnet/minecraft/client/network/ClientPlayerEntity;changeLookDirection(DD)V"))
-	public void injectUpdateMouse(final Args args)
-	{
+public class MixinMouse {
+
+    @ModifyArgs(
+        method = "updateMouse",
+        at = @At(
+            value = "INVOKE",
+            target = "Lnet/minecraft/client/network/ClientPlayerEntity;changeLookDirection(DD)V"
+        )
+    )
+    public void injectUpdateMouse(final Args args) {
 	/*	final float f = RotationUtils.virtualPitch;
 		final float f1 = RotationUtils.virtualYaw;
 		RotationUtils.virtualYaw = (float)((double)RotationUtils.virtualYaw
@@ -35,6 +33,6 @@ public class MixinMouse
 		Client.onEvent(rotationEvent);
 
 	 */
-		
-	}
+
+    }
 }

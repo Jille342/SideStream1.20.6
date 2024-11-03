@@ -2,7 +2,6 @@ package client.event.listeners;
 
 import client.event.Event;
 
-public class EventRenderGUI extends Event<EventRenderGUI>
-{
-	
+public class EventRenderGUI extends Event<EventRenderGUI> {
+
 }

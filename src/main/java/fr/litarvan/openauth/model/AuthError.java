@@ -21,8 +21,8 @@ package fr.litarvan.openauth.model;
 /**
  * JSON model of an error
  *
- * @version 1.0.4
  * @author Litarvan
+ * @version 1.0.4
  */
 public class AuthError {
 
@@ -44,12 +44,9 @@ public class AuthError {
     /**
      * Auth Error constructor
      *
-     * @param error
-     *            Short description of the error
-     * @param errorMessage
-     *            Longer description wich can be shown to the user
-     * @param cause
-     *            Cause of the error
+     * @param error        Short description of the error
+     * @param errorMessage Longer description wich can be shown to the user
+     * @param cause        Cause of the error
      */
     public AuthError(String error, String errorMessage, String cause) {
         this.error = error;

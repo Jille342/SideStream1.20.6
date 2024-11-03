@@ -8,19 +8,17 @@ import com.mojang.authlib.minecraft.MinecraftSessionService;
 import com.mojang.authlib.yggdrasil.ServicesKeyType;
 import com.mojang.authlib.yggdrasil.YggdrasilAuthenticationService;
 import de.florianmichael.waybackauthlib.WaybackAuthLib;
+import java.net.Proxy;
+import java.util.Optional;
 import net.minecraft.client.session.Session;
 import net.minecraft.network.encryption.SignatureVerifier;
 import org.jetbrains.annotations.Nullable;
 
-import java.net.Proxy;
-import java.util.Optional;
-
-public class AlteningUtils implements MCUtil{
+public class AlteningUtils implements MCUtil {
     private static final Environment ENVIRONMENT = new Environment("http://sessionserver.thealtening.com", "http://authserver.thealtening.com", "The Altening");
     private static final YggdrasilAuthenticationService SERVICE = new YggdrasilAuthenticationService(Proxy.NO_PROXY, ENVIRONMENT);
-    private @Nullable static WaybackAuthLib auth;
-
-
+    private @Nullable
+    static WaybackAuthLib auth;
 
 
     public static void login(String s) {
@@ -33,6 +31,7 @@ public class AlteningUtils implements MCUtil{
         } catch (Exception ignored) {
         }
     }
+
     private static WaybackAuthLib getAuth(String s) {
         WaybackAuthLib auth = new WaybackAuthLib(ENVIRONMENT.servicesHost());
         auth.setUsername(s);
@@ -40,6 +39,7 @@ public class AlteningUtils implements MCUtil{
 
         return auth;
     }
+
     public static void setSession(Session session) {
         Client.IMC.setSession(session);
     }

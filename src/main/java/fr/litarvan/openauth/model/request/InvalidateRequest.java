@@ -21,8 +21,8 @@ package fr.litarvan.openauth.model.request;
 /**
  * JSON Model of an invalidate request
  *
- * @version 1.0.4
  * @author Litarvan
+ * @version 1.0.4
  */
 public class InvalidateRequest {
 
@@ -39,24 +39,12 @@ public class InvalidateRequest {
     /**
      * Invalidate Request constructor
      *
-     * @param accessToken
-     *            The access token you want to invalidate
-     * @param clientToken
-     *            The client token associated with the access token
+     * @param accessToken The access token you want to invalidate
+     * @param clientToken The client token associated with the access token
      */
     public InvalidateRequest(String accessToken, String clientToken) {
         this.accessToken = accessToken;
         this.clientToken = clientToken;
-    }
-
-    /**
-     * Sets a new access token (That you want to invalidate)
-     *
-     * @param accessToken
-     *            The new access token
-     */
-    public void setAccessToken(String accessToken) {
-        this.accessToken = accessToken;
     }
 
     /**
@@ -69,13 +57,12 @@ public class InvalidateRequest {
     }
 
     /**
-     * Sets a new client token (Need to be associated with the access token)
+     * Sets a new access token (That you want to invalidate)
      *
-     * @param clientToken
-     *            The new client token
+     * @param accessToken The new access token
      */
-    public void setClientToken(String clientToken) {
-        this.clientToken = clientToken;
+    public void setAccessToken(String accessToken) {
+        this.accessToken = accessToken;
     }
 
     /**
@@ -85,6 +72,15 @@ public class InvalidateRequest {
      */
     public String getClientToken() {
         return clientToken;
+    }
+
+    /**
+     * Sets a new client token (Need to be associated with the access token)
+     *
+     * @param clientToken The new client token
+     */
+    public void setClientToken(String clientToken) {
+        this.clientToken = clientToken;
     }
 
 }

@@ -1,9 +1,8 @@
 package client.event;
 
-public enum EventDirection
-{
-	
-	INCOMING,
-	OUTGOING;
+public enum EventDirection {
+
+    INCOMING,
+    OUTGOING;
 
 }

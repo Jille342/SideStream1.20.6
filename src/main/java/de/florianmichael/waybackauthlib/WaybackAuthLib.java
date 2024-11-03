@@ -20,10 +20,13 @@ package de.florianmichael.waybackauthlib;
 import com.mojang.authlib.GameProfile;
 import com.mojang.authlib.minecraft.client.MinecraftClient;
 import com.mojang.authlib.properties.Property;
-
 import java.net.Proxy;
 import java.net.URI;
-import java.util.*;
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.Collections;
+import java.util.List;
+import java.util.Objects;
 
 public class WaybackAuthLib {
 
@@ -61,15 +64,6 @@ public class WaybackAuthLib {
     /**
      * Creates a new instance of the authentication service.
      *
-     * @param authHost The host of the authentication service. (e.g. <a href="https://authserver.mojang.com/">Mojang AuthServer</a>)
-     */
-    public WaybackAuthLib(final String authHost) {
-        this(authHost, "");
-    }
-
-    /**
-     * Creates a new instance of the authentication service.
-     *
      * @param authHost    The host of the authentication service. (e.g. <a href="https://authserver.mojang.com/">Mojang AuthServer</a>)
      * @param clientToken The client token. (e.g. "")
      */
@@ -94,6 +88,15 @@ public class WaybackAuthLib {
         this.clientToken = clientToken;
 
         this.client = MinecraftClient.unauthenticated(Objects.requireNonNullElse(proxy, Proxy.NO_PROXY));
+    }
+
+    /**
+     * Creates a new instance of the authentication service.
+     *
+     * @param authHost The host of the authentication service. (e.g. <a href="https://authserver.mojang.com/">Mojang AuthServer</a>)
+     */
+    public WaybackAuthLib(final String authHost) {
+        this(authHost, "");
     }
 
     /**
@@ -147,6 +150,23 @@ public class WaybackAuthLib {
         this.loggedIn = true;
     }
 
+    public String getUsername() {
+        return username;
+    }
+
+    /**
+     * Sets the username. If the user is logged in, it will throw an exception.
+     *
+     * @param username The username.
+     */
+    public void setUsername(String username) {
+        if (this.loggedIn && this.currentProfile != null) {
+            throw new IllegalStateException("Cannot change username whilst logged in & online");
+        }
+
+        this.username = username;
+    }
+
     public boolean checkTokenValidity() {
         final var request = new ValidateRequest(accessToken, clientToken);
 
@@ -182,23 +202,6 @@ public class WaybackAuthLib {
 
         this.properties = new ArrayList<>();
         this.profiles = new ArrayList<>();
-    }
-
-    public String getUsername() {
-        return username;
-    }
-
-    /**
-     * Sets the username. If the user is logged in, it will throw an exception.
-     *
-     * @param username The username.
-     */
-    public void setUsername(String username) {
-        if (this.loggedIn && this.currentProfile != null) {
-            throw new IllegalStateException("Cannot change username whilst logged in & online");
-        }
-
-        this.username = username;
     }
 
     public String getPassword() {
@@ -258,18 +261,18 @@ public class WaybackAuthLib {
     @Override
     public String toString() {
         return "WaybackAuthLib{" +
-                "baseURI=" + baseURI +
-                ", clientToken='" + clientToken + '\'' +
-                ", client=" + client +
-                ", username='" + username + '\'' +
-                ", password='" + password + '\'' +
-                ", accessToken='" + accessToken + '\'' +
-                ", userId='" + userId + '\'' +
-                ", loggedIn=" + loggedIn +
-                ", currentProfile=" + currentProfile +
-                ", properties=" + properties +
-                ", profiles=" + profiles +
-                '}';
+            "baseURI=" + baseURI +
+            ", clientToken='" + clientToken + '\'' +
+            ", client=" + client +
+            ", username='" + username + '\'' +
+            ", password='" + password + '\'' +
+            ", accessToken='" + accessToken + '\'' +
+            ", userId='" + userId + '\'' +
+            ", loggedIn=" + loggedIn +
+            ", currentProfile=" + currentProfile +
+            ", properties=" + properties +
+            ", profiles=" + profiles +
+            '}';
     }
 
     /**

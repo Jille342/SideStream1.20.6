@@ -29,16 +29,22 @@ import fr.litarvan.openauth.microsoft.model.request.MinecraftLoginRequest;
 import fr.litarvan.openauth.microsoft.model.request.XSTSAuthorizationProperties;
 import fr.litarvan.openauth.microsoft.model.request.XboxLiveLoginProperties;
 import fr.litarvan.openauth.microsoft.model.request.XboxLoginRequest;
-import fr.litarvan.openauth.microsoft.model.response.*;
-
+import fr.litarvan.openauth.microsoft.model.response.MicrosoftRefreshResponse;
+import fr.litarvan.openauth.microsoft.model.response.MinecraftLoginResponse;
+import fr.litarvan.openauth.microsoft.model.response.MinecraftProfile;
+import fr.litarvan.openauth.microsoft.model.response.MinecraftStoreResponse;
+import fr.litarvan.openauth.microsoft.model.response.XboxLoginResponse;
 import java.io.UnsupportedEncodingException;
-import java.net.*;
+import java.net.CookieHandler;
+import java.net.CookieManager;
+import java.net.CookiePolicy;
+import java.net.HttpURLConnection;
+import java.net.URLDecoder;
 import java.util.Arrays;
 import java.util.Base64;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.concurrent.CompletableFuture;
-import java.util.concurrent.CompletionException;
 import java.util.concurrent.ExecutionException;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
@@ -112,15 +118,129 @@ public class MicrosoftAuthenticator {
         }
 
         try {
-            return loginWithTokens(extractTokens(result.getURL().toString()),true);
+            return loginWithTokens(extractTokens(result.getURL().toString()), true);
         } catch (MicrosoftAuthenticationException e) {
             if (match("(identity/confirm)", http.readResponse(result)) != null) {
                 throw new MicrosoftAuthenticationException(
-                        "User has enabled double-authentication or must allow sign-in on https://account.live.com/activity"
+                    "User has enabled double-authentication or must allow sign-in on https://account.live.com/activity"
                 );
             }
 
             throw e;
+        }
+    }
+
+    /**
+     * Logs in a player using a Microsoft account tokens retrieved earlier.
+     * <b>If the token was retrieved using Azure AAD/MSAL, it should be prefixed with d=</b>
+     *
+     * @param tokens          Player Microsoft account tokens pair
+     * @param retrieveProfile Whether to retrieve the player profile
+     * @return The player Minecraft profile
+     * @throws MicrosoftAuthenticationException Thrown if one of the several HTTP requests failed at some point
+     */
+    public MicrosoftAuthResult loginWithTokens(AuthTokens tokens, boolean retrieveProfile) throws MicrosoftAuthenticationException {
+        XboxLoginResponse xboxLiveResponse = xboxLiveLogin(tokens.getAccessToken());
+        XboxLoginResponse xstsResponse = xstsLogin(xboxLiveResponse.getToken());
+
+        String userHash = xstsResponse.getDisplayClaims().getUsers()[0].getUserHash();
+        MinecraftLoginResponse minecraftResponse = minecraftLogin(userHash, xstsResponse.getToken());
+        MinecraftStoreResponse storeResponse = http.getJson(
+            MINECRAFT_STORE_ENDPOINT,
+            minecraftResponse.getAccessToken(),
+            MinecraftStoreResponse.class
+        );
+
+        if (Arrays.stream(storeResponse.getItems()).noneMatch(item -> item.getName().equals(MINECRAFT_STORE_IDENTIFIER))) {
+            throw new MicrosoftAuthenticationException("Player didn't buy Minecraft Java Edition or did not migrate its account");
+        }
+        MinecraftProfile profile = null;
+        if (retrieveProfile) {
+            profile = http.getJson(
+                MINECRAFT_PROFILE_ENDPOINT,
+                minecraftResponse.getAccessToken(),
+                MinecraftProfile.class
+            );
+        }
+
+        return new MicrosoftAuthResult(
+            profile,
+            minecraftResponse.getAccessToken(),
+            tokens.getRefreshToken(),
+            xboxLiveResponse.getDisplayClaims().getUsers()[0].getUserHash(),
+            Base64.getEncoder().encodeToString(minecraftResponse.getUsername().getBytes())
+        );
+    }
+
+    protected XboxLoginResponse xboxLiveLogin(String accessToken) throws MicrosoftAuthenticationException {
+        XboxLiveLoginProperties properties = new XboxLiveLoginProperties("RPS", XBOX_LIVE_AUTH_HOST, accessToken);
+        XboxLoginRequest<XboxLiveLoginProperties> request = new XboxLoginRequest<>(
+            properties, XBOX_LIVE_AUTH_RELAY, "JWT"
+        );
+
+        return http.postJson(XBOX_LIVE_AUTHORIZATION_ENDPOINT, request, XboxLoginResponse.class);
+    }
+
+    protected XboxLoginResponse xstsLogin(String xboxLiveToken) throws MicrosoftAuthenticationException {
+        XSTSAuthorizationProperties properties = new XSTSAuthorizationProperties("RETAIL", new String[]{xboxLiveToken});
+        XboxLoginRequest<XSTSAuthorizationProperties> request = new XboxLoginRequest<>(
+            properties, MINECRAFT_AUTH_RELAY, "JWT"
+        );
+
+        return http.postJson(XSTS_AUTHORIZATION_ENDPOINT, request, XboxLoginResponse.class);
+    }
+
+    protected MinecraftLoginResponse minecraftLogin(String userHash, String xstsToken) throws MicrosoftAuthenticationException {
+        MinecraftLoginRequest request = new MinecraftLoginRequest(String.format("XBL3.0 x=%s;%s", userHash, xstsToken));
+        return http.postJson(MINECRAFT_AUTH_ENDPOINT, request, MinecraftLoginResponse.class);
+    }
+
+    protected PreAuthData preAuthRequest() throws MicrosoftAuthenticationException {
+        Map<String, String> params = getLoginParams();
+        params.put("display", "touch");
+        params.put("locale", "en");
+
+        String result = http.getText(MICROSOFT_AUTHORIZATION_ENDPOINT, params);
+
+        String ppft = match("sFTTag:'.*value=\"([^\"]*)\"", result);
+        String urlPost = match("urlPost: ?'(.+?(?='))", result);
+
+        return new PreAuthData(ppft, urlPost);
+    }
+
+    protected Map<String, String> getLoginParams() {
+        Map<String, String> params = new HashMap<>();
+        params.put("client_id", XBOX_LIVE_CLIENT_ID);
+        params.put("redirect_uri", MICROSOFT_REDIRECTION_ENDPOINT);
+        params.put("scope", XBOX_LIVE_SERVICE_SCOPE);
+        params.put("response_type", "token");
+
+        return params;
+    }
+
+    protected String match(String regex, String content) {
+        Matcher matcher = Pattern.compile(regex).matcher(content);
+        if (!matcher.find()) {
+            return null;
+        }
+
+        return matcher.group(1);
+    }
+
+    protected AuthTokens extractTokens(String url) throws MicrosoftAuthenticationException {
+        return new AuthTokens(extractValue(url, "access_token"), extractValue(url, "refresh_token"));
+    }
+
+    protected String extractValue(String url, String key) throws MicrosoftAuthenticationException {
+        String matched = match(key + "=([^&]*)", url);
+        if (matched == null) {
+            throw new MicrosoftAuthenticationException("Invalid credentials or tokens");
+        }
+
+        try {
+            return URLDecoder.decode(matched, "UTF-8");
+        } catch (UnsupportedEncodingException e) {
+            throw new MicrosoftAuthenticationException(e);
         }
     }
 
@@ -147,21 +267,21 @@ public class MicrosoftAuthenticator {
      * @return A future resolved by the player Minecraft profile
      */
     public CompletableFuture<MicrosoftAuthResult> loginWithAsyncWebview() {
-        if(!System.getProperty("java.version").startsWith("1."))
+        if (!System.getProperty("java.version").startsWith("1."))
             CookieHandler.setDefault(new CookieManager());
 
         String url = String.format("%s?%s", MICROSOFT_AUTHORIZATION_ENDPOINT, http.buildParams(getLoginParams()));
-   //     LoginFrame frame = new LoginFrame();
+        //     LoginFrame frame = new LoginFrame();
 
         //   return frame.start(url).thenApplyAsync(result -> {
-         //   try {
-          //      if(result != null)
-            //        return loginWithTokens(extractTokens(result),true);
+        //   try {
+        //      if(result != null)
+        //        return loginWithTokens(extractTokens(result),true);
         //        else return null;
-         //   } catch (MicrosoftAuthenticationException e) {
-           //     throw new CompletionException(e);
-          //  }
-     //   });
+        //   } catch (MicrosoftAuthenticationException e) {
+        //     throw new CompletionException(e);
+        //  }
+        //   });
         return null;
     }
 
@@ -178,11 +298,11 @@ public class MicrosoftAuthenticator {
         params.put("grant_type", "refresh_token");
 
         MicrosoftRefreshResponse response = http.postFormGetJson(
-                MICROSOFT_TOKEN_ENDPOINT,
-                params, MicrosoftRefreshResponse.class
+            MICROSOFT_TOKEN_ENDPOINT,
+            params, MicrosoftRefreshResponse.class
         );
 
-        return loginWithTokens(new AuthTokens(response.getAccessToken(), response.getRefreshToken()),true);
+        return loginWithTokens(new AuthTokens(response.getAccessToken(), response.getRefreshToken()), true);
     }
 
     /**
@@ -194,122 +314,6 @@ public class MicrosoftAuthenticator {
      * @throws MicrosoftAuthenticationException Thrown if one of the several HTTP requests failed at some point
      */
     public MicrosoftAuthResult loginWithTokens(AuthTokens tokens) throws MicrosoftAuthenticationException {
-        return loginWithTokens(tokens,true);
-    }
-
-    /**
-     * Logs in a player using a Microsoft account tokens retrieved earlier.
-     * <b>If the token was retrieved using Azure AAD/MSAL, it should be prefixed with d=</b>
-     *
-     * @param tokens Player Microsoft account tokens pair
-     * @param retrieveProfile Whether to retrieve the player profile
-     * @return The player Minecraft profile
-     * @throws MicrosoftAuthenticationException Thrown if one of the several HTTP requests failed at some point
-     */
-    public MicrosoftAuthResult loginWithTokens(AuthTokens tokens, boolean retrieveProfile) throws MicrosoftAuthenticationException {
-        XboxLoginResponse xboxLiveResponse = xboxLiveLogin(tokens.getAccessToken());
-        XboxLoginResponse xstsResponse = xstsLogin(xboxLiveResponse.getToken());
-
-        String userHash = xstsResponse.getDisplayClaims().getUsers()[0].getUserHash();
-        MinecraftLoginResponse minecraftResponse = minecraftLogin(userHash, xstsResponse.getToken());
-        MinecraftStoreResponse storeResponse = http.getJson(
-                MINECRAFT_STORE_ENDPOINT,
-                minecraftResponse.getAccessToken(),
-                MinecraftStoreResponse.class
-        );
-
-        if (Arrays.stream(storeResponse.getItems()).noneMatch(item -> item.getName().equals(MINECRAFT_STORE_IDENTIFIER))) {
-            throw new MicrosoftAuthenticationException("Player didn't buy Minecraft Java Edition or did not migrate its account");
-        }
-        MinecraftProfile profile = null;
-        if (retrieveProfile) {
-            profile = http.getJson(
-                    MINECRAFT_PROFILE_ENDPOINT,
-                    minecraftResponse.getAccessToken(),
-                    MinecraftProfile.class
-            );
-        }
-
-        return new MicrosoftAuthResult(
-                profile,
-                minecraftResponse.getAccessToken(),
-                tokens.getRefreshToken(),
-                xboxLiveResponse.getDisplayClaims().getUsers()[0].getUserHash(),
-                Base64.getEncoder().encodeToString(minecraftResponse.getUsername().getBytes())
-        );
-    }
-
-
-    protected PreAuthData preAuthRequest() throws MicrosoftAuthenticationException {
-        Map<String, String> params = getLoginParams();
-        params.put("display", "touch");
-        params.put("locale", "en");
-
-        String result = http.getText(MICROSOFT_AUTHORIZATION_ENDPOINT, params);
-
-        String ppft = match("sFTTag:'.*value=\"([^\"]*)\"", result);
-        String urlPost = match("urlPost: ?'(.+?(?='))", result);
-
-        return new PreAuthData(ppft, urlPost);
-    }
-
-    protected XboxLoginResponse xboxLiveLogin(String accessToken) throws MicrosoftAuthenticationException {
-        XboxLiveLoginProperties properties = new XboxLiveLoginProperties("RPS", XBOX_LIVE_AUTH_HOST, accessToken);
-        XboxLoginRequest<XboxLiveLoginProperties> request = new XboxLoginRequest<>(
-                properties, XBOX_LIVE_AUTH_RELAY, "JWT"
-        );
-
-        return http.postJson(XBOX_LIVE_AUTHORIZATION_ENDPOINT, request, XboxLoginResponse.class);
-    }
-
-    protected XboxLoginResponse xstsLogin(String xboxLiveToken) throws MicrosoftAuthenticationException {
-        XSTSAuthorizationProperties properties = new XSTSAuthorizationProperties("RETAIL", new String[]{xboxLiveToken});
-        XboxLoginRequest<XSTSAuthorizationProperties> request = new XboxLoginRequest<>(
-                properties, MINECRAFT_AUTH_RELAY, "JWT"
-        );
-
-        return http.postJson(XSTS_AUTHORIZATION_ENDPOINT, request, XboxLoginResponse.class);
-    }
-
-    protected MinecraftLoginResponse minecraftLogin(String userHash, String xstsToken) throws MicrosoftAuthenticationException {
-        MinecraftLoginRequest request = new MinecraftLoginRequest(String.format("XBL3.0 x=%s;%s", userHash, xstsToken));
-        return http.postJson(MINECRAFT_AUTH_ENDPOINT, request, MinecraftLoginResponse.class);
-    }
-
-
-    protected Map<String, String> getLoginParams() {
-        Map<String, String> params = new HashMap<>();
-        params.put("client_id", XBOX_LIVE_CLIENT_ID);
-        params.put("redirect_uri", MICROSOFT_REDIRECTION_ENDPOINT);
-        params.put("scope", XBOX_LIVE_SERVICE_SCOPE);
-        params.put("response_type", "token");
-
-        return params;
-    }
-
-    protected AuthTokens extractTokens(String url) throws MicrosoftAuthenticationException {
-        return new AuthTokens(extractValue(url, "access_token"), extractValue(url, "refresh_token"));
-    }
-
-    protected String extractValue(String url, String key) throws MicrosoftAuthenticationException {
-        String matched = match(key + "=([^&]*)", url);
-        if (matched == null) {
-            throw new MicrosoftAuthenticationException("Invalid credentials or tokens");
-        }
-
-        try {
-            return URLDecoder.decode(matched, "UTF-8");
-        } catch (UnsupportedEncodingException e) {
-            throw new MicrosoftAuthenticationException(e);
-        }
-    }
-
-    protected String match(String regex, String content) {
-        Matcher matcher = Pattern.compile(regex).matcher(content);
-        if (!matcher.find()) {
-            return null;
-        }
-
-        return matcher.group(1);
+        return loginWithTokens(tokens, true);
     }
 }

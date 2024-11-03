@@ -21,8 +21,8 @@ package fr.litarvan.openauth.model;
 /**
  * JSON model of a profile
  *
- * @version 1.0.4
  * @author Litarvan
+ * @version 1.0.4
  */
 public class AuthProfile {
 
@@ -47,10 +47,8 @@ public class AuthProfile {
     /**
      * Normal auth profile
      *
-     * @param name
-     *            The profile name
-     * @param id
-     *            The profile UUID
+     * @param name The profile name
+     * @param id   The profile UUID
      */
     public AuthProfile(String name, String id) {
         this.name = name;

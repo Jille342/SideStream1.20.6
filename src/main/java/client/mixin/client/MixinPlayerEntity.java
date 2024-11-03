@@ -9,21 +9,17 @@ import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.injection.At;
 
 @Mixin(PlayerEntity.class)
-public class MixinPlayerEntity
-{
-	
-	@ModifyReturnValue(method = "getEntityInteractionRange", at = @At("RETURN"))
-	private double hookEntityInteractionRange(double original)
-	{
-		if((Object)this == MinecraftClient.getInstance().player)
-		{
-			if(ModuleManager.getModulebyClass(Reach.class).isEnabled())
-			{
-				return Reach.reach.getValue();
-			}
-			
-		}
-		return original;
-	}
-	
+public class MixinPlayerEntity {
+
+    @ModifyReturnValue(method = "getEntityInteractionRange", at = @At("RETURN"))
+    private double hookEntityInteractionRange(double original) {
+        if ((Object) this == MinecraftClient.getInstance().player) {
+            if (ModuleManager.getModulebyClass(Reach.class).isEnabled()) {
+                return Reach.reach.getValue();
+            }
+
+        }
+        return original;
+    }
+
 }

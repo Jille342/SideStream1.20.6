@@ -18,8 +18,7 @@
  */
 package fr.litarvan.openauth.microsoft.model.response;
 
-public class MicrosoftRefreshResponse
-{
+public class MicrosoftRefreshResponse {
     private final String token_type;
     private final long expires_in;
     private final String scope;
@@ -27,8 +26,7 @@ public class MicrosoftRefreshResponse
     private final String refresh_token;
     private final String user_id;
 
-    public MicrosoftRefreshResponse(String token_type, long expires_in, String scope, String access_token, String refresh_token, String user_id)
-    {
+    public MicrosoftRefreshResponse(String token_type, long expires_in, String scope, String access_token, String refresh_token, String user_id) {
         this.token_type = token_type;
         this.expires_in = expires_in;
         this.scope = scope;
@@ -37,33 +35,27 @@ public class MicrosoftRefreshResponse
         this.user_id = user_id;
     }
 
-    public String getTokenType()
-    {
+    public String getTokenType() {
         return token_type;
     }
 
-    public long getExpiresIn()
-    {
+    public long getExpiresIn() {
         return expires_in;
     }
 
-    public String getScope()
-    {
+    public String getScope() {
         return scope;
     }
 
-    public String getAccessToken()
-    {
+    public String getAccessToken() {
         return access_token;
     }
 
-    public String getRefreshToken()
-    {
+    public String getRefreshToken() {
         return refresh_token;
     }
 
-    public String getUserId()
-    {
+    public String getUserId() {
         return user_id;
     }
 }

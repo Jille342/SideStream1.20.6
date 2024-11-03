@@ -18,17 +18,14 @@
  */
 package fr.litarvan.openauth.microsoft.model.request;
 
-public class MinecraftLoginRequest
-{
+public class MinecraftLoginRequest {
     private final String identityToken;
 
-    public MinecraftLoginRequest(String identityToken)
-    {
+    public MinecraftLoginRequest(String identityToken) {
         this.identityToken = identityToken;
     }
 
-    public String getIdentityToken()
-    {
+    public String getIdentityToken() {
         return identityToken;
     }
 }

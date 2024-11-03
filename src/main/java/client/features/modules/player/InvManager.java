@@ -10,42 +10,60 @@ import net.minecraft.client.gui.screen.ingame.InventoryScreen;
 import net.minecraft.component.type.FoodComponent;
 import net.minecraft.enchantment.EnchantmentHelper;
 import net.minecraft.enchantment.Enchantments;
-import net.minecraft.item.*;
-import net.minecraft.recipe.Ingredient;
+import net.minecraft.item.ArmorItem;
+import net.minecraft.item.AxeItem;
+import net.minecraft.item.BowItem;
+import net.minecraft.item.Item;
+import net.minecraft.item.ItemStack;
+import net.minecraft.item.Items;
+import net.minecraft.item.PickaxeItem;
+import net.minecraft.item.ShearsItem;
+import net.minecraft.item.ShovelItem;
+import net.minecraft.item.SwordItem;
 import net.minecraft.screen.slot.SlotActionType;
 import org.apache.commons.lang3.tuple.MutablePair;
 
-import java.util.Arrays;
-
 public class InvManager extends Module {
 
-    private  BooleanSetting openInv;
-    private  NumberSetting delay;
-    private  BooleanSetting equipArmor;
-    private BooleanSetting dropArmor;
-    private  BooleanSetting dropSword;
-    private  BooleanSetting dropTools ;
-    private BooleanSetting dropTrash;
+    private static final Item[] GOOD_ITEMS = {
+        Items.WATER_BUCKET,
+        Items.LAVA_BUCKET,
+        Items.BUCKET,
+        Items.ENDER_PEARL,
+        Items.GOLDEN_APPLE,
+        Items.ENCHANTED_GOLDEN_APPLE
+    };
     private final TimeHelper interactionTimer = new TimeHelper();
+    private BooleanSetting openInv;
+    private NumberSetting delay;
+    private BooleanSetting equipArmor;
+    private BooleanSetting dropArmor;
+    private BooleanSetting dropSword;
+    private BooleanSetting dropTools;
+    private BooleanSetting dropTrash;
 
     public InvManager() {
         super("InvManager", 0, Category.PLAYER);
     }
-    public void init()
-    {
-        openInv = new BooleanSetting("Open Inv" ,true);
+
+    private static float getFoodValue(ItemStack stack, FoodComponent item) {
+        return stack.getCount() * item.nutrition();
+    }
+
+    public void init() {
+        openInv = new BooleanSetting("Open Inv", true);
         equipArmor = new BooleanSetting("Equip Armor", true);
         dropArmor = new BooleanSetting("Drop Armor", true);
-        delay = new NumberSetting("Delay",250, 0, 1000, 1);
+        delay = new NumberSetting("Delay", 250, 0, 1000, 1);
         dropTrash = new BooleanSetting("Drop Trash", true);
         dropTools = new BooleanSetting("Drop Tools", true);
         dropSword = new BooleanSetting("Drop Sword", true);
         super.init();
-        addSetting(openInv,equipArmor,dropArmor,delay,dropTrash,dropTools,dropSword);
+        addSetting(openInv, equipArmor, dropArmor, delay, dropTrash, dropTools, dropSword);
     }
 
     public void onEvent(Event<?> event) {
-     if  (event instanceof EventUpdate){
+        if (event instanceof EventUpdate) {
             if (openInv.getValue() && mc.currentScreen == null) {
                 return;
             }
@@ -53,17 +71,17 @@ public class InvManager extends Module {
                 return;
             }
             MutablePair<Integer, Float>[] bestTools = new MutablePair[]{
-                    new MutablePair<>(-1, 0f), // 0 = boots
-                    new MutablePair<>(-1, 0f), // 1 = leggings
-                    new MutablePair<>(-1, 0f), // 2 = chestplate
-                    new MutablePair<>(-1, 0f), // 3 = helmet
-                    new MutablePair<>(-1, 0f), // 4 = sword
-                    new MutablePair<>(-1, 0f), // 5 = pickaxe
-                    new MutablePair<>(-1, 0f), // 6 = axe
-                    new MutablePair<>(-1, 0f), // 7 = shovel
-                    new MutablePair<>(-1, 0f), // 8 = shears
-                    new MutablePair<>(-1, 0f), // 9 = bow
-                    new MutablePair<>(-1, 0f), // 10 = food
+                new MutablePair<>(-1, 0f), // 0 = boots
+                new MutablePair<>(-1, 0f), // 1 = leggings
+                new MutablePair<>(-1, 0f), // 2 = chestplate
+                new MutablePair<>(-1, 0f), // 3 = helmet
+                new MutablePair<>(-1, 0f), // 4 = sword
+                new MutablePair<>(-1, 0f), // 5 = pickaxe
+                new MutablePair<>(-1, 0f), // 6 = axe
+                new MutablePair<>(-1, 0f), // 7 = shovel
+                new MutablePair<>(-1, 0f), // 8 = shears
+                new MutablePair<>(-1, 0f), // 9 = bow
+                new MutablePair<>(-1, 0f), // 10 = food
             };
 
             // Gather best armor indexes
@@ -242,7 +260,7 @@ public class InvManager extends Module {
                         }
                     }
                 }
-                if(isTrash(stack) && dropTrash.getValue()){
+                if (isTrash(stack) && dropTrash.getValue()) {
                     drop(i < 9 ? 36 + i : i);
                 }
 
@@ -250,31 +268,23 @@ public class InvManager extends Module {
         }
     }
 
-    private static final Item[] GOOD_ITEMS = {
-            Items.WATER_BUCKET,
-            Items.LAVA_BUCKET,
-            Items.BUCKET,
-            Items.ENDER_PEARL,
-            Items.GOLDEN_APPLE,
-            Items.ENCHANTED_GOLDEN_APPLE
-    };
-    private static  boolean isTrash(ItemStack stack){
+    private static boolean isTrash(ItemStack stack) {
         return (stack.getItem().getTranslationKey().contains("tnt")) ||
-                (stack.getItem().getTranslationKey().contains("egg")) ||
-                (stack.getItem().getTranslationKey().contains("mushroom")) ||
-                (stack.getItem().getTranslationKey().contains("flint")) ||
-                (stack.getItem().getTranslationKey().contains("dyePowder")) ||
-                (stack.getItem().getTranslationKey().contains("feather")) ||
-                (stack.getItem().getTranslationKey().contains("bucket")) ||
-                (stack.getItem().getTranslationKey().contains("chest") && !stack.getName().getString().toLowerCase().contains("collect")) ||
-                (stack.getItem().getTranslationKey().contains("snow")) ||
-                (stack.getItem().getTranslationKey().contains("fish")) ||
-                (stack.getItem().getTranslationKey().contains("enchant")) ||
-                (stack.getItem().getTranslationKey().contains("anvil")) ||
-                (stack.getItem().getTranslationKey().contains("torch")) ||
-                (stack.getItem().getTranslationKey().contains("seeds")) ||
-                (stack.getItem().getTranslationKey().contains("record")) ||
-                (stack.getItem().getTranslationKey().contains("snowball"));
+            (stack.getItem().getTranslationKey().contains("egg")) ||
+            (stack.getItem().getTranslationKey().contains("mushroom")) ||
+            (stack.getItem().getTranslationKey().contains("flint")) ||
+            (stack.getItem().getTranslationKey().contains("dyePowder")) ||
+            (stack.getItem().getTranslationKey().contains("feather")) ||
+            (stack.getItem().getTranslationKey().contains("bucket")) ||
+            (stack.getItem().getTranslationKey().contains("chest") && !stack.getName().getString().toLowerCase().contains("collect")) ||
+            (stack.getItem().getTranslationKey().contains("snow")) ||
+            (stack.getItem().getTranslationKey().contains("fish")) ||
+            (stack.getItem().getTranslationKey().contains("enchant")) ||
+            (stack.getItem().getTranslationKey().contains("anvil")) ||
+            (stack.getItem().getTranslationKey().contains("torch")) ||
+            (stack.getItem().getTranslationKey().contains("seeds")) ||
+            (stack.getItem().getTranslationKey().contains("record")) ||
+            (stack.getItem().getTranslationKey().contains("snowball"));
     }
 
     private static float getSwordValue(ItemStack stack, SwordItem item) {
@@ -303,10 +313,6 @@ public class InvManager extends Module {
         value += EnchantmentHelper.getLevel(Enchantments.PUNCH, stack) * 0.5f;
         value += EnchantmentHelper.getLevel(Enchantments.FLAME, stack) * 0.5f;
         return value;
-    }
-
-    private static float getFoodValue(ItemStack stack, FoodComponent item) {
-        return stack.getCount() * item.nutrition();
     }
 
     private static float getArmorValue(ItemStack stack, ArmorItem item) {

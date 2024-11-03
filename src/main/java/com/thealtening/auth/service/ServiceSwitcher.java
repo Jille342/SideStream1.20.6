@@ -17,10 +17,7 @@
 
 package com.thealtening.auth.service;
 
-import com.mojang.authlib.yggdrasil.YggdrasilAuthenticationService;
 import com.mojang.authlib.yggdrasil.YggdrasilEnvironment;
-
-import java.net.Proxy;
 import java.util.function.Consumer;
 
 /**
@@ -40,7 +37,7 @@ public final class ServiceSwitcher {
             yggdrasilEnvironmentFieldAdapter.updateFieldIfPresent("authHost", environment, service.getAuthServer());
             yggdrasilEnvironmentFieldAdapter.updateFieldIfPresent("accountsHost", environment, service.getAccountsHost());
             yggdrasilEnvironmentFieldAdapter.updateFieldIfPresent("sessionHost", environment, service.getSessionServer());
-           afterSwitching.accept(environment);
+            afterSwitching.accept(environment);
         } catch (Exception exception) {
             exception.printStackTrace();
             return previousService;
