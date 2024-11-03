@@ -55,24 +55,17 @@ public class CivBreak extends Module
 	{
 		if(event instanceof EventUpdate)
 		{
+			RaycastUtils raycastUtils = new RaycastUtils();
+
 			setTag(mode.getMode());
-			if(Objects.requireNonNull(mc.interactionManager).isBreakingBlock()
-				&& this.hitResult == null)
-			{
-				RaycastUtils raycastUtils = new RaycastUtils();
-				this.hitResult =
-					raycastUtils.rayCast(new float[]{RotationUtils.virtualYaw,
-						RotationUtils.virtualPitch}, 3.0, 0);
-			}
-			if(hitResult == null)
-			{
-				return;
-			}
 			BlockPos nexus = getNexus();
+			if( nexus == null)
+				return;
+			hitResult = raycastUtils.rayCast(getAngleToBlockPos(nexus),Math.sqrt(nexus.getSquaredDistance(mc.player.getX(),mc.player.getY(),mc.player.getZ())),mc.getTickDelta());
+			if(hitResult == null)
+				return;
 			Direction facing = ((BlockHitResult)this.hitResult).getSide();
-			if(nexus != null)
-			{
-				this.blockPos = nexus;
+				blockPos = nexus;
 				switch(this.mode.getMode())
 				{
 					
@@ -135,21 +128,19 @@ public class CivBreak extends Module
 					}
 					mc.player.networkHandler
 						.sendPacket(new HandSwingC2SPacket(Hand.MAIN_HAND));
-					mc.interactionManager
-						.updateBlockBreakingProgress(this.blockPos, facing);
+					mc.interactionManager.updateBlockBreakingProgress(blockPos, facing);
 					this.hitResult = null;
 					this.blockPos = null;
 					this.attempt = 0;
 					break;
 				}
-			}
 			
 		}
 		if(event instanceof EventMotion)
 		{
 			if(this.blockPos == null)
 				return;
-			final float[] angles = this.getAngleToBlockPos(this.blockPos);
+			final float[] angles = getAngleToBlockPos(this.blockPos);
 			((EventMotion)event).setYaw(angles[0]);
 			((EventMotion)event).setPitch(angles[1]);
 			

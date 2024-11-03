@@ -29,7 +29,6 @@ import java.util.Objects;
 
 public class LegitAura2 extends Module
 {
-    float[] serverSideAngles;
     float[] fixed;
     float[] angles = null;
     boolean isSilent  =false;
@@ -164,7 +163,6 @@ public class LegitAura2 extends Module
             if(target != null)
             {
                 EventMotion event = (EventMotion)e;
-                serverSideAngles = event.getServerSideAngles();
                 if(fixed != null){
                     if(isSilent) {
                         event.setYaw(fixed[0]);
@@ -205,7 +203,7 @@ public class LegitAura2 extends Module
                 {
                     float aimSpeed = (float) legitAimSpeed.getValue();
                      aimSpeed = (float)
-                            RandomUtils.nextFloat(aimSpeed - 0.2f, aimSpeed + 0.2f)*0.1f;
+                            RandomUtils.nextFloat(aimSpeed - 0.02f, aimSpeed + 0.02f)*0.1f;
                         angles = rotationUtils.calcRotation(target, aimSpeed, (float) rangeSetting.getValue(), isInstant, isSilent, angles);
                 }
                 if(angles != null){
