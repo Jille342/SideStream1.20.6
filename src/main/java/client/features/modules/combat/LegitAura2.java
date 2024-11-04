@@ -55,6 +55,7 @@ public class LegitAura2 extends Module
     BooleanSetting legitInstant;
     BooleanSetting smartSilent;
     BooleanSetting smartLegitInstant;
+    NumberSetting legitInstantAimSpeed;
 
     public LegitAura2()
     {
@@ -73,7 +74,7 @@ public class LegitAura2 extends Module
         this.maxCPS = new NumberSetting("MaxCPS", 7, 2, 20, 1f);
         minCPS = new NumberSetting("MinCPS", 6, 1, 19, 1f);
         sortmode = new ModeSetting("SortMode", "Angle",
-                new String[]{"Angle","HurtTime"});
+                new String[]{"Angle","HurtTime","Distance"});
         rotationmode = new ModeSetting("Rotation Mode", "Normal",
                 new String[]{"None", "Normal", "Normal2", "Legit"});
         moveFix = new BooleanSetting("Move Fix", true);
@@ -87,9 +88,11 @@ public class LegitAura2 extends Module
         legitInstant = new BooleanSetting("Legit Instant", true);
         smartSilent = new BooleanSetting("Smart Silent",false);
         smartLegitInstant = new BooleanSetting("Smart Legit Instant", false);
+        legitInstantAimSpeed = new NumberSetting("Legit Instant Aim Speed", 0.1, 0.01, 0.5, 0.01D);
+
         addSetting(rotationmode, maxCPS, minCPS
                 , ignoreTeamsSetting, sortmode,
-                targetInvisibles, fov, hitThroughWalls, rangeSetting, clickOnly, moveFix, itemCheck, testMove,silent, legitAimSpeed,swingRange,legitInstant,smartSilent,smartLegitInstant,targetMobs);
+                targetInvisibles, fov, hitThroughWalls, rangeSetting, clickOnly, moveFix, itemCheck, testMove,silent, legitAimSpeed,swingRange,legitInstant,smartSilent,smartLegitInstant,targetMobs, legitInstantAimSpeed);
         super.init();
     }
     public static ArrayList<LivingEntity> targets = new ArrayList<LivingEntity>();
@@ -119,10 +122,10 @@ public class LegitAura2 extends Module
                 if(targets.size() >= 2){
                     isInstant =true;
                 } else {
-                    isSilent = false;
+                    isInstant = false;
                 }
             }else {
-                isSilent = legitInstant.getValue();
+                isInstant = legitInstant.getValue();
             }
 
             setTag(sortmode.getMode() + " " + targets.size());
@@ -204,7 +207,7 @@ public class LegitAura2 extends Module
                     float aimSpeed = (float) legitAimSpeed.getValue();
                      aimSpeed = (float)
                             RandomUtils.nextFloat(aimSpeed - 0.02f, aimSpeed + 0.02f)*0.1f;
-                        angles = rotationUtils.calcRotation(target, aimSpeed, (float) rangeSetting.getValue(), isInstant, isSilent, angles);
+                        angles = rotationUtils.calcRotation(target, aimSpeed, (float) rangeSetting.getValue(), isInstant, isSilent, angles, (float) legitInstantAimSpeed.getValue());
                 }
                 if(angles != null){
                     fixed = rotationUtils.fixedSensitivity(angles, 0.1F);
@@ -287,9 +290,12 @@ public class LegitAura2 extends Module
             case"HurtTime":
                 targets.sort(Comparator.comparingInt(o -> o.hurtTime));
                 break;
+            case "Distance":
+                targets.sort(Comparator.comparingDouble(
+                        (entity) -> (double)mc.player.distanceTo((Entity)entity)));
+                break;
         }
-        targets.sort(Comparator.comparingDouble(
-                (entity) -> (double)mc.player.distanceTo((Entity)entity)));
+
         return targets.getFirst();
     }
 

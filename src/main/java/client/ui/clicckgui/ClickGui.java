@@ -20,7 +20,7 @@ public class ClickGui extends Screen
 		double currentX = 50;
 		for(Module.Category c : Module.Category.values())
 		{
-			windows.add(new ClickGuiWindow((float)currentX, 30, c));
+			windows.add(new ClickGuiWindow((float)currentX, 10, c));
 			currentX += 150;
 		}
 	}

@@ -59,7 +59,7 @@ public class WTap
                     return;
                 }
                 if ((double)mc.player.distanceTo(target) <= this.range.getValue()) {
-                    if (target.hurtTime >= 10) {
+                    if (target.maxHurtTime >= 10) {
                         if ( !(target instanceof PlayerEntity)) {
                             return;
                         }
@@ -94,14 +94,14 @@ public class WTap
 
 
     private static void finishCombo() {
-        if (GLFW.glfwGetKey(GLFW.glfwGetCurrentContext(), GLFW.GLFW_KEY_W) == GLFW.GLFW_PRESS) {
-            KeyBinding.setKeyPressed(mc.options.forwardKey.getDefaultKey(), true);
+        if (GLFW.glfwGetKey(mc.getWindow().getHandle(), GLFW.GLFW_KEY_W) == GLFW.GLFW_PRESS) {
+          mc.options.forwardKey.setPressed(true);
         }
     }
 
     private static void startCombo() {
-        if (GLFW.glfwGetKey(GLFW.glfwGetCurrentContext(), GLFW.GLFW_KEY_W) == GLFW.GLFW_PRESS) {
-            KeyBinding.setKeyPressed(mc.options.forwardKey.getDefaultKey(), false);
+        if (GLFW.glfwGetKey(mc.getWindow().getHandle(), GLFW.GLFW_KEY_W) == GLFW.GLFW_PRESS) {
+            mc.options.forwardKey.setPressed(false);
             KeyBinding.updatePressedStates();
         }
     }

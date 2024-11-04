@@ -12,9 +12,8 @@ public class MCTimerUtil implements MCUtil
 
     public static void setTimerSpeed(float timerSpeed)
 	{
-		MCTimerUtil.timerSpeed = timerSpeed;
-		
-		((RenderTickCounterAccessor)(((MinecraftClientAccessor)mc)
+
+        ((RenderTickCounterAccessor)(((MinecraftClientAccessor)mc)
 			.getRenderTickCounter())).setTickTime(1000f / timerSpeed / 20f);
 	}
 }

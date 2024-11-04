@@ -196,7 +196,7 @@ public final class RotationUtils
 			MathHelper.clamp(vec.z, box.minZ, box.maxZ));
 	}
 
-	public  float[] calcRotation(Entity entity ,float speed, float range, boolean instant, boolean silent, float[]serverSideAngles) {
+	public  float[] calcRotation(Entity entity ,float speed, float range, boolean instant, boolean silent, float[]serverSideAngles, float instantAimSpeed) {
 		if (serverSideAngles == null) {
 			serverSideAngles = new float[]{
 					mc.player.getYaw(), mc.player.getPitch()
@@ -205,7 +205,7 @@ public final class RotationUtils
 		float tick = 0.01f;
 		float currentYaw = silent ? serverSideAngles[0] : mc.player.getYaw(tick);
 		float currentPitch = silent ? serverSideAngles[1] : mc.player.getPitch(tick);
-		float tickDelta = instant ? speed * 2 : speed;
+		float tickDelta = instant ? instantAimSpeed : speed;
 		float aYaw = 0, aPitch = 0;
 		Vec3d eye = Objects.requireNonNull(mc.player).getEyePos();
 		Box bb = entity.getBoundingBox();
