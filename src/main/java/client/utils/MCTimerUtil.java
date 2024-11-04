@@ -6,8 +6,7 @@ import lombok.Getter;
 
 public class MCTimerUtil implements MCUtil
 {
-	
-	@Getter
+
     private static float timerSpeed = 1f;
 
     public static void setTimerSpeed(float timerSpeed)
