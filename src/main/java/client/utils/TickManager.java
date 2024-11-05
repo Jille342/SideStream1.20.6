@@ -5,7 +5,9 @@ import client.event.listeners.EventRender2D;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.function.Consumer;
+import lombok.experimental.UtilityClass;
 
+@UtilityClass
 public class TickManager implements MCUtil
 {
 	

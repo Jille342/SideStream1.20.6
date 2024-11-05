@@ -1,11 +1,13 @@
 package client.utils;
 
+import lombok.experimental.UtilityClass;
 import net.minecraft.entity.player.PlayerEntity;
 
 import java.awt.Color;
 import java.text.NumberFormat;
 import java.util.Objects;
 
+@UtilityClass
 public class Colors implements MCUtil
 {
 	public static int getColor(Color color)

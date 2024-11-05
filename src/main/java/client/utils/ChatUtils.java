@@ -1,8 +1,10 @@
 package client.utils;
 
 import client.Client;
+import lombok.experimental.UtilityClass;
 import net.minecraft.text.Text;
 
+@UtilityClass
 public class ChatUtils implements MCUtil
 {
 	public final static String chatPrefix = "\2477[\2476Ex\2477] \2478>> \247f";

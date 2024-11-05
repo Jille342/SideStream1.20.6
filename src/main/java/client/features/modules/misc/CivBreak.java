@@ -61,7 +61,7 @@ public class CivBreak extends Module
 			BlockPos nexus = getNexus();
 			if( nexus == null)
 				return;
-			hitResult = raycastUtils.rayCast(getAngleToBlockPos(nexus),Math.sqrt(nexus.getSquaredDistance(mc.player.getX(),mc.player.getY(),mc.player.getZ())),mc.getTickDelta());
+			hitResult = RaycastUtils.rayCast(getAngleToBlockPos(nexus),Math.sqrt(nexus.getSquaredDistance(mc.player.getX(),mc.player.getY(),mc.player.getZ())),mc.getTickDelta());
 			if(hitResult == null)
 				return;
 			Direction facing = ((BlockHitResult)this.hitResult).getSide();

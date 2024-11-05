@@ -1,7 +1,9 @@
 package client.utils;
 
+import lombok.experimental.UtilityClass;
 import net.minecraft.util.hit.HitResult;
 
+@UtilityClass
 public class RaycastUtils implements MCUtil
 {
 	

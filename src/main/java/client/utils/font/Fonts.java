@@ -1,5 +1,8 @@
 package client.utils.font;
 
+import lombok.experimental.UtilityClass;
+
+@UtilityClass
 public class Fonts
 {
 	public static TTFFontRenderer font = TTFFontRenderer.of("ElliotSans", 10);

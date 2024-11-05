@@ -3,7 +3,9 @@ package client.utils;
 import client.mixin.client.MinecraftClientAccessor;
 import client.mixin.client.RenderTickCounterAccessor;
 import lombok.Getter;
+import lombok.experimental.UtilityClass;
 
+@UtilityClass
 public class MCTimerUtil implements MCUtil
 {
 

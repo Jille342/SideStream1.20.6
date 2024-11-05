@@ -1,5 +1,8 @@
 package client.utils;
 
+import lombok.experimental.UtilityClass;
+
+@UtilityClass
 public class AnimationUtil
 {
 	public static float delta;

@@ -1,11 +1,13 @@
 package client.utils;
 
+import lombok.experimental.UtilityClass;
 import net.minecraft.client.MinecraftClient;
 import net.minecraft.entity.Entity;
 import net.minecraft.util.Hand;
 
 import java.util.Objects;
 
+@UtilityClass
 public class PlayerHelper implements MCUtil
 {
 	

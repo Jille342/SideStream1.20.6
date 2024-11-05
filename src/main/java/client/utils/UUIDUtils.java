@@ -2,7 +2,9 @@ package client.utils;
 
 
 import java.util.UUID;
+import lombok.experimental.UtilityClass;
 
+@UtilityClass
 public class UUIDUtils {
     public static UUID uuidFromString(String stringUUID) throws RuntimeException
     {
