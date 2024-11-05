@@ -20,12 +20,11 @@ import net.minecraft.network.packet.c2s.play.PlayerInteractEntityC2SPacket;
 import net.minecraft.util.Hand;
 import net.minecraft.util.hit.EntityHitResult;
 import net.minecraft.util.hit.HitResult;
+import net.minecraft.util.math.Box;
 import net.minecraft.util.math.MathHelper;
+import net.minecraft.util.math.Vec3d;
 
-import java.util.ArrayList;
-import java.util.Comparator;
-import java.util.List;
-import java.util.Objects;
+import java.util.*;
 
 public class LegitAura2 extends Module
 {
@@ -36,7 +35,7 @@ public class LegitAura2 extends Module
     private double currentCPS;
     BooleanSetting targetMobs;
     BooleanSetting ignoreTeamsSetting;
-
+   float[] serverSideAngles;
     NumberSetting rangeSetting;
     ModeSetting sortmode;
     BooleanSetting targetInvisibles;
@@ -166,6 +165,7 @@ public class LegitAura2 extends Module
             if(target != null)
             {
                 EventMotion event = (EventMotion)e;
+               serverSideAngles =   ((EventMotion) e).getServerSideAngles();
                 if(fixed != null){
                     if(isSilent) {
                         event.setYaw(fixed[0]);
@@ -207,22 +207,31 @@ public class LegitAura2 extends Module
                     float aimSpeed = (float) legitAimSpeed.getValue();
                      aimSpeed = (float)
                             RandomUtils.nextFloat(aimSpeed - 0.02f, aimSpeed + 0.02f)*0.1f;
-                        angles = rotationUtils.calcRotation(target, aimSpeed, (float) rangeSetting.getValue(), isInstant, isSilent, angles, (float) legitInstantAimSpeed.getValue());
+                       angles = rotationUtils.calcRotation(target, aimSpeed, (float) rangeSetting.getValue(), isInstant, isSilent, angles, (float) legitInstantAimSpeed.getValue());
+                     //   angles = RotationUtils.getLimitedAngles(serverSideAngles,tempAngles,target);
                 }
                 if(angles != null){
-                    fixed = rotationUtils.fixedSensitivity(angles, 0.1F);
+                   // fixed = rotationUtils.fixedSensitivity(angles, 0.1F);
+                    fixed =rotationUtils.applySensitivityPatch(angles, serverSideAngles );
                 }
                 if (!isSilent && fixed != null) {
                     mc.player.setYaw(fixed[0]);
                     mc.player.setPitch(fixed[1]);
                 }
             } else {
+                serverSideAngles= new float[]{
+                        mc.player.getYaw(), mc.player.getPitch()
+                };
                 angles = new float[]{
                         mc.player.getYaw(), mc.player.getPitch()
                 };
             }
         }
 
+    }
+
+    private float getFoVDistance(final float yaw, final Entity e) {
+        return ((Math.abs(RotationUtils.getRotationsEntity((LivingEntity) e)[0] - yaw) % 360.0f > 180.0f) ? (360.0f - Math.abs(RotationUtils.getRotationsEntity((LivingEntity) e)[0] - yaw) % 360.0f) : (Math.abs(RotationUtils.getRotationsEntity((LivingEntity) e)[0] - yaw) % 360.0f));
     }
 
     public void attack(Entity target)
@@ -257,7 +266,7 @@ public class LegitAura2 extends Module
                 if(!mc.player.canSee(entity) && !hitThroughWalls.isEnabled())
                     continue;
                 double focusRange = swingRange.getValue();
-                if(mc.player.distanceTo(entity) > focusRange)
+                if(distanceTo(entity) > focusRange)
                     continue;
                 if(entity instanceof PlayerEntity)
                 {
@@ -307,11 +316,21 @@ public class LegitAura2 extends Module
         super.onEnabled();
     }
 
+
+
     @Override
     public void onDisabled()
     {
         targets.clear();
         target = null;
         super.onDisabled();
+    }
+    public double distanceTo( Entity entity){
+        Vec3d eye = Objects.requireNonNull(mc.player).getEyePos();
+        Box bb = entity.getBoundingBox();
+       Vec3d  entityPosition  =new Vec3d(MathHelper.clamp(eye.x, bb.minX, bb.maxX),
+                MathHelper.clamp(eye.y, bb.minY, bb.maxY),
+                MathHelper.clamp(eye.z, bb.minZ, bb.maxZ));
+       return entityPosition.distanceTo(mc.player.getEyePos());
     }
 }

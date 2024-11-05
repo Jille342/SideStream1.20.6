@@ -26,6 +26,7 @@ import net.minecraft.util.math.*;
 
 import java.util.List;
 import java.util.Objects;
+import java.util.Random;
 import java.util.concurrent.ThreadLocalRandom;
 
 public final class RotationUtils
@@ -172,6 +173,15 @@ public final class RotationUtils
 		}
 		return current + change;
 	}
+	private static float getFoVDistance(final float yaw, final Entity e) {
+		return ((Math.abs(RotationUtils.getRotationsEntity((LivingEntity) e)[0] - yaw) % 360.0f > 180.0f) ? (360.0f - Math.abs(RotationUtils.getRotationsEntity((LivingEntity) e)[0] - yaw) % 360.0f) : (Math.abs(RotationUtils.getRotationsEntity((LivingEntity) e)[0] - yaw) % 360.0f));
+	}
+	public static float[] getLimitedAngles(float[] serverSideAngles,float[] targetAngles  ,Entity target){
+		return  new float[]{
+				(float) RotationUtils.limitAngleChange(serverSideAngles[0], targetAngles[0], Math.max(10, getFoVDistance(serverSideAngles[0], target) * 0.8f))
+				, (float) RotationUtils.limitAngleChange(serverSideAngles[1], targetAngles[1], 10 + new Random().nextInt(30))
+		};
+	}
 	
 	public static float fovToEntity(Entity ent)
 	{
@@ -180,6 +190,8 @@ public final class RotationUtils
 		double yaw = Math.atan2(x, z) * 57.2957795D;
 		return (float)(yaw * -1.0D);
 	}
+
+
 	
 	public float[] fixedSensitivity(float[] rotations, float sens)
 	{
@@ -187,6 +199,14 @@ public final class RotationUtils
 		float gcd = f * f * f * 1.2F;
 		return new float[]{(rotations[0] - rotations[0] % gcd),
 			(rotations[1] - rotations[1] % gcd)};
+	}
+
+	public float[] applySensitivityPatch(final float[] targetRotation, float[] previousRotation) {
+		final float mouseSensitivity = (float) (mc.options.getMouseSensitivity().getValue() * (1 + Math.random() / 10000000) * 0.6F + 0.2F);
+		final double multiplier = mouseSensitivity * mouseSensitivity * mouseSensitivity * 8.0F * 0.15D;
+		final float yaw = previousRotation[0] + (float) (Math.round((targetRotation[0] - previousRotation[0]) / multiplier) * multiplier);
+		final float pitch = previousRotation[1] + (float) (Math.round((targetRotation[1] - previousRotation[1]) / multiplier) * multiplier);
+		return new float[]{yaw, MathHelper.clamp(pitch, -90, 90)};
 	}
 	
 	public static Vec3d nearest(Box box, Vec3d vec)
@@ -213,7 +233,7 @@ public final class RotationUtils
 		RaytraceUtils raytraceUtils = new RaytraceUtils();
 		EntityHitResult hitResult = raytraceUtils.rayCastByRotation(currentYaw, currentPitch, range);
 		if (hitResult != null && hitResult.getEntity() != mc.player && hitResult.getEntity() == entity) {
-				final float[] center = rotation(entity.getEyePos().add(0, -0.3, 0), eye);
+				final float[] center = rotation(nearest, eye);
 				aYaw = currentYaw + MathHelper.wrapDegrees(center[0] - currentYaw);
 				aPitch = currentPitch + MathHelper.wrapDegrees(center[1] - currentPitch);
 				return new float[]{
@@ -226,6 +246,21 @@ public final class RotationUtils
 					RandomUtils.nextDouble(-0.0001f, 0.0001)), eye));
 			return lerpArray(new float[]{currentYaw, currentPitch}, newRotation, tickDelta);
 	}
+
+	public Vec3d getAdaptivePosition(Entity entity) {
+		for (double yPercent = 1; yPercent >= 0; yPercent -= 0.25) {
+			for (double xPercent = 1; xPercent >= -0.5; xPercent -= 0.5) {
+				for (double zPercent = 1; zPercent >= -0.5; zPercent -= 0.5) {
+					return entity.getPos().add(
+							(entity.getBoundingBox().maxX - entity.getBoundingBox().minX) * xPercent,
+							(entity.getBoundingBox().maxY - entity.getBoundingBox().minY) * yPercent,
+							(entity.getBoundingBox().maxZ - entity.getBoundingBox().minZ) * zPercent);
+				}
+			}
+
+		}
+		return  entity.getEyePos();
+}
 	public float[] calcRotation(Entity entity) {
 		float aYaw = 0, aPitch = 0;
 		long next = 0;

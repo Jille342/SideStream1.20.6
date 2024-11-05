@@ -8,6 +8,7 @@
 package client.features.modules.combat;
 
 import client.event.Event;
+import client.event.listeners.EventRender2D;
 import client.event.listeners.EventUpdate;
 import client.features.modules.Module;
 import client.settings.BooleanSetting;
@@ -63,7 +64,7 @@ public final class BowAimbot extends Module
 	
 	public void onEvent(Event<?> e)
 	{
-		if(e instanceof EventUpdate)
+		if(e instanceof EventRender2D)
 		{
 			// check if using item
 			if(!mc.options.useKey.isPressed())
