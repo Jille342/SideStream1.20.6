@@ -18,7 +18,7 @@ import java.util.*;
 public class LagRange extends Module {
     public TimeHelper timer = new TimeHelper();
 
-    public LinkedList outPackets = new LinkedList();
+    public LinkedList<Packet> outPackets = new LinkedList();
     public NumberSetting pulseDelay = new NumberSetting("pulse Delay", 200.0, 10.0, 500.0, 10.0);
             ;public LagRange() {
         super("LagRange",0 ,Category.COMBAT);
@@ -35,20 +35,14 @@ public class LagRange extends Module {
             }
         }
         if(event instanceof EventUpdate){
-            this.setTag(String.valueOf(this.pulseDelay.getValue()));
-            if (event.getType() == EventType.PRE) {
+            this.setTag(String.valueOf(pulseDelay.getValue()));
                 if (this.timer.hasReached(pulseDelay.getValue())) {
                     this.fullRelease();
                 }
-
-                if (mc.player.hurtTime > 0) {
+                if (Objects.requireNonNull(mc.player).hurtTime > 0) {
                     this.fullRelease();
                 }
-
-            }
-
         }
-
     }
 
     @Override
@@ -70,7 +64,7 @@ public class LagRange extends Module {
         if (!mc.isInSingleplayer()) {
             try {
                 while(!outPackets.isEmpty()) {
-                   Objects.requireNonNull(mc.getNetworkHandler()).getConnection().send((Packet)this.outPackets.poll());
+            mc.getNetworkHandler().sendPacket((Packet)this.outPackets.poll());
                 }
             } catch (Exception var2) {
             }
@@ -80,7 +74,7 @@ public class LagRange extends Module {
     }
 
     public boolean shouldCancel() {
-        if (ModuleManager.getModulebyClass(LegitAura2.class).isEnabled()) {
+        if (ModuleManager.getModulebyClass(LegitAura2.class).isEnabled() && !mc.isInSingleplayer()) {
             return true;
         } else {
            fullRelease();
