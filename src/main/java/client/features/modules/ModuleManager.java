@@ -58,7 +58,6 @@ public class ModuleManager implements MCUtil
 		modules.add(new AutoTool());
 		modules.add(new Flight());
 		modules.add(new WTap());
-		modules.add(new LagRange());
 	}
 	
 	public static class ModuleComparator implements Comparator<Module>

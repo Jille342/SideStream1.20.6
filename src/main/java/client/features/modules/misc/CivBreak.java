@@ -128,7 +128,7 @@ public class CivBreak extends Module
 					}
 					mc.player.networkHandler
 						.sendPacket(new HandSwingC2SPacket(Hand.MAIN_HAND));
-					mc.interactionManager.updateBlockBreakingProgress(blockPos, facing);
+					mc.interactionManager.attackBlock(blockPos, facing);
 					this.hitResult = null;
 					this.blockPos = null;
 					this.attempt = 0;

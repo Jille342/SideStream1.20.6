@@ -59,7 +59,7 @@ public class WTap
                     return;
                 }
                 if ((double)mc.player.distanceTo(target) <= this.range.getValue()) {
-                    if (target.maxHurtTime >= 10) {
+                    if (target.hurtTime >= 1) {
                         if ( !(target instanceof PlayerEntity)) {
                             return;
                         }
