@@ -2,87 +2,101 @@ package client.features.modules.combat;
 
 import client.Client;
 import client.event.Event;
+import client.event.EventType;
 import client.event.listeners.EventPacket;
 import client.event.listeners.EventUpdate;
 import client.features.modules.Module;
+import client.features.modules.ModuleManager;
 import client.settings.NumberSetting;
-import net.minecraft.entity.player.PlayerEntity;
+import client.utils.RaytraceUtils;
+import client.utils.RotationUtils;
+import client.utils.TimeHelper;
 import net.minecraft.network.packet.Packet;
-
-import java.util.ArrayList;
-import java.util.Collections;
-import java.util.List;
-import java.util.Objects;
+import net.minecraft.util.hit.EntityHitResult;
+import java.util.*;
 
 public class LagRange extends Module {
-    private final List<Packet<?>> packets = Collections.synchronizedList(new ArrayList<>());
-    private final int preActivationBlocks = 2;
-    private final NumberSetting packetsLag = new NumberSetting("Packet Delay", 2, 1, 20, 1);
-    private final NumberSetting distanceEnemy = new NumberSetting("Enemy Distance", 5, 1, 10, 1);
-    public LagRange() {
+    public TimeHelper timer = new TimeHelper();
+
+    public LinkedList outPackets = new LinkedList();
+    public NumberSetting pulseDelay = new NumberSetting("pulse Delay", 200.0, 10.0, 500.0, 10.0);
+            ;public LagRange() {
         super("LagRange",0 ,Category.COMBAT);
-        addSetting(packetsLag, distanceEnemy);
+        addSetting(pulseDelay);
     }
     public void onEvent(Event<?> event){
         if(event instanceof EventPacket){
             if(event.isOutgoing()){
-                synchronized (packets) {
-                    packets.add(((EventPacket) event).getPacket());
+                if (this.shouldCancel() && !event.isCancelled()) {
+                    event.setCancelled(true);
+                    outPackets.add(((EventPacket) event).getPacket());
                 }
-                event.setCancelled(true);
+
             }
         }
         if(event instanceof EventUpdate){
-            if (event.isPost()) {
-                PlayerEntity enemy;
-                if( AimAssist.primary != null ){
-                    enemy = (PlayerEntity) AimAssist.primary;
-                } else if(LegitAura2.target != null){
-                    enemy = (PlayerEntity) LegitAura2.target;
-                } else {
-                    enemy = null;
+            this.setTag(String.valueOf(this.pulseDelay.getValue()));
+            if (event.getType() == EventType.PRE) {
+                if (this.timer.hasReached(pulseDelay.getValue())) {
+                    this.fullRelease();
                 }
 
-                if (enemy == null) {
-                    if (!packets.isEmpty() && Objects.requireNonNull(mc.player).age % packetsLag.getValue() == 0) {
-                        synchronized (packets) {
-                            Packet<?> packet = packets.removeFirst();
-                            Objects.requireNonNull(mc.getNetworkHandler()).sendPacket(packet);
-                        }
-                    }
-                } else {
-                    double distanceToEnemy = Objects.requireNonNull(mc.player).distanceTo(enemy);
-                    if (distanceToEnemy <= distanceEnemy.getValue() + preActivationBlocks) {
-                        synchronized (packets) {
-                            Packet<?> packet = packets.removeFirst();
-                            Objects.requireNonNull(mc.getNetworkHandler()).sendPacket(packet);
-
-                            packets.clear();
-                        }
-                    }
+                if (mc.player.hurtTime > 0) {
+                    this.fullRelease();
                 }
+
             }
+
         }
 
     }
 
     @Override
     public void onEnabled() {
-        reset();
         super.onEnabled();
     }
 
     @Override
     public void onDisabled() {
         if (mc.player == null) return;
-        reset();
+        this.fullRelease();
         super.onDisabled();
     }
 
-    private void reset() {
-        synchronized (packets) {
-            packets.clear();
+    public boolean isHurtTime() {
+        return LegitAura2.target.hurtTime <= 2;
+    }
+    public void fullRelease() {
+        if (!mc.isInSingleplayer()) {
+            try {
+                while(!outPackets.isEmpty()) {
+                   Objects.requireNonNull(mc.getNetworkHandler()).getConnection().send((Packet)this.outPackets.poll());
+                }
+            } catch (Exception var2) {
+            }
+           outPackets.clear();
+           timer.reset();
         }
     }
+
+    public boolean shouldCancel() {
+        if (ModuleManager.getModulebyClass(LegitAura2.class).isEnabled()) {
+            return true;
+        } else {
+           fullRelease();
+            return false;
+        }
+    }
+
+    public boolean isTargetCloseOrVisible() {
+        RaytraceUtils raytraceUtils = new RaytraceUtils();
+        EntityHitResult rayTracedEntity = raytraceUtils.rayCastByRotation(RotationUtils.virtualYaw, RotationUtils.virtualPitch,3.0f);
+        if (LegitAura2.target == null) {
+            return false;
+        } else {
+            return rayTracedEntity.getEntity() == LegitAura2.target || mc.targetedEntity == LegitAura2.target;
+        }
+    }
+
 
 }
