@@ -149,9 +149,6 @@ public class TPBreaker extends Module
 				new BlockHitResult(pos.toCenterPos(), side2, pos, false)
 					.withBlockPos(pos);
 			assert mc.player != null;
-			Objects.requireNonNull(mc.getNetworkHandler()).sendPacket(
-				new BlockBreakingProgressS2CPacket(mc.player.getId(), pos,
-					0));
 			Objects.requireNonNull(mc.getNetworkHandler())
 				.sendPacket(new HandSwingC2SPacket(Hand.MAIN_HAND));
 			Objects.requireNonNull(mc.player).interactAt(mc.player,
@@ -159,6 +156,7 @@ public class TPBreaker extends Module
 			Objects.requireNonNull(mc.player).networkHandler
 				.sendPacket(new PlayerInteractBlockC2SPacket(Hand.MAIN_HAND,
 					blockHitResult, 0));
+			Objects.requireNonNull(mc.interactionManager).interactBlock(mc.player,Hand.MAIN_HAND,blockHitResult);
 		}
 	}
 	

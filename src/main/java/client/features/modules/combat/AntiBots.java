@@ -89,9 +89,7 @@ public final class AntiBots extends Module
 			return false;
 		return switch(mode.getMode())
 		{
-			case "Shotbow" -> (e.getHealth() == 20
-				|| Objects.requireNonNull(mc.getNetworkHandler())
-					.getPlayerListEntry(e.getUuid()) == null);
+			case "Shotbow" -> e.getTeamColorValue() == 16777215;
 			case "Hypixel" -> isHypixelBot(e);
 			case "ShotbowTeams" -> e.getTeamColorValue() == 0;
 			default -> false;

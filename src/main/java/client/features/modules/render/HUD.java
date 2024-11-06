@@ -36,9 +36,9 @@ public class HUD extends Module
 	{
 		super.init();
 		colormode = new ModeSetting("Color Mode ", "Pulsing",
-			new String[]{"Default", "Rainbow", "Pulsing", "Category", "Test", "Orange"});
+			new String[]{"Default", "Rainbow", "Pulsing",  "Test", "Orange"});
 		namecolormode = new ModeSetting("Name Color Mode ", "Default",
-			new String[]{"Default", "Rainbow", "Pulsing", "Category", "Test"});
+			new String[]{"Default", "Rainbow", "Pulsing",  "Test"});
 		background = new BooleanSetting("Background", true);
 		info = new BooleanSetting("Info", true);
 		namebackground = new BooleanSetting("Name Background", true);

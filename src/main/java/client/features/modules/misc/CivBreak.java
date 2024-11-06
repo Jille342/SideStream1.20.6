@@ -56,12 +56,11 @@ public class CivBreak extends Module
 		if(event instanceof EventUpdate)
 		{
 			RaycastUtils raycastUtils = new RaycastUtils();
-
 			setTag(mode.getMode());
 			BlockPos nexus = getNexus();
 			if( nexus == null)
 				return;
-			hitResult = raycastUtils.rayCast(getAngleToBlockPos(nexus),Math.sqrt(nexus.getSquaredDistance(mc.player.getX(),mc.player.getY(),mc.player.getZ())),mc.getTickDelta());
+			hitResult = raycastUtils.rayCast(getAngleToBlockPos(nexus),Math.sqrt(nexus.getSquaredDistance(mc.player.getEyePos())), mc.getTickDelta());
 			if(hitResult == null)
 				return;
 			Direction facing = ((BlockHitResult)this.hitResult).getSide();
@@ -97,13 +96,11 @@ public class CivBreak extends Module
 							0; i < (int)this.packetDelay.getValue(); i++)
 						{
 							mc.player.networkHandler
-								.sendPacket(new PlayerActionC2SPacket(
-									PlayerActionC2SPacket.Action.START_DESTROY_BLOCK,
+								.sendPacket(new PlayerActionC2SPacket(PlayerActionC2SPacket.Action.START_DESTROY_BLOCK,
 									this.blockPos, facing, 0));
 						}
 						
-						mc.player.networkHandler
-							.sendPacket(new PlayerActionC2SPacket(
+						mc.player.networkHandler.sendPacket(new PlayerActionC2SPacket(
 								PlayerActionC2SPacket.Action.STOP_DESTROY_BLOCK,
 								this.blockPos, facing, 0));
 					}
@@ -123,15 +120,16 @@ public class CivBreak extends Module
 					
 					if(dist >= this.range.getValue())
 					{
-						
+						this.hitResult = null;
+						this.blockPos = null;
+						this.attempt = 0;
 						return;
 					}
 					mc.player.networkHandler
 						.sendPacket(new HandSwingC2SPacket(Hand.MAIN_HAND));
-					mc.interactionManager.attackBlock(blockPos, facing);
-					this.hitResult = null;
-					this.blockPos = null;
-					this.attempt = 0;
+					if(!mc.interactionManager.isBreakingBlock())
+					mc.interactionManager.updateBlockBreakingProgress(blockPos, facing);
+
 					break;
 				}
 			
@@ -159,8 +157,7 @@ public class CivBreak extends Module
 					pos = new BlockPos((int)(mc.player.getX() + x),
 						(int)(mc.player.getY() + y),
 						(int)(mc.player.getZ() + z));
-					if(Objects.requireNonNull(mc.world).getBlockState(pos)
-						.getBlock() == Blocks.END_STONE)
+					if(Objects.requireNonNull(mc.world).getBlockState(pos).getBlock() == Blocks.END_STONE)
 						return pos;
 				}
 			}
@@ -182,13 +179,9 @@ public class CivBreak extends Module
 		final double difZ = to.z - from.z;
 		final double dist = Math.sqrt((float)(difX * difX + difZ * difZ));
 		return new float[]{
-			(float)MathHelper
-				.wrapDegrees(Math.toDegrees(Math.atan2(difZ, difX)) - 90.0),
-			(float)MathHelper
-				.wrapDegrees(Math.toDegrees(Math.atan2(difY, dist)))};
-	}
-	
-	@Override
+			(float)MathHelper.wrapDegrees(Math.toDegrees(Math.atan2(difZ, difX)) - 90.0),
+			(float)MathHelper.wrapDegrees(Math.toDegrees(Math.atan2(difY, dist)))};
+	}@Override
 	public void onEnabled()
 	{
 		// for (int i = 0; i < 20; i++) {

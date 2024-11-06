@@ -14,11 +14,10 @@ public class Sprint extends Module
 	
 	public void onEvent(Event<?> e)
 	{
-		if(e.isPre())
-		{
-			if(mc.options.forwardKey.isPressed()
-				&& !(Objects.requireNonNull(mc.player).isUsingItem()))
-				mc.player.setSprinting(true);
+			if (mc.player != null) {
+				if (mc.player.forwardSpeed > 0) {
+					mc.options.sprintKey.setPressed(true);
+				}
+			}
 		}
 	}
-}

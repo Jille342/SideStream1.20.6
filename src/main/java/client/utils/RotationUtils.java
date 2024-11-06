@@ -29,11 +29,9 @@ import java.util.Objects;
 import java.util.Random;
 import java.util.concurrent.ThreadLocalRandom;
 
-public final class RotationUtils
-{
+public final class RotationUtils implements MCUtil{
 	public static float virtualYaw, virtualPitch, virtualPrevYaw,
 		virtualPrevPitch;
-	static MinecraftClient mc = MinecraftClient.getInstance();
 	public static final double DEG_TO_RAD = Math.PI / 180.0;
 
 	public static final double RAD_TO_DEG = 180.0 / Math.PI;
@@ -230,8 +228,7 @@ public final class RotationUtils
 		Vec3d eye = Objects.requireNonNull(mc.player).getEyePos();
 		Box bb = entity.getBoundingBox();
 		Vec3d nearest = nearest(bb, eye);
-		RaytraceUtils raytraceUtils = new RaytraceUtils();
-		EntityHitResult hitResult = raytraceUtils.rayCastByRotation(currentYaw, currentPitch, range);
+		EntityHitResult hitResult = RaytraceUtils.rayCastByRotation(currentYaw, currentPitch, range);
 		if (hitResult != null && hitResult.getEntity() != mc.player && hitResult.getEntity() == entity) {
 				final float[] center = rotation(nearest, eye);
 				aYaw = currentYaw + MathHelper.wrapDegrees(center[0] - currentYaw);

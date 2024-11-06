@@ -105,7 +105,7 @@ public class Module
 	
 	public void setTag(String string)
 	{
-		setDisplayName(name + " " + "§7" + string);
+		setDisplayName(name + " " + "\247f" + string);
 	}
 	
 	public void toggle()

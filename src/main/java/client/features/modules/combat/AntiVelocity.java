@@ -45,13 +45,13 @@ public class AntiVelocity extends Module
 	{
 		if(e instanceof EventUpdate)
 		{
-			setTag(mode.getMode());
+			setTag("H:"+horizontal.getValue()+ " V:"+vertical.getValue());
 		}
 		if(e instanceof EventPacket event)
 		{
 			if(this.mode.getMode().equalsIgnoreCase("Simple"))
 			{
-				if(targetCheck.isEnabled() && (LegitAura2.target != null || AimAssist.primary !=null)) {
+				if(targetCheck.isEnabled() && (LegitAura2.target != null || AimAssist.target !=null)) {
 					if (this.clickOnly.isEnabled() && !mc.options.useKey.isPressed()) {
 						return;
 					}

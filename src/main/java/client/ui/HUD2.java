@@ -63,8 +63,8 @@ public class HUD2
 		float height = 10;
 		String name = Client.NAME;
 		
-		String build = "Build: \2477" + Client.VERSION;
-		String blockps = "Blocks/s: \2477"
+		String build = "Build: \247f" + Client.VERSION;
+		String blockps = "Blocks/s: \247f"
 			+ String.valueOf(MathUtils.round(getDistTraveled(), 2));
 		int nameX = 3;
 		int nameY = 4;
