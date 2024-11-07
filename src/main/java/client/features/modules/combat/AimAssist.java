@@ -36,6 +36,7 @@ public class AimAssist extends Module
 	BooleanSetting targetAnimalsSetting;
 	NumberSetting fov;
 	ModeSetting sortmode;
+	BooleanSetting ignoreBreaking;
 	
 	public AimAssist()
 	{
@@ -55,8 +56,9 @@ public class AimAssist extends Module
 		this.rangeSetting = new NumberSetting("Range", 5.0, 3.0, 8.0, 0.1);
 		this.fov = new NumberSetting("FOV", 90.0D, 15.0D, 360.0D, 1.0D);
 		sortmode = new ModeSetting("SortMode", "Angle", new String[]{"Angle","HurtTime","Distance", "Cycle"});
+		ignoreBreaking = new BooleanSetting("Ignore Breaking", true);
 		addSetting(notHolding, ignoreTeamsSetting, aimSpeedSetting,
-			rangeSetting, targetAnimalsSetting, targetMonstersSetting, fov, sortmode);
+			rangeSetting, targetAnimalsSetting, targetMonstersSetting, fov, sortmode,ignoreBreaking);
 	}
 	
 	@Override
@@ -109,6 +111,9 @@ public class AimAssist extends Module
 		
 		if(!notHolding.enabled && !mc.options.attackKey.isPressed())
 		{
+			return false;
+		}
+		if(ignoreBreaking.isEnabled() && mc.interactionManager.isBreakingBlock()){
 			return false;
 		}
 		
