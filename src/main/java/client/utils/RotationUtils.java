@@ -223,14 +223,17 @@ public final class RotationUtils implements MCUtil{
 		float tick = 0.01f;
 		float currentYaw = silent ? serverSideAngles[0] : mc.player.getYaw(tick);
 		float currentPitch = silent ? serverSideAngles[1] : mc.player.getPitch(tick);
-		float tickDelta = instant ? instantAimSpeed : speed;
+		float aimSpeed = instant ? instantAimSpeed : speed;
 		float aYaw = 0, aPitch = 0;
 		Vec3d eye = Objects.requireNonNull(mc.player).getEyePos();
 		Box bb = entity.getBoundingBox();
 		Vec3d nearest = nearest(bb, eye);
+		final float[] center = rotation(nearest.add(RandomUtils.nextDouble(-0.0001f, 0.0001),
+				RandomUtils.nextDouble(-0.0010f, 0.0001),
+				RandomUtils.nextDouble(-0.0001f, 0.0001)), eye);
 		EntityHitResult hitResult = RaytraceUtils.rayCastByRotation(currentYaw, currentPitch, range);
 		if (hitResult != null && hitResult.getEntity() != mc.player && hitResult.getEntity() == entity) {
-				final float[] center = rotation(nearest, eye);
+
 				aYaw = currentYaw + MathHelper.wrapDegrees(center[0] - currentYaw);
 				aPitch = currentPitch + MathHelper.wrapDegrees(center[1] - currentPitch);
 				return new float[]{
@@ -238,10 +241,11 @@ public final class RotationUtils implements MCUtil{
 						lerp(currentPitch, aPitch, speed * 0.1f)
 				};
 		}
-			float[] newRotation = wrapAngleArray(currentYaw, currentPitch, rotation(nearest.add(RandomUtils.nextDouble(-0.0001f, 0.0001),
-					RandomUtils.nextDouble(-0.0010f, 0.0001),
-					RandomUtils.nextDouble(-0.0001f, 0.0001)), eye));
-			return lerpArray(new float[]{currentYaw, currentPitch}, newRotation, tickDelta);
+			float[] newRotation = wrapAngleArray(currentYaw, currentPitch,center);
+		  float deltaH = Math.abs(currentYaw - newRotation[0]);
+		  float deltaV = Math.abs(currentPitch - newRotation[1]);
+		  float[] newSpeed = computeTurnSpeed( deltaH, deltaV, aimSpeed);
+			return lerpArray(new float[]{currentYaw, currentPitch}, newRotation, newSpeed[0], newSpeed[1]);
 	}
 
 	public Vec3d getAdaptivePosition(Entity entity) {
@@ -258,6 +262,18 @@ public final class RotationUtils implements MCUtil{
 		}
 		return  entity.getEyePos();
 }
+
+	private float[] computeTurnSpeed( float diffH, float diffV , float speed) {
+		 float coeDiffH = 0.024f;
+		 float coeDiffV = 0.024f;
+		 float min = 0.005f;
+		final float turnSpeedH = (float) (coeDiffH* Math.log10(diffH)  +  speed);
+		float turnSpeedV = (float) (coeDiffV* Math.log10(diffV)  +  speed);
+		return new float[] {
+				Math.max(Math.abs(turnSpeedH), min),
+				Math.max(Math.abs(turnSpeedV), min)
+		};
+	}
 	public float[] calcRotation(Entity entity) {
 		float aYaw = 0, aPitch = 0;
 		long next = 0;
@@ -301,9 +317,9 @@ public final class RotationUtils implements MCUtil{
 	private float lerp(float a, float b, float t) {
 		return a + (b - a) * t;
 	}
-	private float[] lerpArray (float[]from, float[] target, float ticks){
+	private float[] lerpArray (float[]from, float[] target, float vSpeed, float hSpeed){
 		return new float[] {
-				lerp(from[0],target[0],ticks), lerp(from[1],target[1],ticks)
+				lerp(from[0],target[0],vSpeed), lerp(from[1],target[1],hSpeed)
 		};
 	}
 	public static float[] rotation(double x, double y, double z, double ax,
