@@ -145,9 +145,7 @@ public class TPBreaker extends Module
 		{
 			Direction side2 = side.getOpposite();
 			BlockHitResult blockHitResult =
-				
-				new BlockHitResult(pos.toCenterPos(), side2, pos, false)
-					.withBlockPos(pos);
+					new BlockHitResult(pos.toCenterPos(), side2, pos, false).withBlockPos(pos);
 			assert mc.player != null;
 			Objects.requireNonNull(mc.getNetworkHandler())
 				.sendPacket(new HandSwingC2SPacket(Hand.MAIN_HAND));
@@ -157,6 +155,7 @@ public class TPBreaker extends Module
 				.sendPacket(new PlayerInteractBlockC2SPacket(Hand.MAIN_HAND,
 					blockHitResult, 0));
 			Objects.requireNonNull(mc.interactionManager).interactBlock(mc.player,Hand.MAIN_HAND,blockHitResult);
+			mc.interactionManager.updateBlockBreakingProgress(pos,side2);
 		}
 	}
 	

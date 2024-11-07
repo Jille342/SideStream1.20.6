@@ -28,7 +28,6 @@ public class AutoDrain extends Module
 	LivingEntity target;
 	int current;
 	public boolean did;
-	NumberSetting fov;
 	
 	public AutoDrain()
 	{
@@ -39,9 +38,8 @@ public class AutoDrain extends Module
 	{
 		super.init();
 		range = new NumberSetting("Range", 4.0, 3, 8, 0.1);
-		this.fov = new NumberSetting("FOV", 20D, 0D, 360D, 1.0D);
 		
-		addSetting(range, fov);
+		addSetting(range);
 	}
 	
 	public void onEvent(Event<?> event)
@@ -106,8 +104,6 @@ public class AutoDrain extends Module
 				{
 					continue;
 				}
-				if(PlayerHelper.isInFov(entity, fov.value))
-					continue;
 				double focusRange =
 					mc.player.canSee(entity) ? range.value : 3.5;
 				if(mc.player.distanceTo(entity) > focusRange)
