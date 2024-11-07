@@ -71,7 +71,7 @@ public class AimAssist extends Module
 	{
 		if(e instanceof EventRender2D) {
 			float tickDelta = mc.getTickDelta();
-			setTag("" + targets.size());
+			setTag(sortmode.getValue()+" " + targets.size());
 			collectTargets();
 			if (!targets.isEmpty()) {
 				target = targets.getFirst();

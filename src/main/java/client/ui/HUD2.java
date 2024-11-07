@@ -42,7 +42,7 @@ public class HUD2
 		switch(HUD.namecolormode.getMode())
 		{
 			case "Default":
-			color = new Color(50, 200, 255).getRGB();
+			color = new Color(0, 200, 255).getRGB();
 			break;
 			case "Rainbow":
 			color = Colors.rainbow((counter[0] * 15) * 7, 0.8f, 1.0f);
@@ -98,9 +98,9 @@ public class HUD2
 		if(HUD.info.isEnabled())
 		{
 			Fonts.font.drawString(blockps, 3,
-				scaledResolution.getScaledHeight() - height, -1);
+				scaledResolution.getScaledHeight() - height,   new Color(0, 200, 255).getRGB());
 		}
-		Fonts.font.drawString(build, 5 , 16+titleFont.getFontHeight(), -1);
+		Fonts.font.drawString(build, 5 , 16+titleFont.getFontHeight(), new Color(0, 200, 255).getRGB());
 		
 		if(HUD.armor.isEnabled())
 		{
@@ -147,7 +147,7 @@ public class HUD2
 				switch(HUD.colormode.getMode())
 				{
 					case "Default":
-					color = new Color(50, 200, 255).getRGB();
+					color = new Color(0, 200, 255).getRGB();
 					break;
 					case "Rainbow":
 					color = Colors.rainbow((counter[0] * 15) * 7, 0.8f, 1.0f);

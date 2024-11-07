@@ -1,6 +1,9 @@
 package client.ui.clicckgui;
 
 import client.features.modules.Module;
+import client.utils.animation.AnimationUtil;
+import client.utils.animation.BackAnimation;
+import net.minecraft.client.MinecraftClient;
 import net.minecraft.client.gui.DrawContext;
 import net.minecraft.client.gui.screen.Screen;
 import net.minecraft.client.util.math.MatrixStack;
@@ -13,7 +16,10 @@ public class ClickGui extends Screen
 {
 	
 	private final List<ClickGuiWindow> windows = new ArrayList<>();
-	
+	private  final MinecraftClient mc  = MinecraftClient.getInstance();
+	private int mouseX, mouseY;
+	private float partialTicks;
+	private final AnimationUtil animationUtil = new BackAnimation();
 	public ClickGui()
 	{
 		super(Text.literal(""));
@@ -24,21 +30,31 @@ public class ClickGui extends Screen
 			currentX += 150;
 		}
 	}
-	
+
+
 	@Override
 	protected void init()
 	{
 		windows.forEach(ClickGuiWindow::init);
 		windows.forEach(m -> m.setSize(width, height));
+		animationUtil.setTick(0.25);
 		super.init();
 	}
 	
 	@Override
 	public void render(DrawContext context, int mouseX, int mouseY, float delta)
 	{
-		super.render(context, mouseX, mouseY, delta);
-		windows
-			.forEach(m -> m.render(new MatrixStack(), mouseX, mouseY, delta));
+		partialTicks = delta;
+		double per = animationUtil.uodate(0.05).calcPercent();
+
+
+		context.getMatrices().push();
+		//Render2DUtil.setAlphaLimit((float) per);
+		context.getMatrices().translate((float) mc.getWindow().getScaledWidth() / 4, (float) mc.getWindow().getScaledHeight() / 4, 0);
+		context.getMatrices().scale((float) per, (float) per, 0);
+		context.getMatrices().translate((float) -mc.getWindow().getScaledWidth() / 4, (float) -mc.getWindow().getScaledHeight() / 4, 0);
+		windows.forEach(m -> m.render(new MatrixStack(), mouseX, mouseY, delta));
+		context.getMatrices().pop();
 	}
 	
 	@Override
@@ -70,5 +86,10 @@ public class ClickGui extends Screen
 	{
 		windows.forEach(m -> m.keyPressed(keyCode, scanCode, modifiers));
 		return super.keyPressed(keyCode, scanCode, modifiers);
+	}
+	@Override
+	public void close(){
+		animationUtil.setTick(0);
+		super.close();
 	}
 }
