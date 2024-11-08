@@ -558,6 +558,8 @@ public class RenderingUtils implements MCUtil
 			.vertex(matrix4f, (float)box.minX, (float)box.maxY, (float)box.minZ)
 			.next();
 		tessellator.draw();
+
+
 		RenderSystem.setShaderColor(1, 1, 1, 1);
 		
 		GL11.glEnable(GL11.GL_DEPTH_TEST);

@@ -1,25 +1,34 @@
 package client.features.modules.misc;
 
+import java.awt.*;
 import java.util.Objects;
 
 import client.event.Event;
 import client.event.listeners.EventMotion;
+import client.event.listeners.EventRender3D;
 import client.event.listeners.EventUpdate;
 import client.features.modules.Module;
 import client.settings.ModeSetting;
 import client.settings.NumberSetting;
 import client.utils.RaycastUtils;
+import client.utils.RenderingUtils;
 import client.utils.RotationUtils;
+import net.minecraft.block.AirBlock;
 import net.minecraft.block.Blocks;
+import net.minecraft.client.render.VertexConsumer;
+import net.minecraft.client.render.VertexConsumerProvider;
+import net.minecraft.client.render.VertexFormats;
+import net.minecraft.client.render.WorldRenderer;
+import net.minecraft.client.util.math.MatrixStack;
 import net.minecraft.network.packet.c2s.play.HandSwingC2SPacket;
 import net.minecraft.network.packet.c2s.play.PlayerActionC2SPacket;
 import net.minecraft.util.Hand;
 import net.minecraft.util.hit.BlockHitResult;
 import net.minecraft.util.hit.HitResult;
-import net.minecraft.util.math.BlockPos;
-import net.minecraft.util.math.Direction;
-import net.minecraft.util.math.MathHelper;
-import net.minecraft.util.math.Vec3d;
+import net.minecraft.util.math.*;
+import net.minecraft.util.shape.VoxelShape;
+import net.minecraft.util.shape.VoxelShapes;
+import org.lwjgl.opengl.GL11;
 
 public class CivBreak extends Module
 {
@@ -38,7 +47,7 @@ public class CivBreak extends Module
 	public void init()
 	{
 		super.init();
-		this.range = new NumberSetting("Range", 5.0, 4.5, 7.0, 0.1);
+		range = new NumberSetting("Range", 5.0, 4.5, 7.0, 0.1);
 		mode =
 			new ModeSetting("Mode", "Legit", new String[]{"Legit", "Packet"});
 		packetDelay = new NumberSetting("Packet Delay", 20, 10, 200, 1.0);
@@ -46,7 +55,7 @@ public class CivBreak extends Module
 	}
 	
 	// public void onClickTick(final ClickTickEvent event) {
-	// if (this.blockPos != null || this.hitResult != null)
+	// if (blockPos != null || hitResult != null)
 	// event.cancel();
 	
 	// super.onClickTick(event);
@@ -63,9 +72,9 @@ public class CivBreak extends Module
 			hitResult = raycastUtils.rayCast(getAngleToBlockPos(nexus),Math.sqrt(nexus.getSquaredDistance(mc.player.getEyePos())), mc.getTickDelta());
 			if(hitResult == null)
 				return;
-			Direction facing = ((BlockHitResult)this.hitResult).getSide();
+			Direction facing = ((BlockHitResult)hitResult).getSide();
 				blockPos = nexus;
-				switch(this.mode.getMode())
+				switch(mode.getMode())
 				{
 					
 					case "Packet":
@@ -73,36 +82,36 @@ public class CivBreak extends Module
 					if(facing == null)
 						return;
 					
-					if(this.blockPos != null)
+					if(blockPos != null)
 					{
 						final float f =
-							(float)(mc.player.getX() - this.blockPos.getX());
+							(float)(mc.player.getX() - blockPos.getX());
 						final float g =
-							(float)(mc.player.getY() - this.blockPos.getY());
+							(float)(mc.player.getY() - blockPos.getY());
 						final float h =
-							(float)(mc.player.getZ() - this.blockPos.getZ());
+							(float)(mc.player.getZ() - blockPos.getZ());
 						final float dist =
 							MathHelper.sqrt(f * f + g * g + h * h);
 						
-						if(dist >= this.range.getValue())
+						if(dist >= range.getValue())
 						{
-							this.hitResult = null;
-							this.blockPos = null;
+							hitResult = null;
+							blockPos = null;
 							return;
 						}
 						
 						mc.player.swingHand(Hand.MAIN_HAND);
 						for(int i =
-							0; i < (int)this.packetDelay.getValue(); i++)
+							0; i < (int)packetDelay.getValue(); i++)
 						{
 							mc.player.networkHandler
 								.sendPacket(new PlayerActionC2SPacket(PlayerActionC2SPacket.Action.START_DESTROY_BLOCK,
-									this.blockPos, facing, 0));
+									blockPos, facing, 0));
 						}
 						
 						mc.player.networkHandler.sendPacket(new PlayerActionC2SPacket(
 								PlayerActionC2SPacket.Action.STOP_DESTROY_BLOCK,
-								this.blockPos, facing, 0));
+								blockPos, facing, 0));
 					}
 					break;
 					case "Legit":
@@ -111,18 +120,18 @@ public class CivBreak extends Module
 						return;
 					}
 					final float f =
-						(float)(mc.player.getX() - this.blockPos.getX());
+						(float)(mc.player.getX() - blockPos.getX());
 					final float g =
-						(float)(mc.player.getY() - this.blockPos.getY());
+						(float)(mc.player.getY() - blockPos.getY());
 					final float h =
-						(float)(mc.player.getZ() - this.blockPos.getZ());
+						(float)(mc.player.getZ() - blockPos.getZ());
 					final float dist = MathHelper.sqrt(f * f + g * g + h * h);
 					
-					if(dist >= this.range.getValue())
+					if(dist >= range.getValue())
 					{
-						this.hitResult = null;
-						this.blockPos = null;
-						this.attempt = 0;
+						hitResult = null;
+						blockPos = null;
+						attempt = 0;
 						return;
 					}
 					mc.player.networkHandler
@@ -134,14 +143,28 @@ public class CivBreak extends Module
 				}
 			
 		}
-		if(event instanceof EventMotion)
-		{
-			if(this.blockPos == null)
-				return;
-			final float[] angles = getAngleToBlockPos(this.blockPos);
-			((EventMotion)event).setYaw(angles[0]);
-			((EventMotion)event).setPitch(angles[1]);
-			
+		if(event instanceof EventMotion) {
+			if (blockPos != null) {
+				final float[] angles = getAngleToBlockPos(blockPos);
+				((EventMotion) event).setYaw(angles[0]);
+				((EventMotion) event).setPitch(angles[1]);
+
+			}
+		}
+		if(event instanceof EventRender3D) {
+			MatrixStack stack = ((EventRender3D) event).getMatrix();
+			if (blockPos != null) {
+				int color = -1;
+
+				Box box = new Box(blockPos);
+			if (Math.sqrt( Objects.requireNonNull(mc.player).squaredDistanceTo(blockPos.toCenterPos())) > range.getValue()) {
+					color = new Color(1.0F, 0.0F, 0.0F, 0.11F).getRGB();
+				} else {
+				color = new Color(0, 200, 255, 0.11f).getRGB();
+				}
+				RenderingUtils.draw3DBox2(stack.peek().getPositionMatrix(), box,color);
+			}
+
 		}
 	}
 	
@@ -167,7 +190,7 @@ public class CivBreak extends Module
 	
 	private float[] getAngleToBlockPos(final BlockPos pos)
 	{
-		final float[] angle = this.calcAngle(mc.player.getEyePos(),
+		final float[] angle = calcAngle(mc.player.getEyePos(),
 			new Vec3d(pos.getX() + 0.5f, pos.getY() + 0.5f, pos.getZ() + 0.5f));
 		return angle;
 	}
@@ -189,15 +212,15 @@ public class CivBreak extends Module
 		// RandomStringUtils.random(12,
 		// "abcdefghijklmnopqrstuvwxyz0123456789"));
 		// }
-		this.attempt = 0;
+		attempt = 0;
 		super.onEnabled();
 	}
 	
 	@Override
 	public void onDisabled()
 	{
-		this.blockPos = null;
-		this.hitResult = null;
+		blockPos = null;
+		hitResult = null;
 		super.onDisabled();
 	}
 }

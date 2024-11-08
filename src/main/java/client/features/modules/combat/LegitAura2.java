@@ -2,15 +2,13 @@
 package client.features.modules.combat;
 
 import client.event.Event;
-import client.event.listeners.EventInput;
-import client.event.listeners.EventMotion;
-import client.event.listeners.EventRender2D;
-import client.event.listeners.EventUpdate;
+import client.event.listeners.*;
 import client.features.modules.Module;
 import client.settings.BooleanSetting;
 import client.settings.ModeSetting;
 import client.settings.NumberSetting;
 import client.utils.*;
+import net.minecraft.client.util.math.MatrixStack;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.LivingEntity;
 import net.minecraft.entity.mob.MobEntity;
@@ -24,6 +22,7 @@ import net.minecraft.util.math.Box;
 import net.minecraft.util.math.MathHelper;
 import net.minecraft.util.math.Vec3d;
 
+import java.awt.*;
 import java.util.*;
 
 public class LegitAura2 extends Module
@@ -55,6 +54,7 @@ public class LegitAura2 extends Module
     BooleanSetting smartSilent;
     BooleanSetting smartLegitInstant;
     NumberSetting legitInstantAimSpeed;
+    BooleanSetting targetESP;
 
     public LegitAura2()
     {
@@ -65,8 +65,7 @@ public class LegitAura2 extends Module
     public void init()
     {
         this.rangeSetting = new NumberSetting("Range", 3.0, 0, 4.2, 0.1);
-        this.targetMobs =
-                new BooleanSetting("Target Mobs", true);
+        this.targetMobs = new BooleanSetting("Target Mobs", true);
         swingRange = new NumberSetting("Swing Range",4.2, 3.0, 6.0, 0.1);
         this.targetInvisibles = new BooleanSetting("Target Invisibles", false);
         this.ignoreTeamsSetting = new BooleanSetting("Ignore Teams", true);
@@ -87,10 +86,10 @@ public class LegitAura2 extends Module
         smartSilent = new BooleanSetting("Smart Silent",false);
         smartLegitInstant = new BooleanSetting("Smart Legit Instant", false);
         legitInstantAimSpeed = new NumberSetting("Legit Instant Aim Speed", 0.1, 0.01, 0.5, 0.01D);
-
+targetESP = new BooleanSetting("Target ESP", true);
         addSetting(rotationmode, maxCPS, minCPS
                 , ignoreTeamsSetting, sortmode,
-                targetInvisibles, fov, hitThroughWalls, rangeSetting, clickOnly, moveFix, itemCheck, testMove,silent, legitAimSpeed,swingRange,legitInstant,smartSilent,smartLegitInstant,targetMobs, legitInstantAimSpeed);
+                targetInvisibles, fov, hitThroughWalls, rangeSetting, clickOnly, moveFix, itemCheck, testMove,silent, legitAimSpeed,swingRange,legitInstant,smartSilent,smartLegitInstant,legitInstantAimSpeed,targetESP,targetMobs);
         super.init();
     }
     public static ArrayList<LivingEntity> targets = new ArrayList<LivingEntity>();
@@ -215,6 +214,30 @@ public class LegitAura2 extends Module
                 angles = new float[]{
                         mc.player.getYaw(), mc.player.getPitch()
                 };
+            }
+        }
+        if( e instanceof EventRender3D){
+            MatrixStack matrixStack = ((EventRender3D) e).getMatrix();
+            float partialTicks = ((EventRender3D) e).getPartialTicks();
+            if(!targets.isEmpty() && target != null && targetESP.isEnabled()){
+                LivingEntity entity = target;
+                int color = 0;
+                color = (((LivingEntity) target).hurtTime == 0) ? new Color(0, 200, 0, 95).getRGB() : new Color(231, 0, 30, 95).getRGB();
+                double interpolatedX = MathHelper.lerp(partialTicks,
+                        entity.prevX, entity.getX());
+                double interpolatedY = MathHelper.lerp(partialTicks,
+                        entity.prevY, entity.getY());
+                double interpolatedZ = MathHelper.lerp(partialTicks,
+                        entity.prevZ, entity.getZ());
+
+                Box boundingBox = entity.getBoundingBox().offset(
+                        interpolatedX - entity.getX(),
+                        interpolatedY - entity.getY(),
+                        interpolatedZ - entity.getZ());
+                RenderingUtils.draw3DBox2(
+                        matrixStack.peek().getPositionMatrix(),
+                        boundingBox, color);
+
             }
         }
 
