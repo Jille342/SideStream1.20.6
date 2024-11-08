@@ -7,9 +7,7 @@ import client.features.modules.movement.DebugSpeed;
 import client.features.modules.movement.Flight;
 import client.features.modules.movement.InventoryMove;
 import client.features.modules.movement.Sprint;
-import client.features.modules.player.AutoTool;
-import client.features.modules.player.InvManager;
-import client.features.modules.player.NoBreakDelay;
+import client.features.modules.player.*;
 import client.features.modules.render.*;
 import client.settings.*;
 import client.event.Event;
@@ -58,6 +56,8 @@ public class ModuleManager implements MCUtil
 		modules.add(new AutoTool());
 		modules.add(new Flight());
 		modules.add(new WTap());
+		modules.add(new AntiVoid());
+		modules.add(new ToggleSneak());
 	}
 	
 	public static class ModuleComparator implements Comparator<Module>

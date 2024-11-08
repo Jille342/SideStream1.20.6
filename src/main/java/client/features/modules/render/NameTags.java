@@ -1,6 +1,7 @@
 package client.features.modules.render;
 
 import client.event.Event;
+import client.event.listeners.EventNameTag;
 import client.event.listeners.EventRender2D;
 import client.event.listeners.EventRender3D;
 import client.features.modules.Module;
@@ -201,5 +202,8 @@ public class NameTags extends Module
 				(int)(actual.x - width / 2d + 2 - 10), (int)(actual.y - 10));
 		}catch(final Exception ignored)
 		{}
+	}
+	public void onNameTag(EventNameTag eventNameTag){
+		eventNameTag.cancel();
 	}
 }

@@ -146,30 +146,12 @@ public class TPBreaker extends Module
 			Direction side2 = side.getOpposite();
 			BlockHitResult blockHitResult =
 					new BlockHitResult(pos.toCenterPos(), side2, pos, false).withBlockPos(pos);
-			assert mc.player != null;
 			Objects.requireNonNull(mc.getNetworkHandler())
 				.sendPacket(new HandSwingC2SPacket(Hand.MAIN_HAND));
-			Objects.requireNonNull(mc.player).interactAt(mc.player,
-				pos.toCenterPos(), Hand.MAIN_HAND);
 			Objects.requireNonNull(mc.player).networkHandler
 				.sendPacket(new PlayerInteractBlockC2SPacket(Hand.MAIN_HAND,
 					blockHitResult, 0));
-			Objects.requireNonNull(mc.interactionManager).interactBlock(mc.player,Hand.MAIN_HAND,blockHitResult);
-			mc.interactionManager.updateBlockBreakingProgress(pos,side2);
+			Objects.requireNonNull(mc.interactionManager).updateBlockBreakingProgress(pos,side2);
 		}
 	}
-	
-	protected void sendSequencedPacket(SequencedPacketCreator packetCreator)
-	{
-		final PendingUpdateManager pendingUpdateManager =
-			new PendingUpdateManager();
-		if(mc.getNetworkHandler() == null || mc.world == null)
-			return;
-		try(pendingUpdateManager)
-		{
-			int i = pendingUpdateManager.getSequence();
-			mc.getNetworkHandler().sendPacket(packetCreator.predict(i));
-		}
-	}
-	
 }

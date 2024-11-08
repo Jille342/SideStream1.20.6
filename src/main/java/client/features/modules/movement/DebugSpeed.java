@@ -30,7 +30,7 @@ public class DebugSpeed extends Module
 	
 	public void onEnabled()
 	{
-		MCTimerUtil.setTimerSpeed((float)this.timerSpeed.getValue());
+		//MCTimerUtil.setTimerSpeed((float)this.timerSpeed.getValue());
 		super.onEnabled();
 	}
 	
@@ -44,7 +44,7 @@ public class DebugSpeed extends Module
 	{
 		if(event instanceof EventUpdate)
 		{
-			setTag("" + timerSpeed.getValue());
+			setTag("" + timerSpeed.getFlooredValue());
 			if(Objects.requireNonNull(mc.interactionManager).isBreakingBlock())
 			{
 				MCTimerUtil.setTimerSpeed(1f);
@@ -81,12 +81,9 @@ public class DebugSpeed extends Module
 						.toList().stream()
 						.filter(p -> p.getEffectType() == StatusEffects.SPEED)
 						.findAny().get().getAmplifier();
-					switch(amp)
-					{
-						case 2:
-						scala = 0.5f;
-						break;
-					}
+                    if (amp == 2) {
+                        scala = 0.5f;
+                    }
 				}
 				mc.player.setVelocity(mc.player.getVelocity().x * scala,
 					mc.player.getVelocity().y,

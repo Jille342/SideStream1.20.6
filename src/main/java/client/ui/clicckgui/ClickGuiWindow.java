@@ -4,6 +4,7 @@ import client.features.modules.Module;
 import client.features.modules.ModuleManager;
 import client.settings.*;
 
+import client.utils.Colors;
 import client.utils.font.Fonts;
 import net.minecraft.client.MinecraftClient;
 import net.minecraft.client.util.math.MatrixStack;
@@ -11,9 +12,11 @@ import org.lwjgl.glfw.GLFW;
 
 import java.awt.*;
 import java.util.List;
+import java.util.Objects;
 import java.util.stream.Collectors;
 
 import static client.utils.RenderingUtils.drawRect;
+import static client.utils.RenderingUtils.renderRect;
 
 public class ClickGuiWindow
 {
@@ -22,9 +25,9 @@ public class ClickGuiWindow
 	
 	private NumberSetting doubleSetting;
 	public Module module;
-	private static Color accentColor = new Color(0xff2C508A);
-	private static final Color backColor = new Color(0xff373737);
-	private static final Color outlineColor1 = new Color(0xff202020);
+	private static final int defaultColor = new Color(0, 200, 255,158).getRGB();
+	private static final Color backColor = new Color(0x67373737, true);
+	private static final int outlineColor1 = Colors.getColor(0, 0, 0, 50);
 	private static final Color outlineColor2 = new Color(0xff313131);
 	private static final int settingTextColor = 0xffd0d0d0;
 	
@@ -35,7 +38,6 @@ public class ClickGuiWindow
 	private final List<Module> modules;
 	private final boolean[] mExpand;
 	int keyCode;
-	boolean pressed = false;
 	KeyBindSetting keyBindSetting = null;
 	private static boolean clicked = false;
 	public int width;
@@ -63,7 +65,7 @@ public class ClickGuiWindow
 		this.height = height;
 	}
 	
-	public void render(MatrixStack context, int mouseX, int mouseY, float delta)
+	public void render(MatrixStack stack, int mouseX, int mouseY, float delta)
 	{
 		if(doubleSetting != null)
 		{
@@ -75,12 +77,11 @@ public class ClickGuiWindow
 			x = mouseX + lastX;
 			y = mouseY + lastY;
 		}
-		drawRect(x - 2, y - 2, x + 122, y + 20, accentColor.getRGB());
-		drawRect(x - 1, y - 1, x + 121, y + 19, outlineColor1.getRGB());
-		drawRect(x, y, x + 120, y + 18, 0xff262626);
-		drawRect(context, outlineColor1.getRGB(), x - 1, y + 17, x + 121,
-			y + 18);
-		Fonts.font.drawString(category.name(), x + 4, y + 4, -1);
+		renderRect(stack,x - 2, y - 2, x + 122, y + 20, defaultColor);
+		renderRect(stack,x - 1, y - 1, x + 121, y + 19, outlineColor1);
+		renderRect(stack,x, y, x + 120, y + 18, 0xff262626);
+		renderRect(stack,  x - 1, y + 17, x + 121, y + 18,outlineColor1);
+		Fonts.font.drawString(stack,category.name(), x + 4, y + 4, -1);
 		
 		if(!expand)
 		{
@@ -91,25 +92,25 @@ public class ClickGuiWindow
 		for(int i = 0; i < modules.size(); i++)
 		{
 			Module m = modules.get(i);
-			drawRect(context, accentColor.getRGB(), x - 2, currentY, x + 122,
+			drawRect(stack, defaultColor, x - 2, currentY, x + 122,
 				currentY + 20);
-			drawRect(context, outlineColor1.getRGB(), x - 1, currentY, x + 121,
+			drawRect(stack, outlineColor1, x - 1, currentY, x + 121,
 				currentY + 19);
-			drawRect(context,
-				m.isEnabled() ? accentColor.getRGB() : backColor.getRGB(), x,
+			drawRect(stack,
+				m.isEnabled() ? defaultColor : backColor.getRGB(), x,
 				currentY, x + 120, currentY + 18);
 			if(m.getKeyCode() == 0
 				|| m.getKeyCode() == GLFW.GLFW_KEY_RIGHT_SHIFT
 				|| (GLFW.glfwGetKeyName(m.getKeyCode(), 1)) == null)
 			{
-				Fonts.font.drawString(m.getName(),
+				Fonts.font.drawString(stack,m.getName(),
 					x + 116 - Fonts.font.getStringWidth(m.getName()),
 					currentY + 4, -1);
 			}else if(((GLFW.glfwGetKeyName(m.getKeyCode(), 1)) != null))
 			{
 				String displayKeyCode = String.format("%s [%s]", m.getName(),
-					GLFW.glfwGetKeyName(m.getKeyCode(), 1).toUpperCase());
-				Fonts.font.drawString(displayKeyCode,
+					Objects.requireNonNull(GLFW.glfwGetKeyName(m.getKeyCode(), 1)).toUpperCase());
+				Fonts.font.drawString(stack,displayKeyCode,
 					x + 116 - Fonts.font.getStringWidth(displayKeyCode),
 					currentY + 4, -1);
 			}
@@ -123,36 +124,34 @@ public class ClickGuiWindow
 			
 			for(int j = 0; j < m.settings.size(); j++)
 			{
-				final Setting s = m.settings.get(j);
-				drawRect(context, accentColor.getRGB(), x - 2, currentY,
+				final Setting<?> s = m.settings.get(j);
+				drawRect(stack, defaultColor, x - 2, currentY,
 					x + 122, currentY + 20);
-				drawRect(context, accentColor.getRGB(), x - 2, currentY,
+				drawRect(stack, defaultColor, x - 2, currentY,
 					x + 122, currentY + 20);
-				drawRect(context, outlineColor1.getRGB(), x - 1, currentY,
+				drawRect(stack, outlineColor1, x - 1, currentY,
 					x + 121, currentY + 19);
-				if(s instanceof NumberSetting)
+				if(s instanceof NumberSetting ds)
 				{
-					final NumberSetting ds = (NumberSetting)s;
-					// final String v = String.valueOf(ds.getValue());
+                    // final String v = String.valueOf(ds.getValue());
 					final String v =
 						String.valueOf((Math.floor(ds.getValue() * 100)) / 100);
-					drawRect(context, outlineColor2.getRGB(), x, currentY,
+					drawRect(stack, outlineColor2.getRGB(), x, currentY,
 						x + 120, currentY + 18);
-					drawRect(context, accentColor.getRGB(), x, currentY + 2,
+					drawRect(stack, defaultColor, x, currentY + 2,
 						(float)(x + ds.getPercentage() * 120), currentY + 16);
-					Fonts.font.drawString(s.name, x + 4, currentY + 4,
+					Fonts.font.drawString(stack,s.name, x + 4, currentY + 4,
 						settingTextColor);
-					Fonts.font.drawString(v,
+					Fonts.font.drawString(stack,v,
 						x + 116 - Fonts.font.getStringWidth(v), currentY + 4,
 						-1);
-				}else if(s instanceof ModeSetting)
+				}else if(s instanceof ModeSetting ms)
 				{
-					final ModeSetting ms = (ModeSetting)s;
-					drawRect(context, outlineColor2.getRGB(), x, currentY,
+                    drawRect(stack, outlineColor2.getRGB(), x, currentY,
 						x + 120, currentY + 18);
-					Fonts.font.drawString(ms.name, x + 4,
+					Fonts.font.drawString(stack,ms.name, x + 4,
 						currentY + 4, settingTextColor);
-					Fonts.font.drawString(ms.getMode(),
+					Fonts.font.drawString(stack,ms.getMode(),
 						x + 116 - Fonts.font.getStringWidth(ms.getMode()),
 						currentY + 4, -1);
 					if(ms.expand)
@@ -160,47 +159,47 @@ public class ClickGuiWindow
 						for(String o : ms.modes)
 						{
 							currentY += 18;
-							drawRect(context, accentColor.getRGB(), x - 2,
+							drawRect(stack, defaultColor, x - 2,
 								currentY, x + 122, currentY + 20);
-							drawRect(context, outlineColor1.getRGB(), x - 1,
+							drawRect(stack, outlineColor1, x - 1,
 								currentY, x + 121, currentY + 19);
-							drawRect(context, outlineColor2.getRGB(), x,
+							drawRect(stack, outlineColor2.getRGB(), x,
 								currentY, x + 120, currentY + 18);
-							Fonts.font.drawString(o, x + 4, currentY + 4,
+							Fonts.font.drawString(stack,o, x + 4, currentY + 4,
 								settingTextColor);
 							// currentY += 18;
 						}
 					}
-				}else if(s instanceof BooleanSetting)
+				}else if(s instanceof BooleanSetting bs)
 				{
-					final BooleanSetting bs = (BooleanSetting)s;
-					drawRect(context,
-						bs.isEnabled() ? accentColor.getRGB()
+                    drawRect(stack,
+						bs.isEnabled() ? defaultColor
 							: outlineColor2.getRGB(),
 						x, currentY, x + 120, currentY + 18);
-					Fonts.font.drawString(s.name, x + 4, currentY + 4,
+					Fonts.font.drawString(stack,s.name, x + 4, currentY + 4,
 						settingTextColor);
-				}else if(s instanceof KeyBindSetting)
+				}else if(s instanceof KeyBindSetting setting)
 				{
-					KeyBindSetting setting = (KeyBindSetting)s;
-					if(GLFW.glfwGetKeyName(setting.getKeyCode(), 1) != null)
+					drawRect(stack, outlineColor2.getRGB(), x, currentY,
+							x + 120, currentY + 18);
+                    if(GLFW.glfwGetKeyName(setting.getKeyCode(), 1) != null) {
 						Fonts.font
-							.drawString(
+								.drawString(stack,
+										setting.name + ": "
+												+ (clicked ? "inputwaiting..."
+												: Objects.requireNonNull(GLFW
+                                                        .glfwGetKeyName(
+                                                                setting.getKeyCode(), 1))
+												.toUpperCase()),
+										(int) (x + 4), (int) (currentY + 4),
+										settingTextColor);
+					}else {
+						Fonts.font.drawString(stack,
 								setting.name + ": "
-									+ (clicked ? "inputwaiting..."
-										: GLFW
-											.glfwGetKeyName(
-												setting.getKeyCode(), 1)
-											.toUpperCase()),
-								(int)(x + 4), (int)(currentY + 4),
+										+ (clicked ? "inputwaiting..." : "NONE"),
+								(int) (x + 4), (int) (currentY + 4),
 								settingTextColor);
-					else
-						Fonts.font.drawString(
-							setting.name + ": "
-								+ (clicked ? "inputwaiting..." : "NONE"),
-							(int)(x + 4), (int)(currentY + 4),
-							settingTextColor);
-					
+					}
 				}
 				currentY += 18;
 			}
@@ -254,7 +253,7 @@ public class ClickGuiWindow
 			
 			for(int j = 0; j < m.settings.size(); j++)
 			{
-				final Setting s = m.settings.get(j);
+				final Setting<?> s = m.settings.get(j);
 				if(s instanceof NumberSetting)
 				{
 					if(ClickUtil.isHovered2(x, currentY, x + 120, currentY + 18,
@@ -263,10 +262,9 @@ public class ClickGuiWindow
 						doubleSetting = (NumberSetting)s;
 						return;
 					}
-				}else if(s instanceof ModeSetting)
+				}else if(s instanceof ModeSetting ms)
 				{
-					final ModeSetting ms = (ModeSetting)s;
-					if(ClickUtil.isHovered2(x, currentY, x + 120, currentY + 18,
+                    if(ClickUtil.isHovered2(x, currentY, x + 120, currentY + 18,
 						mouseX, mouseY))
 					{
 						if(button == 0)
@@ -291,19 +289,17 @@ public class ClickGuiWindow
 							}
 						}
 					}
-				}else if(s instanceof BooleanSetting)
+				}else if(s instanceof BooleanSetting bs)
 				{
-					final BooleanSetting bs = (BooleanSetting)s;
-					if(ClickUtil.isHovered2(x, currentY, x + 120, currentY + 18,
+                    if(ClickUtil.isHovered2(x, currentY, x + 120, currentY + 18,
 						mouseX, mouseY))
 					{
 						bs.toggle();
 						return;
 					}
-				}else if(s instanceof KeyBindSetting)
+				}else if(s instanceof KeyBindSetting ks)
 				{
-					final KeyBindSetting ks = (KeyBindSetting)s;
-					if(ClickUtil.isHovered2(x, currentY, x + 120, currentY + 18,
+                    if(ClickUtil.isHovered2(x, currentY, x + 120, currentY + 18,
 						mouseX, mouseY))
 					{
 						if(button == 0)

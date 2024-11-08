@@ -1,10 +1,6 @@
 package client.mixin.client;
 
-import client.Client;
-import client.event.listeners.EventRotation;
-import client.utils.RotationUtils;
 import net.minecraft.client.Mouse;
-import net.minecraft.util.math.MathHelper;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.injection.At;
 import org.spongepowered.asm.mixin.injection.ModifyArgs;

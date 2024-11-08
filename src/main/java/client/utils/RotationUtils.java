@@ -220,12 +220,13 @@ public final class RotationUtils implements MCUtil{
 					mc.player.getYaw(), mc.player.getPitch()
 			};
 		}
+		float tickDelta = mc.getTickDelta();
 		float tick = 0.01f;
-		float currentYaw = silent ? serverSideAngles[0] : mc.player.getYaw(tick);
-		float currentPitch = silent ? serverSideAngles[1] : mc.player.getPitch(tick);
+		float currentYaw = silent ? serverSideAngles[0] : mc.player.getYaw(tickDelta);
+		float currentPitch = silent ? serverSideAngles[1] : mc.player.getPitch(tickDelta);
 		float aimSpeed = instant ? instantAimSpeed : speed;
 		float aYaw = 0, aPitch = 0;
-		Vec3d eye = Objects.requireNonNull(mc.player).getEyePos();
+		Vec3d eye = Objects.requireNonNull(mc.player).getCameraPosVec(tickDelta);
 		Box bb = entity.getBoundingBox();
 		Vec3d nearest = nearest(bb, eye);
 		final float[] center = rotation(nearest.add(RandomUtils.nextDouble(-0.0001f, 0.0001),
@@ -248,22 +249,14 @@ public final class RotationUtils implements MCUtil{
 			return lerpArray(new float[]{currentYaw, currentPitch}, newRotation, newSpeed[0], newSpeed[1]);
 	}
 
-	public Vec3d getAdaptivePosition(Entity entity) {
-		for (double yPercent = 1; yPercent >= 0; yPercent -= 0.25) {
-			for (double xPercent = 1; xPercent >= -0.5; xPercent -= 0.5) {
-				for (double zPercent = 1; zPercent >= -0.5; zPercent -= 0.5) {
-					return entity.getPos().add(
-							(entity.getBoundingBox().maxX - entity.getBoundingBox().minX) * xPercent,
-							(entity.getBoundingBox().maxY - entity.getBoundingBox().minY) * yPercent,
-							(entity.getBoundingBox().maxZ - entity.getBoundingBox().minZ) * zPercent);
-				}
-			}
-
-		}
-		return  entity.getEyePos();
-}
 
 	private float[] computeTurnSpeed( float diffH, float diffV , float speed) {
+		if(diffH<1) {
+			diffH = 1;
+		}
+		if(diffV<1){
+			diffV = 1;
+		}
 		 float coeDiffH = 0.024f;
 		 float coeDiffV = 0.024f;
 		 float min = 0.005f;

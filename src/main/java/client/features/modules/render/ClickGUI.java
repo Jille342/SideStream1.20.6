@@ -1,7 +1,5 @@
 package client.features.modules.render;
 
-import client.event.Event;
-import client.event.listeners.EventRenderGUI;
 import client.features.modules.Module;
 import client.ui.clicckgui.ClickGui;
 
@@ -18,16 +16,7 @@ public class ClickGUI extends Module
 	{
 		super.init();
 	}
-	
-	@Override
-	public void onEvent(Event<?> e)
-	{
-		if(e instanceof EventRenderGUI)
-		{
-			
-		}
-		super.onEvent(e);
-	}
+
 	
 	@Override
 	public void onEnabled()

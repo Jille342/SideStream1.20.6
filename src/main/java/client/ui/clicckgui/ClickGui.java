@@ -1,11 +1,14 @@
 package client.ui.clicckgui;
 
 import client.features.modules.Module;
+import client.utils.RenderingUtils;
 import client.utils.animation.AnimationUtil;
 import client.utils.animation.BackAnimation;
+import com.mojang.blaze3d.systems.RenderSystem;
 import net.minecraft.client.MinecraftClient;
 import net.minecraft.client.gui.DrawContext;
 import net.minecraft.client.gui.screen.Screen;
+import net.minecraft.client.util.Window;
 import net.minecraft.client.util.math.MatrixStack;
 import net.minecraft.text.Text;
 
@@ -44,17 +47,17 @@ public class ClickGui extends Screen
 	@Override
 	public void render(DrawContext context, int mouseX, int mouseY, float delta)
 	{
+		MatrixStack stack = context.getMatrices();
+		Window window = mc.getWindow();
 		partialTicks = delta;
 		double per = animationUtil.uodate(0.05).calcPercent();
-
-
-		context.getMatrices().push();
-		//Render2DUtil.setAlphaLimit((float) per);
-		context.getMatrices().translate((float) mc.getWindow().getScaledWidth() / 4, (float) mc.getWindow().getScaledHeight() / 4, 0);
-		context.getMatrices().scale((float) per, (float) per, 0);
-		context.getMatrices().translate((float) -mc.getWindow().getScaledWidth() / 4, (float) -mc.getWindow().getScaledHeight() / 4, 0);
-		windows.forEach(m -> m.render(new MatrixStack(), mouseX, mouseY, delta));
-		context.getMatrices().pop();
+		stack.push();
+		RenderingUtils.setAlphaLimit((float) per);
+		stack.translate((float) window.getScaledWidth() / 4, (float) window.getScaledHeight() / 4, 0);
+		//stack.scale(size,size, 0);
+		stack.translate((float) -window.getScaledWidth() / 4, (float) -window.getScaledHeight() / 4, 0);
+		windows.forEach(m -> m.render(stack, mouseX, mouseY, delta));
+		stack.pop();
 	}
 	
 	@Override

@@ -3,7 +3,6 @@ package client.mixin.client;
 import client.features.modules.ModuleManager;
 import client.Client;
 import client.event.listeners.EventRender2D;
-import client.event.listeners.EventRenderGUI;
 import client.features.modules.render.HUD;
 import client.utils.TickManager;
 import me.x150.renderer.render.MSAAFramebuffer;
@@ -35,8 +34,6 @@ public class MixinIngameHud
 	@Inject(at = @At("HEAD"), method = {"render"})
 	private void onRender(DrawContext context, float tickDelta, CallbackInfo ci)
 	{
-		final EventRenderGUI eventRenderGUI = new EventRenderGUI();
-		Client.onEvent(eventRenderGUI);
 		final EventRender2D eventRender2D =
 			new EventRender2D(tickDelta, context);
 		Client.onEvent(eventRender2D);

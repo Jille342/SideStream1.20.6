@@ -1,5 +1,6 @@
 package client.features.modules;
 
+import client.event.listeners.*;
 import client.features.modules.render.ClickGUI;
 import client.settings.KeyBindSetting;
 import client.settings.Setting;
@@ -130,17 +131,47 @@ public class Module
 	{}
 	
 	public void onEvent(Event<?> e)
-	{}
-	
+	{
+		if(e instanceof EventUpdate){
+			onUpdate((EventUpdate) e);
+		}
+		if(e instanceof EventRender2D){
+			onRender2D((EventRender2D) e);
+		}
+		if(e instanceof EventRender3D){
+			onRender3D(((EventRender3D) e));
+		}
+		if(e instanceof EventPacket){
+			onPacket(((EventPacket) e));
+		}
+		if(e instanceof EventMotion){
+			onMotion(((EventMotion) e));
+		}
+		if(e instanceof EventTick){
+			onTick(((EventTick) e));
+		}
+		if(e instanceof EventInput){
+			onInput(((EventInput) e));
+		}
+		if(e instanceof EventNameTag){
+			onNameTag(((EventNameTag) e));
+		}
+	}
+	public void onNameTag(EventNameTag event){}
+	public void onInput(EventInput event){}
+	public void onUpdate(EventUpdate event){}
+	public void onRender2D(EventRender2D event){}
+	public void onRender3D(EventRender3D event){}
+	public void onPacket(EventPacket event){}
+	public void onMotion(EventMotion event){}
+	public void onTick(EventTick event){}
 	public enum Category
 	{
 		COMBAT("Combat"),
 		MOVEMENT("Movement"),
 		MISC("Misc"),
 		PLAYER("Player"),
-		RENDER("Render"),
-		WORLD("World");
-		
+		RENDER("Render");
 		public final String name;
 		
 		Category(String name)

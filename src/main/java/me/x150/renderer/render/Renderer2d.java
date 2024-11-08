@@ -380,6 +380,46 @@ public class Renderer2d
 		BufferUtils.draw(buffer);
 		endRender();
 	}
+	public static void renderQuad(MatrixStack matrices, int color, double x1,
+								  double y1, double x2, double y2)
+	{
+		double j;
+		if(x1 < x2)
+		{
+			j = x1;
+			x1 = x2;
+			x2 = j;
+		}
+
+		if(y1 < y2)
+		{
+			j = y1;
+			y1 = y2;
+			y2 = j;
+		}
+		Matrix4f matrix = matrices.peek().getPositionMatrix();
+		float[] colorFloat = getColor(color);
+
+		BufferBuilder buffer = Tessellator.getInstance().getBuffer();
+		buffer.begin(DrawMode.QUADS, VertexFormats.POSITION_COLOR);
+		buffer.vertex(matrix, (float)x1, (float)y2, 0.0F)
+				.color(colorFloat[0], colorFloat[1], colorFloat[2], colorFloat[3])
+				.next();
+		buffer.vertex(matrix, (float)x2, (float)y2, 0.0F)
+				.color(colorFloat[0], colorFloat[1], colorFloat[2], colorFloat[3])
+				.next();
+		buffer.vertex(matrix, (float)x2, (float)y1, 0.0F)
+				.color(colorFloat[0], colorFloat[1], colorFloat[2], colorFloat[3])
+				.next();
+		buffer.vertex(matrix, (float)x1, (float)y1, 0.0F)
+				.color(colorFloat[0], colorFloat[1], colorFloat[2], colorFloat[3])
+				.next();
+
+		setupRender();
+		RenderSystem.setShader(GameRenderer::getPositionColorProgram);
+		BufferUtils.draw(buffer);
+		endRender();
+	}
 	
 	private static void renderRoundedQuadInternal(Matrix4f matrix, float cr,
 		float cg, float cb, float ca, float fromX, float fromY, float toX,
@@ -410,6 +450,15 @@ public class Renderer2d
 			}
 		}
 		BufferUtils.draw(bufferBuilder);
+	}
+	public static float[] getColor(int color){
+		float f3 = (float)(color >> 24 & 255) / 255.0F;
+		float f = (float)(color >> 16 & 255) / 255.0F;
+		float f1 = (float)(color >> 8 & 255) / 255.0F;
+		float f2 = (float)(color & 255) / 255.0F;
+		return new float[]{
+				f,f1,f2,f3
+		};
 	}
 	
 	/**

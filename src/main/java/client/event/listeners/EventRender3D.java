@@ -9,8 +9,7 @@ import net.minecraft.client.util.math.MatrixStack;
  * 2DRenderのEvent
  */
 @Getter
-public class EventRender3D extends Event
-{
+public class EventRender3D extends Event<EventRender3D> {
 	MatrixStack matrix;
 	float partialTicks;
 	Frustum frustum;

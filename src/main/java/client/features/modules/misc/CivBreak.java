@@ -12,13 +12,7 @@ import client.settings.ModeSetting;
 import client.settings.NumberSetting;
 import client.utils.RaycastUtils;
 import client.utils.RenderingUtils;
-import client.utils.RotationUtils;
-import net.minecraft.block.AirBlock;
 import net.minecraft.block.Blocks;
-import net.minecraft.client.render.VertexConsumer;
-import net.minecraft.client.render.VertexConsumerProvider;
-import net.minecraft.client.render.VertexFormats;
-import net.minecraft.client.render.WorldRenderer;
 import net.minecraft.client.util.math.MatrixStack;
 import net.minecraft.network.packet.c2s.play.HandSwingC2SPacket;
 import net.minecraft.network.packet.c2s.play.PlayerActionC2SPacket;
@@ -26,9 +20,6 @@ import net.minecraft.util.Hand;
 import net.minecraft.util.hit.BlockHitResult;
 import net.minecraft.util.hit.HitResult;
 import net.minecraft.util.math.*;
-import net.minecraft.util.shape.VoxelShape;
-import net.minecraft.util.shape.VoxelShapes;
-import org.lwjgl.opengl.GL11;
 
 public class CivBreak extends Module
 {
@@ -93,7 +84,7 @@ public class CivBreak extends Module
 						final float dist =
 							MathHelper.sqrt(f * f + g * g + h * h);
 						
-						if(dist >= range.getValue())
+						if(dist > range.getValue())
 						{
 							hitResult = null;
 							blockPos = null;
@@ -127,18 +118,17 @@ public class CivBreak extends Module
 						(float)(mc.player.getZ() - blockPos.getZ());
 					final float dist = MathHelper.sqrt(f * f + g * g + h * h);
 					
-					if(dist >= range.getValue())
+					if(dist > range.getValue())
 					{
 						hitResult = null;
-						blockPos = null;
 						attempt = 0;
+						blockPos = null;
 						return;
 					}
 					mc.player.networkHandler
 						.sendPacket(new HandSwingC2SPacket(Hand.MAIN_HAND));
-					if(!mc.interactionManager.isBreakingBlock())
+					if(!Objects.requireNonNull(mc.interactionManager).isBreakingBlock())
 					mc.interactionManager.updateBlockBreakingProgress(blockPos, facing);
-
 					break;
 				}
 			
@@ -190,9 +180,8 @@ public class CivBreak extends Module
 	
 	private float[] getAngleToBlockPos(final BlockPos pos)
 	{
-		final float[] angle = calcAngle(mc.player.getEyePos(),
-			new Vec3d(pos.getX() + 0.5f, pos.getY() + 0.5f, pos.getZ() + 0.5f));
-		return angle;
+        return calcAngle(mc.player.getEyePos(),
+            new Vec3d(pos.getX() + 0.5f, pos.getY() + 0.5f, pos.getZ() + 0.5f));
 	}
 	
 	private float[] calcAngle(final Vec3d from, final Vec3d to)

@@ -18,9 +18,8 @@ public class BetterFightSound extends Module
 	@Override
 	public void onEvent(Event<?> e)
 	{
-		if(e instanceof EventPacket)
+		if(e instanceof EventPacket event)
 		{
-			EventPacket event = ((EventPacket)e);
 			if(event.isIncoming())
 			{
 				Packet<?> p = event.getPacket();

@@ -242,7 +242,7 @@ public class InvManager extends Module {
                         }
                     }
                 }
-                if(isTrash(stack) && dropTrash.getValue()){
+                if(isTrash(item) && dropTrash.getValue()){
                     drop(i < 9 ? 36 + i : i);
                 }
 
@@ -258,23 +258,23 @@ public class InvManager extends Module {
             Items.GOLDEN_APPLE,
             Items.ENCHANTED_GOLDEN_APPLE
     };
-    private static  boolean isTrash(ItemStack stack){
-        return (stack.getItem().getTranslationKey().contains("tnt")) ||
-                (stack.getItem().getTranslationKey().contains("egg")) ||
-                (stack.getItem().getTranslationKey().contains("mushroom")) ||
-                (stack.getItem().getTranslationKey().contains("flint")) ||
-                (stack.getItem().getTranslationKey().contains("dyePowder")) ||
-                (stack.getItem().getTranslationKey().contains("feather")) ||
-                (stack.getItem().getTranslationKey().contains("bucket")) ||
-                (stack.getItem().getTranslationKey().contains("chest") && !stack.getName().getString().toLowerCase().contains("collect")) ||
-                (stack.getItem().getTranslationKey().contains("snow")) ||
-                (stack.getItem().getTranslationKey().contains("fish")) ||
-                (stack.getItem().getTranslationKey().contains("enchant")) ||
-                (stack.getItem().getTranslationKey().contains("anvil")) ||
-                (stack.getItem().getTranslationKey().contains("torch")) ||
-                (stack.getItem().getTranslationKey().contains("seeds")) ||
-                (stack.getItem().getTranslationKey().contains("record")) ||
-                (stack.getItem().getTranslationKey().contains("snowball"));
+    private static boolean isTrash(Item stack){
+        return (stack.getName().getString().toLowerCase().contains("tnt")) ||
+                (stack.getName().getString().toLowerCase().contains("egg")) ||
+                (stack.getName().getString().toLowerCase().contains("mushroom")) ||
+                (stack.getName().getString().toLowerCase().contains("flint")) ||
+                (stack.getName().getString().toLowerCase().contains("dyePowder")) ||
+                (stack.getName().getString().toLowerCase().contains("feather")) ||
+                (stack.getName().getString().toLowerCase().contains("bucket")) ||
+                (stack.getName().getString().toLowerCase().contains("chest") && !stack.getName().getString().toLowerCase().contains("collect")) ||
+                (stack.getName().getString().toLowerCase().contains("snow")) ||
+                (stack.getName().getString().toLowerCase().contains("fish")) ||
+                (stack.getName().getString().toLowerCase().contains("enchant")) ||
+                (stack.getName().getString().toLowerCase().contains("anvil")) ||
+                (stack.getName().getString().toLowerCase().contains("torch")) ||
+                (stack.getName().getString().toLowerCase().contains("seeds")) ||
+                (stack.getName().getString().toLowerCase().contains("record")) ||
+                (stack.getName().getString().toLowerCase().contains("snowball"));
     }
 
     private static float getSwordValue(ItemStack stack, SwordItem item) {

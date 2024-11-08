@@ -37,8 +37,7 @@ public class AutoDrain extends Module
 	public void init()
 	{
 		super.init();
-		range = new NumberSetting("Range", 4.0, 3, 8, 0.1);
-		
+		range = new NumberSetting("Range", 6.0, 5, 8, 0.1);
 		addSetting(range);
 	}
 	

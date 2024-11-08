@@ -23,7 +23,7 @@ public class RenderingUtils implements MCUtil
 {
 	private static final Matrix4f model = new Matrix4f();
 	private static final Matrix4f projection = new Matrix4f();
-	
+
 	public static void onRender(Matrix4f modelView)
 	{
 		model.set(modelView);
@@ -54,23 +54,14 @@ public class RenderingUtils implements MCUtil
 		range[1] = startPoint;
 		return range;
 	}
-	
-	public static void drawRect(double left, double top, double right,
-		double bottom, int color)
+
+	public static void drawRect(MatrixStack stack,double left, double top, double right,
+								double bottom, int color)
 	{
-		MatrixStack matrixStack = new MatrixStack();
-		Color color2 = new Color(color);
-		renderQuad(matrixStack, color2, left, top, right, bottom);
+		renderQuad(stack, color, left, top, right, bottom);
 	}
-	
-	public static void drawRect(DrawContext context, double left, double top,
-		double right, double bottom, int color)
-	{
-		MatrixStack matrixStack = new MatrixStack();
-		Color color2 = new Color(color);
-		renderQuad(matrixStack, color2, left, top, right, bottom);
-	}
-	
+
+
 	public static void drawRect(DrawContext context, int color, double left,
 		double top, double right, double bottom)
 	{
@@ -81,8 +72,7 @@ public class RenderingUtils implements MCUtil
 	public static void drawRect(MatrixStack stack, int color, double left,
 		double top, double right, double bottom)
 	{
-		Color color2 = new Color(color);
-		renderQuad(stack, color2, left, top, right, bottom);
+		renderQuad(stack, color, left, top, right, bottom);
 	}
 	
 	public static Color blendColors(float[] fractions, Color[] colors,
@@ -199,43 +189,7 @@ public class RenderingUtils implements MCUtil
 		BufferUtils.draw(buffer);
 		endRender();
 	}
-	
-	public static void drawGradient(double x, double y, double x2, double y2,
-		int col1, int col2)
-	{
-		float f = (col1 >> 24 & 0xFF) / 255.0F;
-		float f1 = (col1 >> 16 & 0xFF) / 255.0F;
-		float f2 = (col1 >> 8 & 0xFF) / 255.0F;
-		float f3 = (col1 & 0xFF) / 255.0F;
-		
-		float f4 = (col2 >> 24 & 0xFF) / 255.0F;
-		float f5 = (col2 >> 16 & 0xFF) / 255.0F;
-		float f6 = (col2 >> 8 & 0xFF) / 255.0F;
-		float f7 = (col2 & 0xFF) / 255.0F;
-		
-		GL11.glEnable(3042);
-		GL11.glDisable(3553);
-		GL11.glBlendFunc(770, 771);
-		GL11.glEnable(2848);
-		GL11.glShadeModel(7425);
-		
-		GL11.glPushMatrix();
-		GL11.glBegin(7);
-		GL11.glColor4f(f1, f2, f3, f);
-		GL11.glVertex2d(x2, y);
-		GL11.glVertex2d(x, y);
-		
-		GL11.glColor4f(f5, f6, f7, f4);
-		GL11.glVertex2d(x, y2);
-		GL11.glVertex2d(x2, y2);
-		GL11.glEnd();
-		GL11.glPopMatrix();
-		
-		GL11.glEnable(3553);
-		GL11.glDisable(3042);
-		GL11.glDisable(2848);
-		GL11.glShadeModel(7424);
-	}
+
 	
 	public static void draw3DBox(MatrixStack matrixStack, Box box, int hex,
 		float lineThickness)
@@ -587,159 +541,30 @@ public class RenderingUtils implements MCUtil
 			.normal(entry, (float)normalized.x, (float)normalized.y,
 				(float)normalized.z);
 	}
+
+
+
 	
-	public static void drawGradientSideways(double left, double top,
-		double right, double bottom, int col1, int col2)
-	{
-		float f = (col1 >> 24 & 0xFF) / 255.0F;
-		float f1 = (col1 >> 16 & 0xFF) / 255.0F;
-		float f2 = (col1 >> 8 & 0xFF) / 255.0F;
-		float f3 = (col1 & 0xFF) / 255.0F;
-		
-		float f4 = (col2 >> 24 & 0xFF) / 255.0F;
-		float f5 = (col2 >> 16 & 0xFF) / 255.0F;
-		float f6 = (col2 >> 8 & 0xFF) / 255.0F;
-		float f7 = (col2 & 0xFF) / 255.0F;
-		GL11.glEnable(3042);
-		GL11.glDisable(3553);
-		GL11.glBlendFunc(770, 771);
-		GL11.glEnable(2848);
-		GL11.glShadeModel(7425);
-		
-		GL11.glPushMatrix();
-		GL11.glBegin(7);
-		GL11.glColor4f(f1, f2, f3, f);
-		GL11.glVertex2d(left, top);
-		GL11.glVertex2d(left, bottom);
-		
-		GL11.glColor4f(f5, f6, f7, f4);
-		GL11.glVertex2d(right, bottom);
-		GL11.glVertex2d(right, top);
-		GL11.glEnd();
-		GL11.glPopMatrix();
-		
-		GL11.glEnable(3553);
-		GL11.glDisable(3042);
-		GL11.glDisable(2848);
-		GL11.glShadeModel(7424);
-		GL11.glColor4d(255, 255, 255, 255);
-	}
-	
-	public static void drawFilledTriangle(float x, float y, float r, int c,
-		int borderC)
-	{
-		enableGL2D();
-		glColor(c);
-		glEnable(GL_POLYGON_SMOOTH);
-		glBegin(GL_TRIANGLES);
-		glVertex2f(x + r / 2, y + r / 2);
-		glVertex2f(x + r / 2, y - r / 2);
-		glVertex2f(x - r / 2, y);
-		glEnd();
-		glLineWidth(1.3f);
-		glColor(borderC);
-		glBegin(GL_LINE_STRIP);
-		glVertex2f(x + r / 2, y + r / 2);
-		glVertex2f(x + r / 2, y - r / 2);
-		glEnd();
-		glBegin(GL_LINE_STRIP);
-		glVertex2f(x - r / 2, y);
-		glVertex2f(x + r / 2, y - r / 2);
-		glEnd();
-		glBegin(GL_LINE_STRIP);
-		glVertex2f(x + r / 2, y + r / 2);
-		glVertex2f(x - r / 2, y);
-		glEnd();
-		glDisable(GL_POLYGON_SMOOTH);
-		disableGL2D();
-	}
-	
-	public static void drawImage(final Identifier image, final int x,
-		final int y, final int width, final int height)
-	{
-		GL11.glDisable(2929);
-		GL11.glEnable(3042);
-		final MatrixStack matrixStack = null;
-		DrawContext drawContext = null;
-		GL11.glDepthMask(false);
-		GL11.glBlendFunc(770, 771);
-		GL11.glColor4f(1.0f, 1.0f, 1.0f, 1.0f);
-		mc.getTextureManager().bindTexture(image);
-		drawContext.drawTexture(image, x, y, 0.0f, 0.0f, width, height,
-			(int)width, (int)height);
-		GL11.glDepthMask(true);
-		GL11.glDisable(3042);
-		GL11.glEnable(2929);
-	}
-	
-	public static void glColor(final int hex)
+	public static float[] colorArray(final int hex)
 	{
 		float alpha = (hex >> 24 & 0xFF) / 255F;
 		float red = (hex >> 16 & 0xFF) / 255F;
 		float green = (hex >> 8 & 0xFF) / 255F;
 		float blue = (hex & 0xFF) / 255F;
-		glColor4f(red, green, blue, alpha);
+		return new float[]{
+				red,green,blue,alpha
+		};
 	}
-	
-	public static void glColor(final int hex, final float alpha)
-	{
-		float red = (hex >> 16 & 0xFF) / 255F;
-		float green = (hex >> 8 & 0xFF) / 255F;
-		float blue = (hex & 0xFF) / 255F;
-		glColor4f(red, green, blue, alpha);
+
+	public static void setAlphaLimit(float limit) {
+		// Enable blending (transparency)
+		RenderSystem.enableBlend();
+		// Set blend function for transparency
+		RenderSystem.defaultBlendFunc();
+
+		// Set alpha function (not directly possible with RenderSystem)
+		// Instead, we rely on blending setup, as OpenGL's alpha testing is deprecated
+		float alphaThreshold = limit * 0.01f;
+		RenderSystem.setShaderColor(1.0f, 1.0f, 1.0f, alphaThreshold);
 	}
-	
-	public static void enableGL2D()
-	{
-		GL11.glDisable(2929);
-		GL11.glEnable(3042);
-		GL11.glDisable(3553);
-		GL11.glBlendFunc(770, 771);
-		GL11.glDepthMask(true);
-		GL11.glEnable(2848);
-		GL11.glHint(3154, 4354);
-		GL11.glHint(3155, 4354);
-	}
-	
-	public static void disableGL2D()
-	{
-		GL11.glEnable(3553);
-		GL11.glDisable(3042);
-		GL11.glEnable(2929);
-		GL11.glDisable(2848);
-		GL11.glHint(3154, 4352);
-		GL11.glHint(3155, 4352);
-	}
-	
-	public static void pre3D()
-	{
-		GL11.glPushMatrix();
-		GL11.glEnable(3042);
-		GL11.glBlendFunc(770, 771);
-		GL11.glShadeModel(7425);
-		GL11.glDisable(3553);
-		GL11.glEnable(2848);
-		GL11.glDisable(2929);
-		GL11.glDisable(2896);
-		GL11.glDepthMask(false);
-		GL11.glHint(3154, 4354);
-	}
-	
-	public static void post3D()
-	{
-		GL11.glDepthMask(true);
-		GL11.glEnable(2929);
-		GL11.glDisable(2848);
-		GL11.glEnable(3553);
-		GL11.glDisable(3042);
-		GL11.glPopMatrix();
-		GL11.glColor4f(1.0f, 1.0f, 1.0f, 1.0f);
-	}
-	
-	public static double getDiff(double lastI, double i, float ticks,
-		double ownI)
-	{
-		return lastI + (i - lastI) * ticks - ownI;
-	}
-	
 }

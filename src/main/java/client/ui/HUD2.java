@@ -23,6 +23,7 @@ import java.time.LocalTime;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Comparator;
+import java.util.Objects;
 
 import static client.features.modules.render.HUD.namebackground;
 import static client.features.modules.render.HUD.nameinfo;
@@ -179,23 +180,22 @@ public class HUD2
 				
 				if((Boolean)HUD.OUTLINE.enabled)
 				{
-					RenderingUtils.drawRect(context, translateX - 2.6D,
+					RenderingUtils.drawRect(matrixStack, translateX - 2.6D,
 						translateY - 1.0D, translateX - 2.0D,
 						translateY + listOffset - 1.0D, color);
-					double offsetY = listOffset;
-					if(nextModule != null)
+                    if(nextModule != null)
 					{
 						double dif = (length - Fonts.font
 							.getStringWidth(nextModule.getDisplayName()));
-						RenderingUtils.drawRect(translateX - 2.6D,
-							translateY + offsetY - 1.0D,
+						RenderingUtils.drawRect(matrixStack,translateX - 2.6D,
+							translateY + (double) listOffset - 1.0D,
 							translateX - 2.6D + dif,
-							translateY + offsetY - 0.5D, color);
+							translateY + (double) listOffset - 0.5D, color);
 					}else
 					{
-						RenderingUtils.drawRect(translateX - 2.6D,
-							translateY + offsetY - 1.0D, width,
-							translateY + offsetY - 0.6D, color);
+						RenderingUtils.drawRect(matrixStack,translateX - 2.6D,
+							translateY + (double) listOffset - 1.0D, width,
+							translateY + (double) listOffset - 0.6D, color);
 					}
 				}
 				if((Boolean)HUD.background.enabled)
@@ -258,7 +258,7 @@ public class HUD2
 		Color.RGBtoHSB(color.getRed(), color.getGreen(), color.getBlue(), hsb);
 		float brightness =
 			Math.abs(((float)(System.currentTimeMillis() % 2000L) / 1000.0F
-				+ index / count * 2.0F) % 2.0F - 1.0F);
+				+ (float) index / count * 2.0F) % 2.0F - 1.0F);
 		brightness = 0.5F + 0.5F * brightness;
 		hsb[2] = brightness % 2.0F;
 		return new Color(Color.HSBtoRGB(hsb[0], hsb[1], hsb[2]));
@@ -277,9 +277,8 @@ public class HUD2
 	private void drawPotionStatus(Window sr)
 	{
 		float pY = (mc.currentScreen != null) ? -26 : -12;
-		assert mc.player != null;
 		Collection<StatusEffectInstance> collection =
-			mc.player.getStatusEffects();
+			Objects.requireNonNull(mc.player).getStatusEffects();
 		
 		for(StatusEffectInstance effect : collection)
 		{
@@ -318,32 +317,28 @@ public class HUD2
 	
 	private void drawArmorStatus(Window scaledRes, DrawContext context)
 	{
-		assert mc.player != null;
 		MatrixStack matrixStack = context.getMatrices();
-		if(!mc.player.isCreative())
+		if(!Objects.requireNonNull(mc.player).isCreative())
 		{
 			int x = 15;
 			matrixStack.push();
 			for(int index = 3; index >= 0; index--)
 			{
 				ItemStack stack = mc.player.getInventory().armor.get(index);
-				if(stack != null)
-				{
-					context.drawItem(stack,
-						scaledRes.getScaledWidth() / 2 + x - 1,
-						scaledRes.getScaledHeight()
-							- (mc.player.isInsideWaterOrBubbleColumn() ? 70
-								: 50)
-							- 2);
-					context.drawItem(stack,
-						scaledRes.getScaledWidth() / 2 + x - 1,
-						scaledRes.getScaledHeight()
-							- (mc.player.isInsideWaterOrBubbleColumn() ? 70
-								: 50)
-							- 2);
-					x += 18;
-				}
-			}
+                context.drawItem(stack,
+                        scaledRes.getScaledWidth() / 2 + x - 1,
+                        scaledRes.getScaledHeight()
+                                - (mc.player.isInsideWaterOrBubbleColumn() ? 70
+                                : 50)
+                                - 2);
+                context.drawItem(stack,
+                    scaledRes.getScaledWidth() / 2 + x - 1,
+                    scaledRes.getScaledHeight()
+                        - (mc.player.isInsideWaterOrBubbleColumn() ? 70
+                            : 50)
+                        - 2);
+                x += 18;
+            }
 			matrixStack.pop();
 		}
 	}
