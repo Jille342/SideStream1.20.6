@@ -160,7 +160,7 @@ public class CivBreak extends Module
 			if (Math.sqrt( Objects.requireNonNull(mc.player).squaredDistanceTo(blockPos.toCenterPos())) > range.getValue()) {
 					color = new Color(1.0F, 0.0F, 0.0F, 0.11F).getRGB();
 				} else {
-				color = new Color(0, 200, 255, 0.11f).getRGB();
+				color = new Color(0, 200, 255, 158).getRGB();
 				}
 				RenderingUtils.draw3DBox2(stack.peek().getPositionMatrix(), box,color);
 			}
@@ -170,7 +170,7 @@ public class CivBreak extends Module
 	
 	public BlockPos getNexus()
 	{
-		BlockPos pos = null;
+		BlockPos pos;
 		for(int x = -7; x < 7; x++)
 		{
 			for(int y = -7; y < 7; y++)

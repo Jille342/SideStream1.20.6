@@ -5,15 +5,16 @@ import net.minecraft.text.Text;
 
 public class ChatUtils implements MCUtil
 {
-	public final static String chatPrefix = "\2477[\2476Ex\2477] \2478>> \247f";
-	public final static String ircchatPrefix =
-		"\2477[\2476Ex\2479IRC\2477] \247f";
+	public  static String name = Client.NAME;
+	public final static String chatPrefix  = "[\247t"+name.substring(0, 1).replaceAll(name.substring(0, 1),
+			name.substring(0, 1))
+			+ name.substring(1).replaceAll(name.substring(1),
+			"\247f" + name.substring(1)) + "]";
 	
 	public static void printChat(String text)
 	{
 		
-		mc.inGameHud.getChatHud()
-			.addMessage(Text.of("[" + Client.NAME + "] " + text));
+		mc.inGameHud.getChatHud().addMessage(Text.of(chatPrefix+ " " + text));
 		
 	}
 	
