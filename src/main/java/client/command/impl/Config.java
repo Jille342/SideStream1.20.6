@@ -20,7 +20,7 @@ public class Config extends Command
 	@Override
 	public boolean onCommand(String[] args, String command)
 	{
-if(args.length== 1){
+if(args.length== 2){
 	ChatUtils.printChat("Please enter load, save, delete, list.");
 	return true;
 }
