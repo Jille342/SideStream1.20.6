@@ -2,13 +2,13 @@
   "schemaVersion": 1,
   "id": "sidestream",
   "version": "${version}",
-  "name": "SideStream Client",
-  "description": "Destory Bow Server!",
+  "name": "SideStream",
+  "description": "",
   "authors": [
     "Jill"
   ],
   "contact": {
-    "homepage": "https://discord.gg/Y3yMUSWc5s",
+    "homepage": "https://github.com/Jille342/SideStream1.20.6",
     "sources": "https://github.com/Jille342/SideStream1.20.6",
     "discord": "ji12444"
   },
