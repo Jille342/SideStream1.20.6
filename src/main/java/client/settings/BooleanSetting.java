@@ -6,6 +6,7 @@ public class BooleanSetting extends Setting
 {
 	
 	public boolean enabled;
+	public boolean visible;
 	
 	public BooleanSetting(String name, Supplier<Boolean> visibility,
 		boolean enable)
@@ -20,7 +21,9 @@ public class BooleanSetting extends Setting
 		super(name, null, enabled);
 		this.name = name;
 		this.enabled = enabled;
+		this.visible = true;
 	}
+
 	
 	public boolean isEnabled()
 	{
@@ -31,10 +34,12 @@ public class BooleanSetting extends Setting
 	{
 		this.enabled = enable;
 	}
+	public boolean isVisible(){
+		return visible;
+	}
 	public boolean getValue(){
 		return enabled;
 	}
-	
 	public void toggle()
 	{
 		enabled = !enabled;

@@ -11,13 +11,14 @@ import client.features.modules.Module;
 import client.features.modules.ModuleManager;
 import client.settings.*;
 import client.utils.Logger;
+import com.mojang.datafixers.kinds.Kind1;
 import org.apache.commons.io.FilenameUtils;
 /*    */ import java.io.*;
 import java.util.ArrayList;
-/*    */ import java.util.Iterator;
+/*    */ import java.util.HashMap;
+import java.util.Iterator;
 /*    */ import java.util.List;
 
-import static client.config.configs.SettingsConfig.getSettingbyName;
 
 public class ConfigManager
 {
@@ -202,6 +203,14 @@ public class ConfigManager
 		}
 		return file;
 	}
+	public  Setting<?> getSettingbyName(Module module, String str)
+	{
+		if (module == null || module.settings == null) {
+			return null;  // または例外を投げる
+		}
+		return module.settings.stream()
+				.filter(s -> s.name != null && s.name.equalsIgnoreCase(str)).findFirst().orElse(null);
+	}
 	
 	public void load(File file)
 	{
@@ -239,11 +248,26 @@ public class ConfigManager
 							{
 								((ModeSetting)setting).setModes(arguments[2]);
 							}else
-							
+
 							if(setting instanceof KeyBindSetting)
 							{
 								((KeyBindSetting)setting)
 									.setKeyCode(Integer.parseInt(arguments[2]));
+							}
+							else if(setting instanceof MultiBooleanSetting){
+								HashMap<String, Boolean> map = ((MultiBooleanSetting) setting).getValues();
+								String mapString = arguments[2];
+								mapString = mapString.substring(1, mapString.length() - 1);  // 最初と最後の{}を除く
+								String[] entries = mapString.split(", ");  // カンマとスペースで分割
+								if(entries.length ==1)
+									return;
+								// 各エントリをキーと値に分割してHashMapに追加
+								for (String entry : entries) {
+									String[] keyValue = entry.split("=");
+									String key = String.valueOf(keyValue[0].trim());  // キーをIntegerに変換
+									boolean value = Boolean.parseBoolean(keyValue[1].trim());  // 値の空白を除去
+									map.put(key, value);
+								}
 							}
 							
 						}
@@ -290,6 +314,10 @@ public class ConfigManager
 						text = String.valueOf(module.getName().toLowerCase()
 							+ ":" + setting.name.toLowerCase() + ":"
 							+ ((BooleanSetting)setting).isEnabled());
+					}
+					if( setting instanceof MultiBooleanSetting){
+						text = String.valueOf(module.getName().toLowerCase()
+								+ ":" + setting.name.toLowerCase() + ":" + ((MultiBooleanSetting) setting).getValues().toString());
 					}
 					
 					var4.write(text);

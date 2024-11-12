@@ -20,5 +20,4 @@ public class Setting<T>
 	{
 		return value.toString();
 	}
-	
 }

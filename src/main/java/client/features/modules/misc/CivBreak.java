@@ -138,7 +138,6 @@ public class CivBreak extends Module
 				final float[] angles = getAngleToBlockPos(blockPos);
 				((EventMotion) event).setYaw(angles[0]);
 				((EventMotion) event).setPitch(angles[1]);
-
 			}
 		}
 		if(event instanceof EventRender3D) {

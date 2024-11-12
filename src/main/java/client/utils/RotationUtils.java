@@ -238,8 +238,8 @@ public final class RotationUtils implements MCUtil{
 				aYaw = currentYaw + MathHelper.wrapDegrees(center[0] - currentYaw);
 				aPitch = currentPitch + MathHelper.wrapDegrees(center[1] - currentPitch);
 				return new float[]{
-						lerp(currentYaw, aYaw, speed * 0.1f),
-						lerp(currentPitch, aPitch, speed * 0.1f)
+						lerp(currentYaw, aYaw, speed * 0.5f),
+						lerp(currentPitch, aPitch, speed * 0.5f)
 				};
 		}
 			float[] newRotation = wrapAngleArray(currentYaw, currentPitch,center);

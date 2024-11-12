@@ -12,6 +12,7 @@ import org.lwjgl.glfw.GLFW;
 
 import java.awt.*;
 import java.util.List;
+import java.util.Map;
 import java.util.Objects;
 import java.util.stream.Collectors;
 
@@ -172,12 +173,12 @@ public class ClickGuiWindow
 					}
 				}else if(s instanceof BooleanSetting bs)
 				{
-                    drawRect(stack,
-						bs.isEnabled() ? defaultColor
-							: outlineColor2.getRGB(),
-						x, currentY, x + 120, currentY + 18);
-					Fonts.font.drawString(stack,s.name, x + 4, currentY + 4,
-						settingTextColor);
+						drawRect(stack,
+								bs.isEnabled() ? defaultColor
+										: outlineColor2.getRGB(),
+								x, currentY, x + 120, currentY + 18);
+						Fonts.font.drawString(stack, s.name, x + 4, currentY + 4,
+								settingTextColor);
 				}else if(s instanceof KeyBindSetting setting)
 				{
 					drawRect(stack, outlineColor2.getRGB(), x, currentY,
@@ -199,6 +200,24 @@ public class ClickGuiWindow
 										+ (clicked ? "inputwaiting..." : "NONE"),
 								(int) (x + 4), (int) (currentY + 4),
 								settingTextColor);
+					}
+				} else if( s instanceof MultiBooleanSetting multiBooleanSetting){
+					drawRect(stack, outlineColor2.getRGB(), x, currentY,
+							x + 120, currentY + 18);
+					Fonts.font.drawString(stack,multiBooleanSetting.name, x + 4,
+							currentY + 4, settingTextColor);
+					if(multiBooleanSetting.expand)
+					{
+						for (Map.Entry<String, Boolean> entry : multiBooleanSetting.getValues().entrySet()) {
+							currentY += 18;
+							drawRect(stack, defaultColor, x - 2,
+									currentY, x + 122, currentY + 20);
+							drawRect(stack, outlineColor1, x - 1,
+									currentY, x + 121, currentY + 19);
+							drawRect(stack, outlineColor2.getRGB(), x,
+									currentY, x + 120, currentY + 18);
+							Fonts.font.drawString(stack,entry.getKey(), x + 62.5f, currentY + 3, entry.getValue() ? defaultColor : 0xffE0DFE2);
+						}
 					}
 				}
 				currentY += 18;
@@ -315,6 +334,24 @@ public class ClickGuiWindow
 						
 						return;
 					}
+				} else if(s instanceof MultiBooleanSetting mBS){
+					if(ClickUtil.isHovered2(x, currentY, x + 120, currentY + 18,
+							mouseX, mouseY))
+					{
+						mBS.expand = !mBS.expand;
+					}
+
+						if (mBS.expand) {
+							for (Map.Entry<String, Boolean> entry : mBS.getValues().entrySet()) {
+								currentY += 18;
+								if (ClickUtil.isHovered2(x - 2, currentY, x + 122,
+										currentY + 20, mouseX, mouseY)) {
+									mBS.getValues().put(entry.getKey(), !entry.getValue());
+									return;
+								}
+							}
+						}
+
 				}
 				currentY += 18;
 			}

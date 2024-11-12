@@ -6,6 +6,7 @@ import client.event.listeners.*;
 import client.features.modules.Module;
 import client.settings.BooleanSetting;
 import client.settings.ModeSetting;
+import client.settings.MultiBooleanSetting;
 import client.settings.NumberSetting;
 import client.utils.*;
 import net.minecraft.client.util.math.MatrixStack;
@@ -32,12 +33,9 @@ public class LegitAura2 extends Module
     boolean isSilent  =false;
     boolean isInstant = false;
     private double currentCPS;
-    BooleanSetting targetMobs;
-    BooleanSetting ignoreTeamsSetting;
    float[] serverSideAngles;
     NumberSetting rangeSetting;
-    ModeSetting sortmode;
-    BooleanSetting targetInvisibles;
+    ModeSetting sortmode;;
     NumberSetting fov;
     BooleanSetting hitThroughWalls;
     BooleanSetting clickOnly;
@@ -55,6 +53,11 @@ public class LegitAura2 extends Module
     BooleanSetting smartLegitInstant;
     NumberSetting legitInstantAimSpeed;
     BooleanSetting targetESP;
+    MultiBooleanSetting targeting;
+    NumberSetting angleStepSetting;
+
+
+
 
     public LegitAura2()
     {
@@ -64,16 +67,17 @@ public class LegitAura2 extends Module
     @Override
     public void init()
     {
-        this.rangeSetting = new NumberSetting("Range", 3.0, 0, 4.2, 0.1);
-        this.targetMobs = new BooleanSetting("Target Mobs", true);
-        swingRange = new NumberSetting("Swing Range",4.2, 3.0, 6.0, 0.1);
-        this.targetInvisibles = new BooleanSetting("Target Invisibles", false);
-        this.ignoreTeamsSetting = new BooleanSetting("Ignore Teams", true);
-        this.maxCPS = new NumberSetting("MaxCPS", 7, 2, 20, 1f);
+        angleStepSetting = new NumberSetting("Angle Step", 1,1 ,180,1);
+        targeting = new MultiBooleanSetting("Targeting");
+        targeting.addValue("Targeting Mobs",true);
+        targeting.addValue("Ignore Teams", true);
+        targeting.addValue("Targeting Invisibles", false);
+        rangeSetting = new NumberSetting("Range", 3.1, 3.0,4.2, 0.1);
+        swingRange = new NumberSetting("Swing Range",4.2, 3.0, 6.0, 0.1);maxCPS = new NumberSetting("MaxCPS", 7, 2, 20, 1f);
         minCPS = new NumberSetting("MinCPS", 6, 1, 19, 1f);
         sortmode = new ModeSetting("SortMode", "Angle", new String[]{"Angle","HurtTime","Distance", "Cycle"});
         rotationmode = new ModeSetting("Rotation Mode", "Normal",
-                new String[]{"None", "Normal", "Normal2", "Legit"});
+                new String[]{ "Normal", "Normal2", "Legit"});
         moveFix = new BooleanSetting("Move Fix", true);
         itemCheck = new BooleanSetting("Item Check", true);
         this.fov = new NumberSetting("FOV", 20D, 0D, 360D, 1.0D);
@@ -87,9 +91,9 @@ public class LegitAura2 extends Module
         smartLegitInstant = new BooleanSetting("Smart Legit Instant", false);
         legitInstantAimSpeed = new NumberSetting("Legit Instant Aim Speed", 0.1, 0.01, 0.5, 0.01D);
 targetESP = new BooleanSetting("Target ESP", true);
-        addSetting(rotationmode, maxCPS, minCPS
-                , ignoreTeamsSetting, sortmode,
-                targetInvisibles, fov, hitThroughWalls, rangeSetting, clickOnly, moveFix, itemCheck, testMove,silent, legitAimSpeed,swingRange,legitInstant,smartSilent,smartLegitInstant,legitInstantAimSpeed,targetESP,targetMobs);
+        addSetting(angleStepSetting,rotationmode, maxCPS, minCPS
+                        ,targeting, sortmode,
+              fov, hitThroughWalls, rangeSetting, clickOnly, moveFix, itemCheck, testMove,silent, legitAimSpeed,swingRange,legitInstant,smartSilent,smartLegitInstant,legitInstantAimSpeed,targetESP);
         super.init();
     }
     public static ArrayList<LivingEntity> targets = new ArrayList<LivingEntity>();
@@ -133,20 +137,7 @@ targetESP = new BooleanSetting("Target ESP", true);
 
 
                 if (target != null) {
-
-                        if (e.isPre()) {
-
-                                if (currentCPS == 0) {
-                                    currentCPS = 1;
-                                }
-                                if (attackTimer.hasReached(1000 / currentCPS)) {
-                                    currentCPS = RandomUtils.nextDouble(minCPS.getValue(),
-                                            maxCPS.getValue());
-                                    attack(target);
-                                    attackTimer.reset();
-                                }
-                        }
-                        super.onEvent(e);
+                            attack(target);
                     }
             } else {
                 target = null;
@@ -187,8 +178,7 @@ targetESP = new BooleanSetting("Target ESP", true);
                 } else
                 if(rotationmode.getMode().equalsIgnoreCase("Normal2"))
                 {
-                    angles = RotationUtils
-                            .getRotationsRandom((LivingEntity)target);
+                    angles = RotationUtils.getRotationsRandom((LivingEntity)target);
 
                 } else
                 if(rotationmode.getMode().equalsIgnoreCase("Legit"))
@@ -200,8 +190,19 @@ targetESP = new BooleanSetting("Target ESP", true);
                      //   angles = RotationUtils.getLimitedAngles(serverSideAngles,tempAngles,target);
                 }
                 if(angles != null){
+                    float angleStep = ((float) angleStepSetting.getValue());
                    // fixed = rotationUtils.fixedSensitivity(angles, 0.1F);
-                    fixed =rotationUtils.applySensitivityPatch(angles, serverSideAngles );
+                    float[] tempAngles = new float[]{angles[0], angles[1]};
+                    if (tempAngles[0] > angles[0]) {
+                        tempAngles[0] -= angleStep;
+                    } else if (tempAngles[0] < angles[0]) {
+                        tempAngles[0] += angleStep;
+                    }
+                    float yawDiff = tempAngles[0] - angles[0];
+                    if (yawDiff < angleStep) {
+                        tempAngles[0] = angles[0];
+                    }
+                    fixed =rotationUtils.applySensitivityPatch(tempAngles, serverSideAngles );
                 }
                 if (!isSilent && fixed != null) {
                     mc.player.setYaw(fixed[0]);
@@ -249,54 +250,76 @@ targetESP = new BooleanSetting("Target ESP", true);
 
     public void attack(Entity target)
     {
-        if(angles != null) {
-                EntityHitResult hitResult = RaytraceUtils.rayCastByRotation(angles[0], angles[1], (float) rangeSetting.getValue());
-                if (hitResult != null && hitResult.getEntity() != mc.player) {
-                        Objects.requireNonNull(mc.getNetworkHandler()).sendPacket(PlayerInteractEntityC2SPacket.attack(target, Objects.requireNonNull(mc.player).isSneaking()));
-            }
+        if (currentCPS == 0) {
+            currentCPS = 1;
         }
-        Objects.requireNonNull(mc.player).swingHand(Hand.MAIN_HAND);
+        if (attackTimer.hasReached(1000 / currentCPS)) {
+            currentCPS = RandomUtils.nextDouble(minCPS.getValue(),
+                    maxCPS.getValue());
+            if(target != null) {
+                if (angles != null) {
+                    EntityHitResult hitResult = RaytraceUtils.rayCastByRotation(angles[0], angles[1], (float) rangeSetting.getValue());
+                    if (hitResult != null && hitResult.getEntity() != mc.player) {
+                        Objects.requireNonNull(mc.getNetworkHandler()).sendPacket(PlayerInteractEntityC2SPacket.attack(target, Objects.requireNonNull(mc.player).isSneaking()));
+                    }
+                }
+            }
+            Objects.requireNonNull(mc.player).swingHand(Hand.MAIN_HAND);
+            attackTimer.reset();
+        }
+
     }
 
     private void findTargets()
     {
         targets.clear();
-        assert mc.world != null;
-        for(Entity entity : mc.world.getEntities())
+        for(Entity entity : Objects.requireNonNull(mc.world).getEntities())
         {
-            if(entity instanceof LivingEntity && entity != mc.player)
-            {
-                if(!entity.isAlive() || entity.age < 10)
-                {
-                    continue;
+            if(isValid(entity)){
+                if(distanceTo(entity)<= rangeSetting.getValue()){
+                    targets.add((LivingEntity) entity);
+                } else if (distanceTo(entity) <= swingRange.getValue()){
+                 attack(null);
                 }
-                if(entity.isInvisible() && !targetInvisibles.enabled)
-                    continue;
 
-                if(!RotationUtils.fov(entity, fov.value))
-                    continue;
-                if(!mc.player.canSee(entity) && !hitThroughWalls.isEnabled())
-                    continue;
-                if(distanceTo(entity) > swingRange.getValue())
-                    continue;
-                if(entity instanceof PlayerEntity)
-                {
-
-                    if(ignoreTeamsSetting.isEnabled() && ServerHelper.isTeammate((PlayerEntity)entity))
-                    {
-                        continue;
-                    }
-                    if(AntiBots.isBot((PlayerEntity)entity))
-                        continue;
-
-                    targets.add((LivingEntity)entity);
-                }else if(entity instanceof MobEntity && targetMobs.isEnabled())
-                {
-                    targets.add((LivingEntity)entity);
-                }
             }
         }
 
+    }
+    public boolean isValid(Entity entity){
+        boolean targetInvisibles =  targeting.getValues().get("Targeting Invisibles");
+       boolean targetMobs =  targeting.getValues().get("Targeting Mobs");
+       boolean ignoreTeams =  targeting.getValues().get("Ignore Teams");
+        if(entity instanceof LivingEntity && entity != mc.player)
+        {
+            if(!entity.isAlive() || entity.age < 10)
+            {
+                return false;
+            }
+            if(entity.isInvisible() && !targetInvisibles)
+                return false;
+
+            if(!RotationUtils.fov(entity, fov.value))
+                return false;
+            if(!Objects.requireNonNull(mc.player).canSee(entity) && !hitThroughWalls.isEnabled())
+                return false;
+
+            if(entity instanceof PlayerEntity)
+            {
+
+                if(ignoreTeams && ServerHelper.isTeammate((PlayerEntity)entity))
+                {
+                    return false;
+                }
+                if(AntiBots.isBot((PlayerEntity)entity))
+                    return false;
+            }else if(entity instanceof MobEntity && !targetMobs)
+            {
+                return false;
+            }
+            return true;
+        }
+        return false;
     }
 
     private void sortTargets() {
@@ -347,9 +370,9 @@ targetESP = new BooleanSetting("Target ESP", true);
     public double distanceTo( Entity entity){
         Vec3d eye = Objects.requireNonNull(mc.player).getEyePos();
         Box bb = entity.getBoundingBox();
-       Vec3d  entityPosition  =new Vec3d(MathHelper.clamp(eye.x, bb.minX, bb.maxX),
+       Vec3d  entityPosition  = new Vec3d(MathHelper.clamp(eye.x, bb.minX, bb.maxX),
                 MathHelper.clamp(eye.y, bb.minY, bb.maxY),
                 MathHelper.clamp(eye.z, bb.minZ, bb.maxZ));
-       return entityPosition.distanceTo(mc.player.getEyePos());
+       return entityPosition.distanceTo(eye);
     }
 }
