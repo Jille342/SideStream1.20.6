@@ -179,6 +179,11 @@ public final class RotationUtils implements MCUtil{
 				(float) RotationUtils.limitAngleChange(serverSideAngles[0], targetAngles[0], Math.max(10, getFoVDistance(serverSideAngles[0], target) * 0.8f))
 				, (float) RotationUtils.limitAngleChange(serverSideAngles[1], targetAngles[1], 10 + new Random().nextInt(30))
 		};
+	}public static float[] getLimitedAngles(float[] serverSideAngles,float[] targetAngles  ,float fov){
+		return  new float[]{
+				(float) RotationUtils.limitAngleChange(serverSideAngles[0], targetAngles[0], Math.max(10, fov))
+				, (float) RotationUtils.limitAngleChange(serverSideAngles[1], targetAngles[1], 10 + new Random().nextInt(30))
+		};
 	}
 	
 	public static float fovToEntity(Entity ent)
@@ -221,7 +226,6 @@ public final class RotationUtils implements MCUtil{
 			};
 		}
 		float tickDelta = mc.getTickDelta();
-		float tick = 0.01f;
 		float currentYaw = silent ? serverSideAngles[0] : mc.player.getYaw(tickDelta);
 		float currentPitch = silent ? serverSideAngles[1] : mc.player.getPitch(tickDelta);
 		float aimSpeed = instant ? instantAimSpeed : speed;
@@ -242,12 +246,15 @@ public final class RotationUtils implements MCUtil{
 						lerp(currentPitch, aPitch, speed * 0.5f)
 				};
 		}
-			float[] newRotation = wrapAngleArray(currentYaw, currentPitch,center);
-		  float deltaH = Math.abs(currentYaw - newRotation[0]);
-		  float deltaV = Math.abs(currentPitch - newRotation[1]);
+		float[] wrappedAngles  = wrapAngleArray(currentYaw, currentPitch,center);
+
+			wrappedAngles =  getLimitedAngles(new float[]{currentYaw, currentPitch}, wrappedAngles, entity);
+			float deltaH = Math.abs(currentYaw - wrappedAngles[0]);
+		  float deltaV = Math.abs(currentPitch - wrappedAngles[1]);
 		  float[] newSpeed = computeTurnSpeed( deltaH, deltaV, aimSpeed);
-			return lerpArray(new float[]{currentYaw, currentPitch}, newRotation, newSpeed[0], newSpeed[1]);
+			return lerpArray(new float[]{currentYaw, currentPitch}, wrappedAngles, newSpeed[0], newSpeed[1]);
 	}
+
 
 
 	private float[] computeTurnSpeed( float diffH, float diffV , float speed) {

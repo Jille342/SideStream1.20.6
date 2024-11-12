@@ -48,13 +48,12 @@ public class LegitAura2 extends Module
     BooleanSetting silent;
     NumberSetting legitAimSpeed;
     NumberSetting swingRange;
-    BooleanSetting legitInstant;
     BooleanSetting smartSilent;
-    BooleanSetting smartLegitInstant;
     NumberSetting legitInstantAimSpeed;
     BooleanSetting targetESP;
     MultiBooleanSetting targeting;
     NumberSetting angleStepSetting;
+    MultiBooleanSetting legitInstantSettings;
 
 
 
@@ -86,14 +85,15 @@ public class LegitAura2 extends Module
         testMove = new BooleanSetting("Test Move", true);
         silent = new BooleanSetting("Silent", true);
         legitAimSpeed = new NumberSetting("Legit Aim Speed", 0.1D, 0.05D,1.0, 0.01D);
-        legitInstant = new BooleanSetting("Legit Instant", true);
+        legitInstantSettings = new MultiBooleanSetting("Legit Instant Settigs");
+        legitInstantSettings.addValue("Legit Instant", false);
+        legitInstantSettings.addValue("Smart Legit Instant", false);
         smartSilent = new BooleanSetting("Smart Silent",false);
-        smartLegitInstant = new BooleanSetting("Smart Legit Instant", false);
         legitInstantAimSpeed = new NumberSetting("Legit Instant Aim Speed", 0.1, 0.01, 0.5, 0.01D);
 targetESP = new BooleanSetting("Target ESP", true);
         addSetting(angleStepSetting,rotationmode, maxCPS, minCPS
                         ,targeting, sortmode,
-              fov, hitThroughWalls, rangeSetting, clickOnly, moveFix, itemCheck, testMove,silent, legitAimSpeed,swingRange,legitInstant,smartSilent,smartLegitInstant,legitInstantAimSpeed,targetESP);
+              fov, hitThroughWalls, rangeSetting, clickOnly, moveFix, itemCheck, testMove,silent, legitAimSpeed,swingRange,smartSilent,legitInstantSettings,legitInstantAimSpeed,targetESP);
         super.init();
     }
     public static ArrayList<LivingEntity> targets = new ArrayList<LivingEntity>();
@@ -106,7 +106,8 @@ targetESP = new BooleanSetting("Target ESP", true);
 
         if(e instanceof EventUpdate) {
             setTag(sortmode.getMode() + " " + targets.size());
-
+            boolean legitInstant =  legitInstantSettings.getValues().get("Legit Instant");
+            boolean smartLegitInstant = legitInstantSettings.getValues().get("Smart Legit Instant");
             if((Objects.requireNonNull(mc.player).isUsingItem()  && itemCheck.isEnabled()) || clickOnly.enabled && !mc.options.attackKey.isPressed()){
                 targets.clear();
                 target = null;
@@ -125,14 +126,14 @@ targetESP = new BooleanSetting("Target ESP", true);
                 } else {
                     isSilent = silent.getValue();
                 }
-                if (smartLegitInstant.getValue()) {
+                if (smartLegitInstant) {
                     if (targets.size() >= 2) {
                         isInstant = true;
                     } else {
                         isInstant = false;
                     }
                 } else {
-                    isInstant = legitInstant.getValue();
+                    isInstant = legitInstant;
                 }
 
 
