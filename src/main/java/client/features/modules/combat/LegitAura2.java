@@ -89,7 +89,7 @@ public class LegitAura2 extends Module
         legitInstantSettings.addValue("Legit Instant", false);
         legitInstantSettings.addValue("Smart Legit Instant", false);
         smartSilent = new BooleanSetting("Smart Silent",false);
-        legitInstantAimSpeed = new NumberSetting("Legit Instant Aim Speed", 0.1, 0.01, 0.5, 0.01D);
+        legitInstantAimSpeed = new NumberSetting("Legit Instant Aim Speed", 0.01, 0.01, 0.5, 0.01D);
 targetESP = new BooleanSetting("Target ESP", true);
         addSetting(angleStepSetting,rotationmode, maxCPS, minCPS
                         ,targeting, sortmode,

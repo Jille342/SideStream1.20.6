@@ -5,6 +5,7 @@ import client.event.EventType;
 import client.event.listeners.EventMotion;
 import client.event.listeners.EventMove;
 import client.event.listeners.EventUpdate;
+import client.event.listeners.EventUpdateVelocity;
 import client.utils.RotationUtils;
 import net.fabricmc.loader.impl.lib.sat4j.core.Vec;
 import net.minecraft.client.MinecraftClient;
@@ -71,5 +72,21 @@ public class MixinClientPlayerEntity
 		RotationUtils.virtualPitch = event.getPitch();
 		return event.getPitch();
 	}
-	
+	@ModifyArgs(
+			method = {"tickMovement"},
+			at = @At(
+					value = "INVOKE",
+					target = "Lnet/minecraft/client/network/ClientPlayerEntity;setSprinting(Z)V"
+			)
+	)
+	private void injected(Args args) {
+		EventUpdateVelocity event = new EventUpdateVelocity(1.0F, MinecraftClient.getInstance().player.getYaw());
+		Client.onEvent(event);
+		if (event.yaw != MinecraftClient.getInstance().player.getYaw()) {
+			args.set(0, true);
+		}
+
+	}
+
+
 }

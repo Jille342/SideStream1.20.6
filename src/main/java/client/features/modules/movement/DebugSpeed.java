@@ -3,6 +3,7 @@ package client.features.modules.movement;
 import client.event.Event;
 import client.event.listeners.EventMove;
 import client.event.listeners.EventUpdate;
+import client.event.listeners.EventUpdateVelocity;
 import client.features.modules.Module;
 import client.features.modules.combat.AntiVelocity;
 import client.features.modules.combat.LegitAura2;
@@ -68,6 +69,19 @@ public class DebugSpeed extends Module {
 	}
 
 	public void onEvent(Event<?> event) {
+		if(event instanceof EventUpdateVelocity){
+			if (!mc.player.isTouchingWater()) {
+				switch (this.modeSetting.getValue()) {
+					case "Matrix":
+						if (!MoveUtils.isMoving()) {
+							return;
+						} else {
+							((EventUpdateVelocity) event).yaw = this.yaw + 0.1F;
+						}
+				}
+			}
+
+		}
 		if (event instanceof EventUpdate) {
 			setTag(modeSetting.getValue()); if (mc.player.horizontalCollision) {
 				this.direction = !this.direction;

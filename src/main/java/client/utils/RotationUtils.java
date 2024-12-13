@@ -229,6 +229,9 @@ public final class RotationUtils implements MCUtil{
 		float currentYaw = silent ? serverSideAngles[0] : mc.player.getYaw(tickDelta);
 		float currentPitch = silent ? serverSideAngles[1] : mc.player.getPitch(tickDelta);
 		float aimSpeed = instant ? instantAimSpeed : speed;
+		if(aimSpeed >1){
+			aimSpeed =1;
+		}
 		float aYaw = 0, aPitch = 0;
 		Vec3d eye = Objects.requireNonNull(mc.player).getCameraPosVec(tickDelta);
 		Box bb = entity.getBoundingBox();
@@ -270,8 +273,8 @@ public final class RotationUtils implements MCUtil{
 		final float turnSpeedH = (float) (coeDiffH* Math.log10(diffH)  +  speed);
 		float turnSpeedV = (float) (coeDiffV* Math.log10(diffV)  +  speed);
 		return new float[] {
-				Math.max(Math.abs(turnSpeedH), min),
-				Math.max(Math.abs(turnSpeedV), min)
+				 Math.min(Math.max(Math.abs(turnSpeedH), min), 1),
+				Math.min(Math.max(Math.abs(turnSpeedV), min), 1)
 		};
 	}
 	public float[] calcRotation(Entity entity) {
