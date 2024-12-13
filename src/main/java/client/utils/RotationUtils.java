@@ -229,8 +229,8 @@ public final class RotationUtils implements MCUtil{
 		float currentYaw = silent ? serverSideAngles[0] : mc.player.getYaw(tickDelta);
 		float currentPitch = silent ? serverSideAngles[1] : mc.player.getPitch(tickDelta);
 		float aimSpeed = instant ? instantAimSpeed : speed;
-		if(aimSpeed >1){
-			aimSpeed =1;
+		if (aimSpeed > 1) {
+			aimSpeed = 1;
 		}
 		float aYaw = 0, aPitch = 0;
 		Vec3d eye = Objects.requireNonNull(mc.player).getCameraPosVec(tickDelta);
@@ -242,20 +242,19 @@ public final class RotationUtils implements MCUtil{
 		EntityHitResult hitResult = RaytraceUtils.rayCastByRotation(currentYaw, currentPitch, range);
 		if (hitResult != null && hitResult.getEntity() != mc.player && hitResult.getEntity() == entity) {
 
-				aYaw = currentYaw + MathHelper.wrapDegrees(center[0] - currentYaw);
-				aPitch = currentPitch + MathHelper.wrapDegrees(center[1] - currentPitch);
-				return new float[]{
-						lerp(currentYaw, aYaw, speed * 0.5f),
-						lerp(currentPitch, aPitch, speed * 0.5f)
-				};
-		}
-		float[] wrappedAngles  = wrapAngleArray(currentYaw, currentPitch,center);
-
-			wrappedAngles =  getLimitedAngles(new float[]{currentYaw, currentPitch}, wrappedAngles, entity);
+			aYaw = currentYaw + MathHelper.wrapDegrees(center[0] - currentYaw);
+			aPitch = currentPitch + MathHelper.wrapDegrees(center[1] - currentPitch);
+			return new float[]{
+					lerp(currentYaw, aYaw, speed * 0.5f),
+					lerp(currentPitch, aPitch, speed * 0.5f)
+			};
+		} else {
+			float[] wrappedAngles = wrapAngleArray(currentYaw, currentPitch, center);
 			float deltaH = Math.abs(currentYaw - wrappedAngles[0]);
-		  float deltaV = Math.abs(currentPitch - wrappedAngles[1]);
-		  float[] newSpeed = computeTurnSpeed( deltaH, deltaV, aimSpeed);
+			float deltaV = Math.abs(currentPitch - wrappedAngles[1]);
+			float[] newSpeed = computeTurnSpeed(deltaH, deltaV, aimSpeed);
 			return lerpArray(new float[]{currentYaw, currentPitch}, wrappedAngles, newSpeed[0], newSpeed[1]);
+		}
 	}
 
 
