@@ -73,9 +73,8 @@ public class TPBreaker extends Module
 					yPos = tpPos.getY();
 					zPos = tpPos.getZ();
 					// ChatUtils.printChat(block.getName().getString());
-					placeBlock(tpPos);
-					rotations = getBlockRotations(tpPos.getX(), tpPos.getY(),
-						tpPos.getZ());
+					mc.interactionManager.interactBlock(mc.player, Hand.MAIN_HAND, new BlockHitResult(mc.player.getBlockPos().toCenterPos(), Direction.UP, mc.player.getBlockPos().add(tpPos), false));
+					//rotations = getBlockRotations(tpPos.getX(), tpPos.getY(), tpPos.getZ());
 				}else
 				{
 					setTag(mode.getMode());
@@ -93,10 +92,7 @@ public class TPBreaker extends Module
 			}
 		}
 	}
-	
-	// private boolean blockChecks(Block block) {
-	// return block == Blocks.quartz_ore;
-	// }
+
 	
 	public float[] getBlockRotations(double x, double y, double z)
 	{
@@ -137,21 +133,5 @@ public class TPBreaker extends Module
 		}
 		return null;
 	}
-	
-	private void placeBlock(BlockPos pos)
-	{
-		
-		for(Direction side : Direction.values())
-		{
-			Direction side2 = side.getOpposite();
-			BlockHitResult blockHitResult =
-					new BlockHitResult(pos.toCenterPos(), side2, pos, false).withBlockPos(pos);
-			Objects.requireNonNull(mc.getNetworkHandler())
-				.sendPacket(new HandSwingC2SPacket(Hand.MAIN_HAND));
-			Objects.requireNonNull(mc.player).networkHandler
-				.sendPacket(new PlayerInteractBlockC2SPacket(Hand.MAIN_HAND,
-					blockHitResult, 0));
-			Objects.requireNonNull(mc.interactionManager).updateBlockBreakingProgress(pos,side2);
-		}
-	}
+
 }

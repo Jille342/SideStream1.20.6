@@ -3,6 +3,7 @@ package client.features.modules.combat;
 import client.event.Event;
 import client.event.listeners.EventPacket;
 import client.features.modules.Module;
+import net.minecraft.item.AxeItem;
 import net.minecraft.item.ItemStack;
 import net.minecraft.item.Items;
 import net.minecraft.item.SwordItem;
@@ -43,6 +44,7 @@ public class AutoSword extends Module
     }
 
     private static float getSwordValue(SwordItem item) {
+
         return item.getMaterial().getAttackDamage();
     }
 

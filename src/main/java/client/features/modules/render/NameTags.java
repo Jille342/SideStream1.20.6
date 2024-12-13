@@ -5,6 +5,7 @@ import client.event.listeners.EventNameTag;
 import client.event.listeners.EventRender2D;
 import client.event.listeners.EventRender3D;
 import client.features.modules.Module;
+import client.settings.NumberSetting;
 import client.utils.font.TTFFontRenderer;
 import java.awt.Color;
 import java.util.Comparator;
@@ -38,18 +39,20 @@ public class NameTags extends Module
 	private static final int MAX_SAMPLES =
 		GL30.glGetInteger(GL30C.GL_MAX_SAMPLES);
 	private final TTFFontRenderer font = TTFFontRenderer.of("ElliotSans", 8);
-	private final TTFFontRenderer nameDrawer =
-		TTFFontRenderer.of("ElliotSans", 10);
+	private  TTFFontRenderer nameDrawer;
+		public NumberSetting size;
 	
 	public NameTags()
 	{
 		super("NameTags", 0, Category.RENDER);
+		size = new NumberSetting("Size", 8, 5, 12,1);
 	}
 	
 	public void onEvent(Event<?> event)
 	{
 		if(event instanceof EventRender3D)
 		{
+			nameDrawer = TTFFontRenderer.of("ElliotSans", (int) size.getValue());
 			if(mc.player == null || mc.world == null)
 				return;
 			if(mc.gameRenderer.getCamera() == null)
