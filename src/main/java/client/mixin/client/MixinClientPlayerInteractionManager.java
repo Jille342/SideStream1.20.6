@@ -5,14 +5,20 @@
 
 package client.mixin.client;
 
+import client.Client;
+import client.event.listeners.EventAttack;
 import client.features.modules.ModuleManager;
 import client.features.modules.player.NoBreakDelay;
 import net.minecraft.client.network.ClientPlayerInteractionManager;
+import net.minecraft.entity.Entity;
+import net.minecraft.entity.player.PlayerEntity;
 import org.objectweb.asm.Opcodes;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.Shadow;
 import org.spongepowered.asm.mixin.injection.At;
+import org.spongepowered.asm.mixin.injection.Inject;
 import org.spongepowered.asm.mixin.injection.Redirect;
+import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 
 import java.util.Objects;
 
@@ -35,4 +41,18 @@ public class MixinClientPlayerInteractionManager
 			.requireNonNull(ModuleManager.getModulebyClass(NoBreakDelay.class))
 			.isEnabled() ? 0 : cd;
 	}
+	@Inject(
+			method = {"attackEntity"},
+			at = {@At("HEAD")},
+			cancellable = true
+	)
+	public void injectAttackEntity(PlayerEntity player, Entity target, CallbackInfo ci) {
+		EventAttack event = new EventAttack(target);
+		Client.onEvent(event);
+		if (event.isCancelled()) {
+			ci.cancel();
+		}
+
+	}
+
 }

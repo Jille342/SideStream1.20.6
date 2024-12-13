@@ -28,6 +28,34 @@ public class MoveUtils implements MCUtil{
         return mc.player.forwardSpeed != 0.0F
                 || mc.player.sidewaysSpeed != 0.0F;
     }
+    public static double getSpeed() {
+        return mc.player.getVelocity().horizontalLength();
+    }
+    public static double getDirection(float yaw) {
+        float rotationYaw = yaw;
+        if (mc.options.backKey.isPressed()) {
+            rotationYaw = yaw + 180.0F;
+        }
+
+        float forward = 1.0F;
+        if (mc.options.backKey.isPressed()) {
+            forward = -0.5F;
+        } else if (mc.options.forwardKey.isPressed()) {
+            forward = 0.5F;
+        }
+
+        if (mc.options.leftKey.isPressed()) {
+            rotationYaw -= 90.0F * forward;
+        }
+
+        if (mc.options.rightKey.isPressed()) {
+            rotationYaw += 90.0F * forward;
+        }
+
+        return Math.toRadians((double)rotationYaw);
+    }
+
+
     public static int getJumpEffect() {
         if (mc.player.hasStatusEffect(StatusEffects.JUMP_BOOST))
             return mc.player.getStatusEffect(StatusEffects.JUMP_BOOST).getAmplifier() + 1;

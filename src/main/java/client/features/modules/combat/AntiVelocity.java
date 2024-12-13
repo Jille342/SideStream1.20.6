@@ -9,6 +9,7 @@ import client.mixin.client.IEntityVelocityUpdateS2CPacketMixin;
 import client.settings.BooleanSetting;
 import client.settings.ModeSetting;
 import client.settings.NumberSetting;
+import net.minecraft.network.packet.s2c.play.EntityDamageS2CPacket;
 import net.minecraft.network.packet.s2c.play.EntityVelocityUpdateS2CPacket;
 
 public class AntiVelocity extends Module
@@ -19,7 +20,9 @@ public class AntiVelocity extends Module
 	NumberSetting chance;
 	BooleanSetting clickOnly;
 	BooleanSetting targetCheck;
-	
+	public static long lastVelocity = System.currentTimeMillis();
+
+
 	public AntiVelocity()
 	{
 		super("AntiVelocity", 0, Category.COMBAT);
@@ -49,6 +52,13 @@ public class AntiVelocity extends Module
 		}
 		if(e instanceof EventPacket event)
 		{
+			if(event.getPacket() instanceof EntityDamageS2CPacket){
+				EntityDamageS2CPacket p = (EntityDamageS2CPacket) event.getPacket();
+				if (p.entityId() == mc.player.getId() && p.sourceCauseId() != 8) {
+					lastVelocity = System.currentTimeMillis();
+				}
+
+			}
 			if(this.mode.getMode().equalsIgnoreCase("Simple"))
 			{
 				if(targetCheck.isEnabled() && (LegitAura2.target != null || AimAssist.target !=null)) {

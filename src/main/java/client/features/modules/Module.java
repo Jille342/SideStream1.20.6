@@ -135,6 +135,9 @@ public class Module
 		if(e instanceof EventUpdate){
 			onUpdate((EventUpdate) e);
 		}
+		if(e instanceof EventAttack){
+			onAttack(((EventAttack) e));
+		}
 		if(e instanceof EventRender2D){
 			onRender2D((EventRender2D) e);
 		}
@@ -156,6 +159,8 @@ public class Module
 		if(e instanceof EventNameTag){
 			onNameTag(((EventNameTag) e));
 		}
+	}
+	public void onAttack(EventAttack event){
 	}
 	public void onNameTag(EventNameTag event){}
 	public void onInput(EventInput event){}

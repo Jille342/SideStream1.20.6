@@ -1,10 +1,12 @@
 package client.features.modules.misc;
 
 import java.awt.*;
+import java.util.ArrayList;
 import java.util.Objects;
 
 import client.event.Event;
 import client.event.listeners.EventMotion;
+import client.event.listeners.EventPacket;
 import client.event.listeners.EventRender3D;
 import client.event.listeners.EventUpdate;
 import client.features.modules.Module;
@@ -13,7 +15,10 @@ import client.settings.NumberSetting;
 import client.utils.RaycastUtils;
 import client.utils.RenderingUtils;
 import net.minecraft.block.Blocks;
+import net.minecraft.client.network.ClientPlayNetworkHandler;
 import net.minecraft.client.util.math.MatrixStack;
+import net.minecraft.item.ItemStack;
+import net.minecraft.network.packet.Packet;
 import net.minecraft.network.packet.c2s.play.HandSwingC2SPacket;
 import net.minecraft.network.packet.c2s.play.PlayerActionC2SPacket;
 import net.minecraft.util.Hand;
@@ -29,7 +34,12 @@ public class CivBreak extends Module
 	private BlockPos blockPos;
 	private HitResult hitResult;
 	private int attempt;
-	
+	private  ArrayList<Packet> packets = new ArrayList();
+	private boolean recoding = false;
+	private ItemStack stack = null;
+
+
+
 	public CivBreak()
 	{
 		super("CivBreak", 0, Category.MISC);
@@ -41,7 +51,7 @@ public class CivBreak extends Module
 		range = new NumberSetting("Range", 5.0, 4.5, 7.0, 0.1);
 		mode =
 			new ModeSetting("Mode", "Legit", new String[]{"Legit", "Packet"});
-		packetDelay = new NumberSetting("Packet Delay", 20, 10, 200, 1.0);
+		packetDelay = new NumberSetting("Packet Delay", 1, 1, 20, 1.0);
 		addSetting(range, mode, packetDelay);
 	}
 	
@@ -67,44 +77,6 @@ public class CivBreak extends Module
 				blockPos = nexus;
 				switch(mode.getMode())
 				{
-					
-					case "Packet":
-					
-					if(facing == null)
-						return;
-					
-					if(blockPos != null)
-					{
-						final float f =
-							(float)(mc.player.getX() - blockPos.getX());
-						final float g =
-							(float)(mc.player.getY() - blockPos.getY());
-						final float h =
-							(float)(mc.player.getZ() - blockPos.getZ());
-						final float dist =
-							MathHelper.sqrt(f * f + g * g + h * h);
-						
-						if(dist > range.getValue())
-						{
-							hitResult = null;
-							blockPos = null;
-							return;
-						}
-						
-						mc.player.swingHand(Hand.MAIN_HAND);
-						for(int i =
-							0; i < (int)packetDelay.getValue(); i++)
-						{
-							mc.player.networkHandler
-								.sendPacket(new PlayerActionC2SPacket(PlayerActionC2SPacket.Action.START_DESTROY_BLOCK,
-									blockPos, facing, 0));
-						}
-						
-						mc.player.networkHandler.sendPacket(new PlayerActionC2SPacket(
-								PlayerActionC2SPacket.Action.STOP_DESTROY_BLOCK,
-								blockPos, facing, 0));
-					}
-					break;
 					case "Legit":
 					if(facing == null)
 					{
@@ -130,6 +102,42 @@ public class CivBreak extends Module
 					if(!Objects.requireNonNull(mc.interactionManager).isBreakingBlock())
 					mc.interactionManager.updateBlockBreakingProgress(blockPos, facing);
 					break;
+					case "Packet":
+						if (this.blockPos == null) {
+							this.blockPos = getNexus();
+						}
+
+						if (this.blockPos != null) {
+							float f2= (float)(mc.player.getX() - (double)this.blockPos.getX());
+							float g2 = (float)(mc.player.getY() - (double)this.blockPos.getY());
+							float h2 = (float)(mc.player.getZ() - (double)this.blockPos.getZ());
+							float dist2= MathHelper.sqrt(f2 * f2 + g2 * g2 + h2 * h2);
+							if ((double)dist2 >= this.range.getValue()) {
+								this.blockPos = null;
+							} else {
+								if (this.blockPos != null) {
+									if (this.stack != mc.player.getMainHandStack()) {
+										this.stack = mc.player.getMainHandStack();
+										this.recoding = true;
+										this.packets.clear();
+									}
+
+									if (this.recoding) {
+										for(int i = 0; (double)i < this.packetDelay.getValue(); ++i) {
+											mc.interactionManager.updateBlockBreakingProgress(this.blockPos, Direction.UP);
+											mc.player.swingHand(Hand.MAIN_HAND);
+										}
+									} else if (mc.player.age % 2 == 0) {
+										ClientPlayNetworkHandler networkHandler = mc.getNetworkHandler();
+										Objects.requireNonNull(networkHandler);
+										packets.forEach(networkHandler::sendPacket);
+									}
+								}
+
+							}
+						}
+
+						break;
 				}
 			
 		}
@@ -154,6 +162,22 @@ public class CivBreak extends Module
 				RenderingUtils.draw3DBox2(stack.peek().getPositionMatrix(), box,color);
 			}
 
+		}
+		if(event instanceof EventPacket){
+			if(event.isOutgoing()){
+				if (this.recoding) {
+					Packet var3 = ((EventPacket) event).getPacket();
+					if (var3 instanceof PlayerActionC2SPacket) {
+						PlayerActionC2SPacket packet = (PlayerActionC2SPacket)var3;
+						this.packets.add(var3);
+						if (packet.getAction() == PlayerActionC2SPacket.Action.STOP_DESTROY_BLOCK) {
+							this.recoding = false;
+						}
+					}
+
+				}
+
+			}
 		}
 	}
 	

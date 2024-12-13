@@ -58,6 +58,7 @@ public class ModuleManager implements MCUtil
 		modules.add(new WTap());
 		modules.add(new AntiVoid());
 		modules.add(new ToggleSneak());
+		modules.add(new WTap2());
 	}
 	
 	public static class ModuleComparator implements Comparator<Module>
