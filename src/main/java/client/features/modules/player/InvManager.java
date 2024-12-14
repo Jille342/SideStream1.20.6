@@ -243,7 +243,9 @@ public class InvManager extends Module {
                     }
                 }
                 if(isTrash(item) && dropTrash.getValue()){
-                    drop(i < 9 ? 36 + i : i);
+                    if(bestTools[10].left != i) {
+                        drop(i < 9 ? 36 + i : i);
+                    }
                 }
 
             }
@@ -265,7 +267,6 @@ public class InvManager extends Module {
                 (stack.getName().getString().toLowerCase().contains("flint")) ||
                 (stack.getName().getString().toLowerCase().contains("dyePowder")) ||
                 (stack.getName().getString().toLowerCase().contains("feather")) ||
-                (stack.getName().getString().toLowerCase().contains("bucket")) ||
                 (stack.getName().getString().toLowerCase().contains("chest") && !stack.getName().getString().toLowerCase().contains("collect")) ||
                 (stack.getName().getString().toLowerCase().contains("snow")) ||
                 (stack.getName().getString().toLowerCase().contains("fish")) ||
@@ -278,20 +279,37 @@ public class InvManager extends Module {
     }
 
     private static float getSwordValue(ItemStack stack, SwordItem item) {
-        return item.getMaterial().getAttackDamage();
+        float value = item.getMaterial().getAttackDamage() * 1000.0F;
+        value += (float) EnchantmentHelper.getLevel(Enchantments.SHARPNESS, stack);
+        value += (float)EnchantmentHelper.getLevel(Enchantments.FIRE_ASPECT, stack) * 1000.0F;
+        value += (float) EnchantmentHelper.getLevel(Enchantments.KNOCKBACK, stack);
+        return value;
     }
 
     private static float getPickaxeValue(ItemStack stack, PickaxeItem item) {
-        return item.getMaterial().getMiningSpeedMultiplier();
+        float value = item.getMaterial().getMiningSpeedMultiplier() * 1000.0F;
+        value += (float) EnchantmentHelper.getLevel(Enchantments.EFFICIENCY, stack);
+        value += (float) EnchantmentHelper.getLevel(Enchantments.UNBREAKING, stack);
+        value += (float)EnchantmentHelper.getLevel(Enchantments.FORTUNE, stack) * 1000.0F;
+        return value;
     }
 
     private static float getAxeValue(ItemStack stack, AxeItem item) {
-        return item.getMaterial().getMiningSpeedMultiplier();
+        float value = item.getMaterial().getMiningSpeedMultiplier() * 1000.0F;
+        value += (float) EnchantmentHelper.getLevel(Enchantments.EFFICIENCY, stack);
+        value += (float) EnchantmentHelper.getLevel(Enchantments.UNBREAKING, stack);
+        value += (float)EnchantmentHelper.getLevel(Enchantments.FORTUNE, stack) * 1000.0F;
+        return value;
     }
 
     private static float getShovelValue(ItemStack stack, ShovelItem item) {
-        return item.getMaterial().getMiningSpeedMultiplier();
+        float value = item.getMaterial().getMiningSpeedMultiplier() * 1000.0F;
+        value += (float) EnchantmentHelper.getLevel(Enchantments.EFFICIENCY, stack);
+        value += (float) EnchantmentHelper.getLevel(Enchantments.UNBREAKING, stack);
+        value += (float)EnchantmentHelper.getLevel(Enchantments.FORTUNE, stack) * 1000.0F;
+        return value;
     }
+
 
     private static float getShearsValue(ItemStack stack, ShearsItem item) {
         return 1 - (float) stack.getDamage() / stack.getMaxDamage();

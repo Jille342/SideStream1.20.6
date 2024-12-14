@@ -18,7 +18,7 @@ import java.io.File;
 public class Client
 {
 	public static final String NAME = "SideStream";
-	public static final String VERSION = "20241108";
+	public static final String VERSION = "20241214";
 	public static HUD2 hud2 = new HUD2();
 	public static String bgLocation = "client/bg.png";
 	public static AltManager altManager;
