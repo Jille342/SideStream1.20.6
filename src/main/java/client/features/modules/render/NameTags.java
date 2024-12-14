@@ -45,7 +45,8 @@ public class NameTags extends Module
 	public NameTags()
 	{
 		super("NameTags", 0, Category.RENDER);
-		size = new NumberSetting("Size", 8, 5, 12,1);
+		size = new NumberSetting("Size", 10, 8, 20,1);
+		addSetting(size);
 	}
 	
 	public void onEvent(Event<?> event)

@@ -5,6 +5,8 @@ import client.features.modules.render.ClickGUI;
 import client.settings.KeyBindSetting;
 import client.settings.Setting;
 import client.event.Event;
+import client.utils.ChatUtils;
+import client.utils.Logger;
 import client.utils.Translate;
 import lombok.Getter;
 import lombok.Setter;
@@ -160,8 +162,7 @@ public class Module
 			onNameTag(((EventNameTag) e));
 		}
 	}
-	public void onAttack(EventAttack event){
-	}
+	public void onAttack(EventAttack event){}
 	public void onNameTag(EventNameTag event){}
 	public void onInput(EventInput event){}
 	public void onUpdate(EventUpdate event){}

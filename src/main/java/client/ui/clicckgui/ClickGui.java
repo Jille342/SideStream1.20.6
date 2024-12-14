@@ -11,6 +11,7 @@ import net.minecraft.client.gui.screen.Screen;
 import net.minecraft.client.util.Window;
 import net.minecraft.client.util.math.MatrixStack;
 import net.minecraft.text.Text;
+import net.minecraft.util.math.MathHelper;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -51,15 +52,26 @@ public class ClickGui extends Screen
 		Window window = mc.getWindow();
 		partialTicks = delta;
 		double per = animationUtil.uodate(0.05).calcPercent();
+		setAlphaLimit(stack,(float) per);
 		stack.push();
-		RenderingUtils.setAlphaLimit((float) per);
+
 		stack.translate((float) window.getScaledWidth() / 4, (float) window.getScaledHeight() / 4, 0);
 		//stack.scale(size,size, 0);
 		stack.translate((float) -window.getScaledWidth() / 4, (float) -window.getScaledHeight() / 4, 0);
 		windows.forEach(m -> m.render(stack, mouseX, mouseY, delta));
 		stack.pop();
 	}
-	
+	public static void setAlphaLimit(MatrixStack matrixStack, float alpha) {
+		alpha = MathHelper.clamp(alpha * 0.01f, 0.0f, 1.0f);
+		System.out.println("Alpha value: " + alpha); // Debugging
+		RenderSystem.enableBlend();
+		RenderSystem.defaultBlendFunc();
+		RenderSystem.setShaderColor(1.0f, 1.0f, 1.0f, alpha);
+		matrixStack.push();
+		// Apply transformations (debug to check)
+		matrixStack.scale(1.0f, 1.0f, 1.0f);
+		matrixStack.pop();
+	}
 	@Override
 	public boolean mouseClicked(double mouseX, double mouseY, int button)
 	{

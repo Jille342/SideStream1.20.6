@@ -17,7 +17,7 @@ public class Blink extends client.features.modules.Module {
     private final Queue<PlayerMoveC2SPacket> queue = new LinkedList<>();
     private CopiedOtherClientPlayerEntity clone;
     public Blink() {
-        super("Blink",Category.PLAYER);
+        super("Blink",0,Category.PLAYER);
     }
 
     public void onEnabled() {

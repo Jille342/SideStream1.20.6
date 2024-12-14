@@ -15,9 +15,5 @@ public class Setting<T>
 		this.visibility = visibility;
 		this.value = value;
 	}
-	
-	public String getValueString()
-	{
-		return value.toString();
-	}
+
 }

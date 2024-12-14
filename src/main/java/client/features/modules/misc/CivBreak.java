@@ -17,6 +17,7 @@ import client.utils.RenderingUtils;
 import net.minecraft.block.Blocks;
 import net.minecraft.client.network.ClientPlayNetworkHandler;
 import net.minecraft.client.util.math.MatrixStack;
+import net.minecraft.entity.Entity;
 import net.minecraft.item.ItemStack;
 import net.minecraft.network.packet.Packet;
 import net.minecraft.network.packet.c2s.play.HandSwingC2SPacket;
@@ -203,8 +204,7 @@ public class CivBreak extends Module
 	
 	private float[] getAngleToBlockPos(final BlockPos pos)
 	{
-        return calcAngle(mc.player.getEyePos(),
-            new Vec3d(pos.getX() + 0.5f, pos.getY() + 0.5f, pos.getZ() + 0.5f));
+        return calcAngle(mc.player.getEyePos(), getNearestBlockPos(pos));
 	}
 	
 	private float[] calcAngle(final Vec3d from, final Vec3d to)
@@ -234,5 +234,13 @@ public class CivBreak extends Module
 		blockPos = null;
 		hitResult = null;
 		super.onDisabled();
+	}
+	public Vec3d getNearestBlockPos( BlockPos blockPos){
+		Vec3d eye = Objects.requireNonNull(mc.player).getEyePos();
+		Box bb = new Box(blockPos);
+		Vec3d  newBlockPos  = new Vec3d(MathHelper.clamp(eye.x, bb.minX, bb.maxX),
+				MathHelper.clamp(eye.y, bb.minY, bb.maxY),
+				MathHelper.clamp(eye.z, bb.minZ, bb.maxZ));
+		return newBlockPos;
 	}
 }

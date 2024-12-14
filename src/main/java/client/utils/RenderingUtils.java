@@ -556,15 +556,4 @@ public class RenderingUtils implements MCUtil
 		};
 	}
 
-	public static void setAlphaLimit(float limit) {
-		// Enable blending (transparency)
-		RenderSystem.enableBlend();
-		// Set blend function for transparency
-		RenderSystem.defaultBlendFunc();
-
-		// Set alpha function (not directly possible with RenderSystem)
-		// Instead, we rely on blending setup, as OpenGL's alpha testing is deprecated
-		float alphaThreshold = limit * 0.01f;
-		RenderSystem.setShaderColor(1.0f, 1.0f, 1.0f, alphaThreshold);
-	}
 }

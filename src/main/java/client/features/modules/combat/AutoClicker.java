@@ -1,7 +1,9 @@
 
 package client.features.modules.combat;
 
+import client.Client;
 import client.event.Event;
+import client.event.listeners.EventAttack;
 import client.event.listeners.EventUpdate;
 import client.features.modules.Module;
 import client.settings.NumberSetting;
@@ -88,6 +90,8 @@ public class AutoClicker extends Module
 		
 		if(mc.crosshairTarget.getType() == HitResult.Type.ENTITY)
 		{
+			EventAttack eventAttack = new EventAttack(mc.targetedEntity);
+			Client.onEvent(eventAttack);
 			mc.interactionManager.attackEntity(mc.player, mc.targetedEntity);
 		}
 		mc.player.swingHand(Hand.MAIN_HAND);

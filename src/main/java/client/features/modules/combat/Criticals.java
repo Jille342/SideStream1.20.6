@@ -1,13 +1,18 @@
 package client.features.modules.combat;
 
 import client.event.listeners.EventAttack;
+import client.event.listeners.EventPacket;
 import client.event.listeners.EventUpdate;
 import client.features.modules.Module;
 import client.settings.ModeSetting;
+import client.utils.ChatUtils;
+import client.utils.RotationUtils;
+import net.minecraft.network.packet.Packet;
 import net.minecraft.network.packet.c2s.play.PlayerMoveC2SPacket;
 
 public class Criticals extends Module{
     ModeSetting mode;
+    private boolean skipPacket;
 
     public Criticals()
     {
@@ -17,15 +22,24 @@ public class Criticals extends Module{
     public void init()
     {
         super.init();
-        mode = new ModeSetting("Mode", "Matrix", "Matrix");
+        mode = new ModeSetting("Mode", "Matrix", "Matrix","Packet");
         addSetting(mode);
     }
     public void onUpdate(EventUpdate eventUpdate){
         setTag(mode.getValue());
     }
+    @Override
     public void onAttack(EventAttack event){
-       sendFakeY(1.0E-5, mc.player.isOnGround());
-       sendFakeY(0, mc.player.isOnGround());
+        if(mode.getMode().equalsIgnoreCase("Matrix")) {
+            sendFakeY(1.0E-5, false);
+            sendFakeY(0, true);
+        } else if (mode.getMode().equalsIgnoreCase("Packet")) {
+
+                sendFakeY(0.0625, true);
+                sendFakeY(0, false);
+                sendFakeY(1.1e-5, false);
+                sendFakeY(0, false);
+        }
     }
     private void sendFakeY(double offset, boolean onGround)
     {

@@ -44,6 +44,9 @@ public class NumberSetting extends Setting
 			Math.round(Math.max(minimum, Math.min(maximum, value)) * preci)
 				/ preci;
 	}
+	public String getValueString(){
+		return String.valueOf(getFlooredValue());
+	}
 	
 	public void setValue(float posX, float width, float mouseX)
 	{

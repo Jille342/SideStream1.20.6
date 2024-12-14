@@ -1,6 +1,7 @@
 
 package client.features.modules.combat;
 
+import client.Client;
 import client.event.Event;
 import client.event.listeners.*;
 import client.features.modules.Module;
@@ -261,6 +262,8 @@ targetESP = new BooleanSetting("Target ESP", true);
                 if (angles != null) {
                     EntityHitResult hitResult = RaytraceUtils.rayCastByRotation(angles[0], angles[1], (float) rangeSetting.getValue());
                     if (hitResult != null && hitResult.getEntity() != mc.player) {
+                        EventAttack eventAttack = new EventAttack(target);
+                        Client.onEvent(eventAttack);
                         Objects.requireNonNull(mc.getNetworkHandler()).sendPacket(PlayerInteractEntityC2SPacket.attack(target, Objects.requireNonNull(mc.player).isSneaking()));
                     }
                 }
