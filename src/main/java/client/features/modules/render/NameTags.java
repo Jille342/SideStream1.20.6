@@ -153,7 +153,7 @@ public class NameTags extends Module
 			ping = ple.getLatency();
 		}
 		final String pingStr = (ping == 0 ? "?" : ping) + " ms";
-		final MatrixStack stack1 = new MatrixStack();
+		final MatrixStack stack1 = eve.getContext().getMatrices();
 		final Vec3d actual =
 			new Vec3d(screenPos.x, screenPos.y - labelHeight, screenPos.z);
 		float width = this.nameDrawer.getStringWidth(text) + 4;
