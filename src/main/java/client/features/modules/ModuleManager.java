@@ -62,6 +62,7 @@ public class ModuleManager implements MCUtil
 		modules.add(new Criticals());
 		modules.add(new FastBreak());
 		modules.add(new Blink());
+		modules.add(new Fucker());
 	}
 	
 	public static class ModuleComparator implements Comparator<Module>
