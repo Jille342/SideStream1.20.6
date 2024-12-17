@@ -19,11 +19,10 @@ public class Fucker extends Module
 {
 
     public static BlockPos blockBreaking;
-    private double xPos, yPos, zPos, minx;
     float[] rotations = null;
-    private final BooleanSetting tp = new BooleanSetting("TP ",true);
-    private final BooleanSetting suiren = new BooleanSetting("Suiren", false);
-    private final NumberSetting range = new NumberSetting("Range ", 6.0 , 6.0, 7.0 ,0.1 );
+    private  BooleanSetting tp;
+    private  BooleanSetting suiren;
+    private  NumberSetting range;
 
 
 
@@ -41,6 +40,9 @@ public class Fucker extends Module
 
     public void init()
     {
+        tp = new BooleanSetting("TP ",true);
+        suiren = new BooleanSetting("Suiren", false);
+        range = new NumberSetting("Range ", 6.0 , 6.0, 7.0 ,0.1 );
 super.init();
 addSetting(tp,suiren, range);
     }

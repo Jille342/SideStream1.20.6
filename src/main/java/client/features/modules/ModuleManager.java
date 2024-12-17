@@ -63,6 +63,7 @@ public class ModuleManager implements MCUtil
 		modules.add(new FastBreak());
 		modules.add(new Blink());
 		modules.add(new Fucker());
+		modules.add(new TPESP());
 	}
 	
 	public static class ModuleComparator implements Comparator<Module>
