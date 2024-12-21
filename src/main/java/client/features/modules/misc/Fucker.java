@@ -57,21 +57,19 @@ addSetting(tp,suiren, range);
             if (mc.player.age % 10 == 0) {
                 int range = (int)this.range.getValue();
 
-                label51:
                 for(int x = -range; x <= range; ++x) {
                     for(int y = -range; y <= range; ++y) {
                         for(int z = -range; z <= range; ++z) {
                             Block block = mc.world.getBlockState(mc.player.getBlockPos().add(x, y, z)).getBlock();
-                            if (this.tp.getValue() && block == Blocks.NETHER_QUARTZ_ORE) {
+                            if (tp.getValue() && block == Blocks.NETHER_QUARTZ_ORE) {
                                 mc.interactionManager.interactBlock(mc.player, Hand.MAIN_HAND, new BlockHitResult(mc.player.getBlockPos().toCenterPos(), Direction.UP, mc.player.getBlockPos().add(x, y, z), false));
-                                break label51;
+
                             }
 
-                            boolean shouldBreak = this.suiren.getValue() && block == Blocks.LILY_PAD;
+                            boolean shouldBreak = suiren.getValue() && block == Blocks.LILY_PAD;
                             if (shouldBreak) {
                                 mc.interactionManager.updateBlockBreakingProgress(mc.player.getBlockPos().add(x, y, z), Direction.UP);
                                 mc.player.swingHand(Hand.MAIN_HAND);
-                                break label51;
                             }
                         }
                     }

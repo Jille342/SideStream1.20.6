@@ -36,7 +36,6 @@ public class ModuleManager implements MCUtil
 		modules.add(new BowAimbot());
 		modules.add(new NameProtect());
 		modules.add(new NoBreakDelay());
-		modules.add(new TPBreaker());
 		modules.add(new Reach());
 		modules.add(new AutoDrain());
 		modules.add(new NameTags());

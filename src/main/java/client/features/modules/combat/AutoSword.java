@@ -3,6 +3,8 @@ package client.features.modules.combat;
 import client.event.Event;
 import client.event.listeners.EventPacket;
 import client.features.modules.Module;
+import net.minecraft.enchantment.EnchantmentHelper;
+import net.minecraft.enchantment.Enchantments;
 import net.minecraft.item.AxeItem;
 import net.minecraft.item.ItemStack;
 import net.minecraft.item.Items;
@@ -31,7 +33,7 @@ public class AutoSword extends Module
                                 continue;
                             }
                             if (itemStack.getItem() instanceof SwordItem swordItem ) {
-                                final float a =getSwordValue(swordItem);
+                                final float a =getSwordValue(itemStack,swordItem);
                                 if (a >= n) {
                                     n = a;
                                     mc.player.getInventory().selectedSlot= b1;
@@ -43,9 +45,12 @@ public class AutoSword extends Module
         }
     }
 
-    private static float getSwordValue(SwordItem item) {
-
-        return item.getMaterial().getAttackDamage();
+    private static float getSwordValue(ItemStack stack, SwordItem item) {
+        float value = item.getMaterial().getAttackDamage() * 1000.0F;
+        value += (float) EnchantmentHelper.getLevel(Enchantments.SHARPNESS, stack);
+        value += (float)EnchantmentHelper.getLevel(Enchantments.FIRE_ASPECT, stack) * 1000.0F;
+        value += (float) EnchantmentHelper.getLevel(Enchantments.KNOCKBACK, stack);
+        return value;
     }
 
 }
