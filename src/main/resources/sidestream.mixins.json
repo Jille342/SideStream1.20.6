@@ -11,11 +11,12 @@
     "MixinIngameHud",
     "MixinKeyboard",
     "MixinPlayerEntity",
+    "MinecraftClientAccessor",
     "YggdrasilMinecraftSessionServiceAccessor"
   ],
   "client": [
+    "RenderTickCounterAccessor",
     "KeyboardInputMixin",
-    "MinecraftClientAccessor",
     "MixinChatScreen",
     "MixinClientPlayerInteractionManager",
     "MixinEntity",
@@ -29,6 +30,7 @@
     "MixinScreen",
     "MixinSimpleOption",
     "MixinWorldRenderer",
+    "RenderTickCounterMixin",
     "RenderTickCounterAccessor"
   ],
   "injectors": {

@@ -9,6 +9,7 @@ import client.features.modules.ModuleManager;
 import client.mixin.mixininterface.IMinecraftClient;
 import client.ui.BackgroundManager;
 import client.ui.HUD2;
+import client.utils.MCTimerUtil;
 import client.utils.RotationUtils;
 import lombok.Getter;
 import net.minecraft.client.MinecraftClient;
@@ -26,6 +27,7 @@ public class Client
 	public static ConfigManager configManager;
 	
 	public static MinecraftClient mc = MinecraftClient.getInstance();
+	public static MCTimerUtil timerUtil = new MCTimerUtil();
 	public static IMinecraftClient IMC = (IMinecraftClient)mc;
 	public static final File FOLDER = new File(mc.runDirectory, NAME);
 	@Getter
@@ -64,4 +66,5 @@ public class Client
 			FOLDER.mkdir();
 		}
 	}
+
 }

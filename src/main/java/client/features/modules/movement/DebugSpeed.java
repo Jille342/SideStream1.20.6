@@ -12,14 +12,15 @@ import client.settings.ModeSetting;
 import client.settings.NumberSetting;
 import client.utils.MCTimerUtil;
 import client.utils.MoveUtils;
-import client.utils.PlayerHelper;
 import client.utils.RotationUtils;
-import net.minecraft.entity.effect.StatusEffectInstance;
+import net.minecraft.block.Blocks;
 import net.minecraft.entity.effect.StatusEffects;
-import net.minecraft.util.math.MathHelper;
+import net.minecraft.util.Hand;
+import net.minecraft.util.hit.BlockHitResult;
+import net.minecraft.util.math.Direction;
 
-import java.util.List;
-import java.util.Objects;
+import java.util.Map;
+import java.util.concurrent.atomic.AtomicInteger;
 
 public class DebugSpeed extends Module {
 
@@ -56,7 +57,6 @@ public class DebugSpeed extends Module {
 
 	public void onEnabled() {
 		this.yaw = mc.player.getYaw();
-		//MCTimerUtil.setTimerSpeed((float)this.timerSpeed.getValue());
 
 		super.onEnabled();
 	}
@@ -83,12 +83,13 @@ public class DebugSpeed extends Module {
 
 		}
 		if (event instanceof EventUpdate) {
-			setTag(modeSetting.getValue()); if (mc.player.horizontalCollision) {
+			setTag(modeSetting.getValue());
+			if (mc.player.horizontalCollision) {
 				this.direction = !this.direction;
 			}
 
-
 			if (modeSetting.getMode().equalsIgnoreCase("Matrix")) {
+
 				if (!MoveUtils.isMoving()) {
 					this.jumpCount = 0;
 					return;
@@ -137,8 +138,58 @@ public class DebugSpeed extends Module {
 				} else {
 					mc.player.setVelocity(mc.player.getVelocity().x, mc.player.getVelocity().y - 0.0034, mc.player.getVelocity().z);
 				}
+			} else
+if(modeSetting.getMode().equalsIgnoreCase("Timer")){
+	// Loop to check surrounding blocks
+	for (int x = -2; x <= 2; ++x) {
+		for (int y = -2; y <= 2; ++y) {
+			for (int z = -2; z <= 2; ++z) {
+				if (mc.world.getBlockState(mc.player.getBlockPos().add(x, y, z)).getBlock() == Blocks.REDSTONE_BLOCK) {
+					mc.interactionManager.interactBlock(mc.player, Hand.MAIN_HAND, new BlockHitResult(mc.player.getBlockPos().toCenterPos(), Direction.UP, mc.player.getBlockPos().add(x, y, z), false));
+					mc.player.swingHand(Hand.MAIN_HAND);
+				}
 			}
+		}
+	}
 
+	// Speed management
+	if (mc.interactionManager.isBreakingBlock()) {
+		MCTimerUtil.setTimerSpeed(1.0f);
+	} else {
+		MCTimerUtil.setTimerSpeed((float) timerSpeed.getValue());
+		if (!mc.player.isOnGround() && mc.player.isSprinting()) {
+			mc.player.setSprinting(true);
+			mc.player.input.pressingForward = true;
+		} else {
+			mc.player.setSprinting(false);
+			mc.player.input.pressingForward = false;
+			if (!mc.player.isClimbing() && !mc.player.isSubmergedInWater()) {
+				if (mc.player.isHoldingOntoLadder()) {
+					mc.player.setVelocity(mc.player.getVelocity().multiply(0.6, 1.0, 0.6));
+				} else {
+
+					float speedScale = 0.7f;
+					if (mc.player.getActiveStatusEffects().entrySet().stream()
+							.anyMatch(entry -> entry.getKey() == StatusEffects.SLOWNESS)) {
+						AtomicInteger level = new AtomicInteger();
+						mc.player.getActiveStatusEffects().entrySet().stream()
+								.filter(entry -> entry.getKey() == StatusEffects.SLOWNESS)
+								.map(Map.Entry::getValue) // Get the StatusEffectInstance
+								.findFirst()
+								.ifPresent(effect -> {
+								level.set(effect.getAmplifier());
+									// Now you have the level of the Slowness effect
+								});
+						if (level.get() == 2) {
+							speedScale = 0.5f;
+						}
+					}
+
+					mc.player.setVelocity(mc.player.getVelocity().multiply(speedScale, 1.0, speedScale));
+				}
+			}
+		}
+	}}
 
 		}
 		if(event instanceof EventMove){
@@ -161,46 +212,7 @@ mc.options.jumpKey.setPressed(true);
 					}
 				}
 			}
-			/*
-			else if(modeSetting.getMode().equalsIgnoreCase("Matrix")){
-				double moveSpeed = MoveUtils.getBaseMoveSpeed();
-				EventMove eventMove = (EventMove) event;
-					if (mc.player.input.movementForward== 0.0f && mc.player.input.movementSideways == 0.0f) {
-						moveSpeed = MoveUtils.getBaseMoveSpeed() - matrixDecrease.getValue();  // Reset speed if no input
-					}
-
-					// Gradual speed increase with cap
-					if (MoveUtils.isMoving()) {
-						moveSpeed += 0.01;  // Slowly increase speed
-						moveSpeed = Math.min(moveSpeed, MoveUtils.getBaseMoveSpeed());  // Cap at 10% boost
-					} else {
-					moveSpeed = MoveUtils.getBaseMoveSpeed();  // Reset when stopping
-					}
-
-					// Handle safe jump height
-					if (mc.player.isOnGround()) {
-						double motY = 0.42;  // Safe jump height
-						eventMove.setY(motY);
-						mc.player.jump();
-					}
-
-					// Apply minor speed boost on damage if within allowed limits
-					if (mc.player.hurtTime > 0 && moveSpeed < MoveUtils.getBaseMoveSpeed() * 1.15) {
-						moveSpeed *= 1.05;  // Minor boost on damage
-					}
-
-					// Apply movement with limit on strafing
-
-				MoveUtils.setMotion(eventMove, moveSpeed);
-
-			}
-
-			 */
 		}
 	}
-	protected double getHop(double height) {
-		StatusEffectInstance jumpBoost = mc.player.hasStatusEffect(StatusEffects.JUMP_BOOST) ? mc.player.getStatusEffect(StatusEffects.JUMP_BOOST) : null;
-		if (jumpBoost != null) height += (jumpBoost.getAmplifier() + 1) * 0.1f;
-		return height;
-	}
+
 }

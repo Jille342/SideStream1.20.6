@@ -17,6 +17,7 @@ import java.util.*;
 import java.util.concurrent.CopyOnWriteArrayList;
 
 import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
 
 public class ModuleManager implements MCUtil
 {
@@ -63,6 +64,7 @@ public class ModuleManager implements MCUtil
 		modules.add(new Blink());
 		modules.add(new Fucker());
 		modules.add(new TPESP());
+		modules.add(new AntiDebuff());
 	}
 	
 	public static class ModuleComparator implements Comparator<Module>
@@ -73,7 +75,13 @@ public class ModuleManager implements MCUtil
 			return Integer.compare(o2.priority, o1.priority);
 		}
 	}
-	
+	public @Nullable Module getModuleIgnoreCase(String moduleName) {
+		return (Module)modules.stream().filter((m) -> {
+			return m.getName().equalsIgnoreCase(moduleName);
+		}).findFirst().orElse((Module) null);
+	}
+
+
 	public void onEvent(Event<?> e)
 	{
 		if(e instanceof EventKey)

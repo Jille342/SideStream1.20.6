@@ -1,49 +1,46 @@
 package client.command.impl;
 
+
+import client.Client;
 import client.command.Command;
 import client.features.modules.Module;
-import client.features.modules.ModuleManager;
 import client.utils.ChatUtils;
-import org.lwjgl.glfw.GLFW;
+import client.utils.MCUtil;
+import net.minecraft.client.util.InputUtil;
+import net.minecraft.text.Text;
 
-public class Bind extends Command
-{
-	
-	public Bind()
-	{
-		super("Bind", "", "bind <Module> <Key>", "bind", "b");
+public class Bind extends Command implements MCUtil {
+	public Bind() {
+		super("Bind", ".bind <module name> <key name>", "bind", "b");
 	}
-	
+
+
 	@Override
-	public boolean onCommand(String[] args, String command)
-	{
-		if(args.length == 2)
-		{
-			for(Module m : ModuleManager.modules)
-			{
-				if(m.getName().toLowerCase().equals(args[0].toLowerCase()))
-				{
-					int keycode = getKeyCodeFromKey(args[1]);
-					
-					m.setKeyCode(keycode);
-					ChatUtils.printChat("Module " + m.getName()
-						+ " bound to key:" + args[1].toUpperCase());
-					return true;
+	public boolean onCommand(String[] args, String command) {
+		if (args.length != 2) {
+			return true;
+		} else {
+			Module module = Client.getModuleManager().getModuleIgnoreCase(args[0]);
+			if (module == null) {
+			ChatUtils.printChat(String.format("Module '%S' not found", args[0]));
+				return false;
+			} else {
+				InputUtil.Key key = InputUtil.fromKeyCode(256, 0);
+
+				try {
+					key = InputUtil.fromTranslationKey(String.format("key.keyboard.%s", args[1].toLowerCase()));
+				} catch (IllegalArgumentException var5) {
 				}
+
+				module.setKeyCode(key.getCode() == 256 ? -1 : key.getCode());
+				if (module.getKeyCode() == -1) {
+					ChatUtils.printChat(String.format("Module %s is now unbounded", module.getName()));
+				} else {
+					ChatUtils.printChat(String.format("Module %s is now bound with %s", module.getName(), key.getTranslationKey()));
+				}
+
+				return false;
 			}
 		}
-		return false;
 	}
-	
-	public int getKeyCodeFromKey(String key)
-	{
-		for(int i = 39; i < 97; i++)
-		{
-			if(key.equalsIgnoreCase(
-				GLFW.glfwGetKeyName(GLFW.GLFW_KEY_UNKNOWN, i)))
-				return i;
-		}
-		return 0;
-	}
-	
 }

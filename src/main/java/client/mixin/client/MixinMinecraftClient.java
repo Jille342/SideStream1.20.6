@@ -13,6 +13,7 @@ import java.util.UUID;
 import client.Client;
 import client.event.listeners.EventTick;
 import client.mixin.mixininterface.IMinecraftClient;
+import lombok.Setter;
 import org.spongepowered.asm.mixin.Final;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.Shadow;
@@ -37,7 +38,7 @@ import net.minecraft.util.thread.ReentrantThreadExecutor;
 @Mixin(MinecraftClient.class)
 public abstract class MixinMinecraftClient
 	extends ReentrantThreadExecutor<Runnable>
-	implements WindowEventHandler, IMinecraftClient
+	implements WindowEventHandler, IMinecraftClient , MinecraftClientAccessor
 {
 	@Shadow
 	@Final
@@ -52,6 +53,9 @@ public abstract class MixinMinecraftClient
 	
 	private Session wurstSession;
 	private ProfileKeysImpl wurstProfileKeys;
+
+	@Setter
+    private float tickSpeedMultiplier = 1.0F; // Default tick speed multiplier
 	
 	private MixinMinecraftClient(Client wurst, String name)
 	{
@@ -128,4 +132,5 @@ public abstract class MixinMinecraftClient
 		wurstProfileKeys =
 			new ProfileKeysImpl(userApiService, uuid, runDirectory.toPath());
 	}
+
 }

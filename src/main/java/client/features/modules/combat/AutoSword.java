@@ -1,6 +1,7 @@
 package client.features.modules.combat;
 
 import client.event.Event;
+import client.event.listeners.EventAttack;
 import client.event.listeners.EventPacket;
 import client.features.modules.Module;
 import net.minecraft.enchantment.EnchantmentHelper;
@@ -21,9 +22,7 @@ public class AutoSword extends Module
     }
 
     public void onEvent(Event<?> e) {
-        if (e instanceof EventPacket eventPacket) {
-            if(eventPacket.isOutgoing()) {
-                if (eventPacket.getPacket() instanceof PlayerInteractEntityC2SPacket packet) {
+  if(e instanceof EventAttack){
 
                         float n = 0.0f;
                         for (int b1 = 0; b1 < 9; b1++) {
@@ -42,8 +41,6 @@ public class AutoSword extends Module
                     }
                 }
             }
-        }
-    }
 
     private static float getSwordValue(ItemStack stack, SwordItem item) {
         float value = item.getMaterial().getAttackDamage() * 1000.0F;

@@ -31,9 +31,7 @@ public interface MinecraftClientAccessor
 	
 	@Invoker("doItemUse")
 	void accessDoUseItem();
-	
-	@Accessor("renderTickCounter")
-	RenderTickCounter getRenderTickCounter();
+
 	@Mutable
 	@Accessor("profileKeys")
 	void setProfileKeys(ProfileKeys keys);
@@ -68,4 +66,8 @@ public interface MinecraftClientAccessor
 	@Mutable
 	@Accessor("gameProfileFuture")
 	void setGameProfileFuture(CompletableFuture<ProfileResult> future);
+	@Mutable
+	@Accessor("renderTickCounter")
+	RenderTickCounter getRenderTickCounter();
+
 }

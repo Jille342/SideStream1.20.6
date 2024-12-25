@@ -46,8 +46,30 @@ public final class RotationUtils implements MCUtil{
 			mc.player.getY() + mc.player.getEyeHeight(mc.player.getPose()),
 			mc.player.getZ());
 	}
+	public static float[] getAngleToBlockPos(final BlockPos pos)
+	{
+		return calcAngle(mc.player.getEyePos(), getNearestBlockPos(pos));
+	}
+	public static Vec3d getNearestBlockPos( BlockPos blockPos){
+		Vec3d eye = Objects.requireNonNull(mc.player).getEyePos();
+		Box bb = new Box(blockPos);
+		Vec3d  newBlockPos  = new Vec3d(MathHelper.clamp(eye.x, bb.minX, bb.maxX),
+				MathHelper.clamp(eye.y, bb.minY, bb.maxY),
+				MathHelper.clamp(eye.z, bb.minZ, bb.maxZ));
+		return newBlockPos;
+	}
 
-	public static Vec3d getVectorForRotation(float yaw, float pitch) {
+	public static float[] calcAngle(final Vec3d from, final Vec3d to) {
+		final double difX = to.x - from.x;
+		final double difY = (to.y - from.y) * -1.0;
+		final double difZ = to.z - from.z;
+		final double dist = Math.sqrt((float) (difX * difX + difZ * difZ));
+		return new float[]{
+				(float) MathHelper.wrapDegrees(Math.toDegrees(Math.atan2(difZ, difX)) - 90.0),
+				(float) MathHelper.wrapDegrees(Math.toDegrees(Math.atan2(difY, dist)))};
+	}
+
+		public static Vec3d getVectorForRotation(float yaw, float pitch) {
 		float var2 = MathHelper.cos(-yaw * 0.017453292F - 3.1415927F);
 		float var3 = MathHelper.sin(-yaw * 0.017453292F - 3.1415927F);
 		float var4 = -MathHelper.cos(-pitch * 0.017453292F);

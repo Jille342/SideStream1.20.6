@@ -22,15 +22,20 @@ import org.spongepowered.asm.mixin.injection.invoke.arg.Args;
 @Mixin({ClientPlayerEntity.class})
 public class MixinClientPlayerEntity
 {
-	@Inject(at = @At(value = "INVOKE",
-		target = "Lnet/minecraft/client/network/AbstractClientPlayerEntity;tick()V",
-		ordinal = 0), method = "tick()V")
-	private void onTick(CallbackInfo ci)
-	{
-		EventUpdate eventUpdate = new EventUpdate();
-		eventUpdate.setType(EventType.PRE);
-		Client.onEvent(eventUpdate);
+	@Inject(
+			method = {"sendMovementPackets"},
+			at = {@At("HEAD")},
+			cancellable = true
+	)
+	public void injectSendMovementPacketsPre(CallbackInfo ci) {
+		EventUpdate event = new EventUpdate();
+		Client.onEvent(event);
+		if (event.isCancelled()) {
+			ci.cancel();
+		}
+
 	}
+
 	
 	@Redirect(method = "sendMovementPackets",
 		at = @At(value = "INVOKE",
