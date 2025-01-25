@@ -9,6 +9,7 @@ import net.minecraft.entity.player.PlayerEntity;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.UUID;
+import java.util.regex.Pattern;
 
 public class ServerHelper
 {
@@ -22,6 +23,11 @@ public class ServerHelper
 	public static boolean isTeammate(PlayerEntity player)
 	{
 		return player.isTeammate(MinecraftClient.getInstance().player);
+	}
+	private Pattern COLOR_PATTERN = Pattern.compile("(?i)§[0-9A-FK-OR]");
+
+	public String stripMinecraftColorCodes(String input){
+		return COLOR_PATTERN.matcher(input).replaceAll("");
 	}
 	
 	// public static boolean isFriend(PlayerEntity player) {

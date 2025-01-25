@@ -65,6 +65,8 @@ public class ModuleManager implements MCUtil
 		modules.add(new Fucker());
 		modules.add(new TPESP());
 		modules.add(new AntiDebuff());
+		modules.add(new LowFireOverlay());
+		modules.add(new AntiAFK());
 	}
 	
 	public static class ModuleComparator implements Comparator<Module>
