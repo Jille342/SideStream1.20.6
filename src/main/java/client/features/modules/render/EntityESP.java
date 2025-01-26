@@ -68,12 +68,13 @@ if(!(entity instanceof PlayerEntity) && !mobs.isEnabled()){
 						if (entity != mc.player) {
 							int color = 0;
 
-							if (colorMode.getMode().equalsIgnoreCase("Team")) {color = Colors.reAlpha(entity.getTeamColorValue(), alpha.getValue());
+							if (colorMode.getMode().equalsIgnoreCase("Team")) {
+								color = entity.getTeamColorValue();
 							} else if (colorMode.getMode()
 									.equalsIgnoreCase("HurtTime")) {
 								color = (((LivingEntity) entity).hurtTime == 0)
-										? new Color(0, 200, 0, alpha.getValue()).getRGB()
-										: new Color(239, 235, 41,   alpha.getValue()).getRGB();
+										? new Color(0, 200, 0, 0).getRGB()
+										: new Color(239, 235, 41,   0).getRGB();
 							}
 
 							switch (mode.getMode()) {
@@ -91,7 +92,7 @@ if(!(entity instanceof PlayerEntity) && !mobs.isEnabled()){
 											interpolatedZ - entity.getZ());
 									RenderingUtils.draw3DBox2(
 											matrixStack.peek().getPositionMatrix(),
-											boundingBox, color);
+											boundingBox, Colors.reAlpha(color, (float) alpha.getValue()));
 									break;
 								case "Lines":
 									// RenderingUtils.drawEntityModel(matrixStack,

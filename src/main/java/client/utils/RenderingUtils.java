@@ -330,7 +330,7 @@ public class RenderingUtils implements MCUtil
 		float red = (color >> 16 & 0xFF) / 255F;
 		float green = (color >> 8 & 0xFF) / 255F;
 		float blue = (color & 0xFF) / 255F;
-		RenderSystem.setShaderColor(red, green, blue, 0.11F);
+		RenderSystem.setShaderColor(red, green, blue, alpha);
 		
 		GL11.glEnable(GL11.GL_BLEND);
 		GL11.glDisable(GL11.GL_DEPTH_TEST);
