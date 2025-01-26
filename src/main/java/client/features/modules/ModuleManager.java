@@ -3,10 +3,7 @@ package client.features.modules;
 import client.event.listeners.EventKey;
 import client.features.modules.combat.*;
 import client.features.modules.misc.*;
-import client.features.modules.movement.DebugSpeed;
-import client.features.modules.movement.Flight;
-import client.features.modules.movement.InventoryMove;
-import client.features.modules.movement.Sprint;
+import client.features.modules.movement.*;
 import client.features.modules.player.*;
 import client.features.modules.render.*;
 import client.settings.*;
@@ -67,6 +64,7 @@ public class ModuleManager implements MCUtil
 		modules.add(new AntiDebuff());
 		modules.add(new LowFireOverlay());
 		modules.add(new AntiAFK());
+		modules.add(new KeepSprint());
 	}
 	
 	public static class ModuleComparator implements Comparator<Module>

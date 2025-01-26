@@ -5,6 +5,7 @@ import client.event.listeners.EventRender3D;
 import client.features.modules.Module;
 import client.settings.BooleanSetting;
 import client.settings.ModeSetting;
+import client.settings.NumberSetting;
 import client.utils.*;
 import net.minecraft.client.network.AbstractClientPlayerEntity;
 import net.minecraft.client.render.Camera;
@@ -24,7 +25,7 @@ public class EntityESP extends Module
 	static ModeSetting mode;
 	public ModeSetting colorMode;
 	public static BooleanSetting mobs;
-	
+	public NumberSetting alpha;
 	public EntityESP()
 	{
 		
@@ -38,7 +39,7 @@ public class EntityESP extends Module
 		super.init();
 		colorMode = new ModeSetting("Color Mode", "HurtTime",
 			new String[]{"HurtTime", "Team"});
-		
+		alpha = new NumberSetting("Alpha", 50, 0 , 100,1);
 		mode = new ModeSetting("Mode ", "BoundingBox",
 			new String[]{"BoundingBox"});
 		mobs = new BooleanSetting("Render Mobs", true);
@@ -69,11 +70,12 @@ if(!(entity instanceof PlayerEntity) && !mobs.isEnabled()){
 
 							if (colorMode.getMode().equalsIgnoreCase("Team")) {
 								color = entity.getTeamColorValue();
+								color = Colors.reAlpha(entity.getTeamColorValue(), (int) alpha.getValue());
 							} else if (colorMode.getMode()
 									.equalsIgnoreCase("HurtTime")) {
 								color = (((LivingEntity) entity).hurtTime == 0)
-										? new Color(0, 200, 0, 100).getRGB()
-										: new Color(239, 235, 41, 255).getRGB();
+										? new Color(0, 200, 0,  (int) alpha.getValue()).getRGB()
+										: new Color(239, 235, 41,  (int) alpha.getValue()).getRGB();
 							}
 
 							switch (mode.getMode()) {

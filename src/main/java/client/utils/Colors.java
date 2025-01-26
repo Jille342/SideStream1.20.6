@@ -47,6 +47,14 @@ public class Colors implements MCUtil
 		float b = 0.003921569F * c.getBlue();
 		return new Color(r, g, b, alpha).getRGB();
 	}
+	public static int reAlpha(int color, int alpha)
+	{
+		Color c = new Color(color);
+		float r = 0.003921569F * c.getRed();
+		float g = 0.003921569F * c.getGreen();
+		float b = 0.003921569F * c.getBlue();
+		return new Color(r, g, b, alpha).getRGB();
+	}
 	
 	public static Color blendColors(float[] fractions, Color[] colors,
 		float progress)
