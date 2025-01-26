@@ -225,7 +225,7 @@ targetESP = new BooleanSetting("Target ESP", true);
             if(!targets.isEmpty() && target != null && targetESP.isEnabled()){
                 LivingEntity entity = target;
                 int color = 0;
-                color = (((LivingEntity) target).hurtTime == 0) ? new Color(0, 200, 0, 95).getRGB() : new Color(231, 0, 30, 95).getRGB();
+                color = (((LivingEntity) target).hurtTime == 0) ? new Color(0, 200, 0, 50).getRGB() : new Color(231, 0, 30, 50).getRGB();
                 double interpolatedX = MathHelper.lerp(partialTicks,
                         entity.prevX, entity.getX());
                 double interpolatedY = MathHelper.lerp(partialTicks,
