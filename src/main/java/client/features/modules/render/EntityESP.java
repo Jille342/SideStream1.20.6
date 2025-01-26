@@ -68,9 +68,7 @@ if(!(entity instanceof PlayerEntity) && !mobs.isEnabled()){
 						if (entity != mc.player) {
 							int color = 0;
 
-							if (colorMode.getMode().equalsIgnoreCase("Team")) {
-								color = entity.getTeamColorValue();
-								color = Colors.reAlpha(entity.getTeamColorValue(), (int) alpha.getValue());
+							if (colorMode.getMode().equalsIgnoreCase("Team")) {color = Colors.reAlpha(entity.getTeamColorValue(), (int) alpha.getValue());
 							} else if (colorMode.getMode()
 									.equalsIgnoreCase("HurtTime")) {
 								color = (((LivingEntity) entity).hurtTime == 0)
