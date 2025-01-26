@@ -428,7 +428,7 @@ public class RenderingUtils implements MCUtil
 		
 		tessellator.draw();
 		
-		RenderSystem.setShaderColor(red, green, blue, 0.8F);
+		RenderSystem.setShaderColor(red, green, blue, alpha);
 		RenderSystem.setShader(GameRenderer::getPositionProgram);
 		
 		bufferBuilder.begin(VertexFormat.DrawMode.QUADS,
