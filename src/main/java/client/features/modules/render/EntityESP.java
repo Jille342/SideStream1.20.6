@@ -39,11 +39,11 @@ public class EntityESP extends Module
 		super.init();
 		colorMode = new ModeSetting("Color Mode", "HurtTime",
 			new String[]{"HurtTime", "Team"});
-		alpha = new NumberSetting("Alpha", 50, 0 , 100,1);
+		alpha = new NumberSetting("Alpha", 0.5, 0 , 1,0.1);
 		mode = new ModeSetting("Mode ", "BoundingBox",
 			new String[]{"BoundingBox"});
 		mobs = new BooleanSetting("Render Mobs", true);
-		addSetting(mode, colorMode,mobs);
+		addSetting(mode, colorMode,mobs,alpha);
 	}
 	
 	@Override
@@ -68,12 +68,12 @@ if(!(entity instanceof PlayerEntity) && !mobs.isEnabled()){
 						if (entity != mc.player) {
 							int color = 0;
 
-							if (colorMode.getMode().equalsIgnoreCase("Team")) {color = Colors.reAlpha(entity.getTeamColorValue(), (int) alpha.getValue());
+							if (colorMode.getMode().equalsIgnoreCase("Team")) {color = Colors.reAlpha(entity.getTeamColorValue(), alpha.getValue());
 							} else if (colorMode.getMode()
 									.equalsIgnoreCase("HurtTime")) {
 								color = (((LivingEntity) entity).hurtTime == 0)
-										? new Color(0, 200, 0,  (int) alpha.getValue()).getRGB()
-										: new Color(239, 235, 41,  (int) alpha.getValue()).getRGB();
+										? new Color(0, 200, 0, alpha.getValue()).getRGB()
+										: new Color(239, 235, 41,   alpha.getValue()).getRGB();
 							}
 
 							switch (mode.getMode()) {
