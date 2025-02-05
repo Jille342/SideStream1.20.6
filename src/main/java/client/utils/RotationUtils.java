@@ -241,15 +241,15 @@ public final class RotationUtils implements MCUtil{
 			MathHelper.clamp(vec.z, box.minZ, box.maxZ));
 	}
 
-	public  float[] calcRotation(Entity entity ,float speed, float range, boolean instant, boolean silent, float[]serverSideAngles, float instantAimSpeed) {
+	public  float[] calcRotation(Entity entity ,float speed, float range, boolean instant,float[]serverSideAngles, float instantAimSpeed) {
 		if (serverSideAngles == null) {
 			serverSideAngles = new float[]{
 					mc.player.getYaw(), mc.player.getPitch()
 			};
 		}
 		float tickDelta = mc.getTickDelta();
-		float currentYaw = silent ? serverSideAngles[0] : mc.player.getYaw(tickDelta);
-		float currentPitch = silent ? serverSideAngles[1] : mc.player.getPitch(tickDelta);
+		float currentYaw = serverSideAngles[0];
+		float currentPitch =  serverSideAngles[1];
 		float aimSpeed = instant ? instantAimSpeed : speed;
 		if (aimSpeed > 1) {
 			aimSpeed = 1;

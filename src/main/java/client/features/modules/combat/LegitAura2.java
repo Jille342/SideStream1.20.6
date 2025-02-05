@@ -188,7 +188,7 @@ targetESP = new BooleanSetting("Target ESP", true);
                     float aimSpeed = (float) legitAimSpeed.getValue();
                      aimSpeed = (float)
                             RandomUtils.nextFloat(aimSpeed - 0.02f, aimSpeed + 0.02f)*0.1f;
-                       angles = rotationUtils.calcRotation(target, aimSpeed, (float) rangeSetting.getValue(), isInstant, isSilent, angles, (float) legitInstantAimSpeed.getValue());
+                       angles = rotationUtils.calcRotation(target, aimSpeed, (float) rangeSetting.getValue(), isInstant,  angles, (float) legitInstantAimSpeed.getValue());
                      //   angles = RotationUtils.getLimitedAngles(serverSideAngles,tempAngles,target);
                 }
                 if(angles != null){
@@ -294,6 +294,8 @@ targetESP = new BooleanSetting("Target ESP", true);
         boolean targetInvisibles =  targeting.getValues().get("Targeting Invisibles");
        boolean targetMobs =  targeting.getValues().get("Targeting Mobs");
        boolean ignoreTeams =  targeting.getValues().get("Ignore Teams");
+        EntityHitResult hitResult = RaytraceUtils.rayCastByRotation(angles[0], angles[1], (float) rangeSetting.getValue());
+
         if(entity instanceof LivingEntity && entity != mc.player)
         {
             if(!entity.isAlive() || entity.age < 10)
