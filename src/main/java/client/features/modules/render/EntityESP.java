@@ -3,6 +3,8 @@ package client.features.modules.render;
 import client.event.Event;
 import client.event.listeners.EventRender3D;
 import client.features.modules.Module;
+import client.features.modules.ModuleManager;
+import client.features.modules.combat.HitBoxes;
 import client.settings.BooleanSetting;
 import client.settings.ModeSetting;
 import client.settings.NumberSetting;
@@ -85,11 +87,18 @@ if(!(entity instanceof PlayerEntity) && !mobs.isEnabled()){
 											entity.prevY, entity.getY());
 									double interpolatedZ = MathHelper.lerp(partialTicks,
 											entity.prevZ, entity.getZ());
-
-									Box boundingBox = entity.getBoundingBox().offset(
-											interpolatedX - entity.getX(),
-											interpolatedY - entity.getY(),
-											interpolatedZ - entity.getZ());
+									Box boundingBox;
+if(ModuleManager.getModulebyClass(HitBoxes.class).isEnabled()){
+	 boundingBox = entity.getBoundingBox().offset(
+			interpolatedX - entity.getX(),
+			interpolatedY - entity.getY(),
+			interpolatedZ - entity.getZ()).expand(HitBoxes.getSize(entity));
+} else {
+	boundingBox = entity.getBoundingBox().offset(
+			interpolatedX - entity.getX(),
+			interpolatedY - entity.getY(),
+			interpolatedZ - entity.getZ());
+}
 									RenderingUtils.draw3DBox2(
 											matrixStack.peek().getPositionMatrix(),
 											boundingBox, Colors.reAlpha(color, (float) alpha.getValue()));

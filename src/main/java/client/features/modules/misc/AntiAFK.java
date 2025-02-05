@@ -8,6 +8,7 @@ import client.utils.ChatUtils;
 import client.utils.RandomUtils;
 import net.minecraft.network.packet.Packet;
 import net.minecraft.network.packet.s2c.play.ChatMessageS2CPacket;
+import net.minecraft.network.packet.s2c.play.GameMessageS2CPacket;
 
 import java.util.Objects;
 import java.util.regex.Pattern;
@@ -28,10 +29,9 @@ public class AntiAFK extends Module {
         if(eventPacket.isIncoming())
         {
             Packet<?> p = eventPacket.getPacket();
-            if(p instanceof ChatMessageS2CPacket packet)
+            if(p instanceof GameMessageS2CPacket packet)
             {
-                if(Objects.requireNonNull(stripper(Objects.requireNonNull(packet.unsignedContent())
-                        .getLiteralString())).contains("You have been detected as idle and will be kicked"))
+                if(Objects.requireNonNull(stripper(Objects.requireNonNull(packet.content()).getString())).contains("You have been detected as idle and will be kicked"))
                 {
                  isAFK = true;
                 }
