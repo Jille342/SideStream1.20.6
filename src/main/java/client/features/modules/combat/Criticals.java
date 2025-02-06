@@ -41,10 +41,7 @@ public class Criticals extends Module{
                 sendFakeY(0, false);
         }
     }
-    private void sendFakeY(double offset, boolean onGround)
-    {
-        mc.player.networkHandler.sendPacket(
-                new PlayerMoveC2SPacket.PositionAndOnGround(mc.player.getX(), mc.player.getY() + offset,
-                        mc.player.getZ(), onGround));
+    private void sendFakeY(double offset, boolean onGround) {
+        mc.player.networkHandler.sendPacket(new PlayerMoveC2SPacket.PositionAndOnGround(mc.player.getX(), mc.player.getY() + offset, mc.player.getZ(), onGround));
     }
 }
