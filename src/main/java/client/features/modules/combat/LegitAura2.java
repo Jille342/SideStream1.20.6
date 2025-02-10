@@ -92,7 +92,7 @@ public class LegitAura2 extends Module
         legitInstantSettings.addValue("Smart Legit Instant", false);
         smartSilent = new BooleanSetting("Smart Silent",false);
         legitMoveTurnFast = new BooleanSetting("Legit Move Turn Fast", true);
-        legitfastmultipliter = new NumberSetting("Legit Move Fast Multipliter", 0.1, 0.1, 0.5, 0.01D);
+        legitfastmultipliter = new NumberSetting("Legit Move Turn Fast Multipliter", 0.1, 0.1, 0.5, 0.01D);
 targetESP = new BooleanSetting("Target ESP", true);
         addSetting(angleStepSetting,rotationmode, maxCPS, minCPS
                         ,targeting, sortmode,
