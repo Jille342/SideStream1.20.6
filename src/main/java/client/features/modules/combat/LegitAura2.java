@@ -50,7 +50,7 @@ public class LegitAura2 extends Module
     NumberSetting legitAimSpeed;
     NumberSetting swingRange;
     BooleanSetting smartSilent;
-    NumberSetting legitInstantAimSpeed;
+    NumberSetting legitfastmultipliter;
     BooleanSetting targetESP;
     MultiBooleanSetting targeting;
     NumberSetting angleStepSetting;
@@ -92,11 +92,11 @@ public class LegitAura2 extends Module
         legitInstantSettings.addValue("Smart Legit Instant", false);
         smartSilent = new BooleanSetting("Smart Silent",false);
         legitMoveTurnFast = new BooleanSetting("Legit Move Turn Fast", true);
-        legitInstantAimSpeed = new NumberSetting("Legit Instant Aim Speed", 0.01, 0.01, 0.5, 0.01D);
+        legitfastmultipliter = new NumberSetting("Legit Move Fast Multipliter", 0.1, 0.1, 0.5, 0.01D);
 targetESP = new BooleanSetting("Target ESP", true);
         addSetting(angleStepSetting,rotationmode, maxCPS, minCPS
                         ,targeting, sortmode,
-              fov, hitThroughWalls, rangeSetting, clickOnly, moveFix, itemCheck, testMove,silent, legitAimSpeed,swingRange,smartSilent,legitMoveTurnFast,legitInstantSettings,legitInstantAimSpeed,targetESP);
+              fov, hitThroughWalls, rangeSetting, clickOnly, moveFix, itemCheck, testMove,silent, legitAimSpeed,swingRange,smartSilent,legitMoveTurnFast,legitInstantSettings,legitfastmultipliter,targetESP);
         super.init();
     }
     public static ArrayList<LivingEntity> targets = new ArrayList<LivingEntity>();
@@ -197,7 +197,7 @@ targetESP = new BooleanSetting("Target ESP", true);
                     float aimSpeed = (float) legitAimSpeed.getValue();
                      aimSpeed = (float)
                             RandomUtils.nextFloat(aimSpeed - 0.02f, aimSpeed + 0.02f)*0.1f;
-                       angles = rotationUtils.calcRotation(legitMoveTurnFast.getValue(),target, aimSpeed, (float) rangeSetting.getValue(), isInstant,  currentAngles, (float) legitInstantAimSpeed.getValue());
+                       angles = rotationUtils.calcRotation(legitMoveTurnFast.getValue(),target, aimSpeed, (float) rangeSetting.getValue(), isInstant,  currentAngles, (float) legitfastmultipliter.getValue());
                      //   angles = RotationUtils.getLimitedAngles(serverSideAngles,tempAngles,target);
                 }
                 if(angles != null){
