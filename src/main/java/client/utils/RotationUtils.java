@@ -241,7 +241,7 @@ public final class RotationUtils implements MCUtil{
 			MathHelper.clamp(vec.z, box.minZ, box.maxZ));
 	}
 
-	public  float[] calcRotation(Entity entity ,float speed, float range, boolean instant,float[]serverSideAngles, float instantAimSpeed) {
+	public  float[] calcRotation(boolean legitTurnFast,Entity entity ,float speed, float range, boolean instant,float[]serverSideAngles, float instantAimSpeed) {
 		if (serverSideAngles == null) {
 			serverSideAngles = new float[]{
 					mc.player.getYaw(), mc.player.getPitch()
@@ -271,8 +271,12 @@ public final class RotationUtils implements MCUtil{
 					lerp(currentPitch, aPitch, speed * 0.5f)
 			};
 		} else {
+			float relativeVelocity = (float) ( Math.abs(entity.getVelocity().getX() - mc.player.getVelocity().getX()) + Math.abs(entity.getVelocity().getZ() - mc.player.getVelocity().getZ()));
 			float[] wrappedAngles = wrapAngleArray(currentYaw, currentPitch, center);
 			float deltaH = Math.abs(currentYaw - wrappedAngles[0]);
+			if(legitTurnFast){
+				aimSpeed  =  aimSpeed + relativeVelocity*0.5f;
+			}
 			float deltaV = Math.abs(currentPitch - wrappedAngles[1]);
 			float[] newSpeed = computeTurnSpeed(deltaH, deltaV, aimSpeed);
 			return lerpArray(new float[]{currentYaw, currentPitch}, wrappedAngles, newSpeed[0], newSpeed[1]);

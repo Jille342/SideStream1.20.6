@@ -12,7 +12,6 @@ public class RaytraceUtils implements  MCUtil {
         Entity cameraEntity = mc.getCameraEntity();
         double e = MathHelper.square(reach);
         if (cameraEntity != null && mc.world != null) {
-            assert mc.player != null;
             float f = 1.0F;
             Vec3d eyeVec = cameraEntity.getCameraPosVec(1.0F);
             Vec3d lookVec = RotationUtils.getVectorForRotation(yaw, pitch);

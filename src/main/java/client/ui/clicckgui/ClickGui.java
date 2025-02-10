@@ -52,7 +52,6 @@ public class ClickGui extends Screen
 		Window window = mc.getWindow();
 		partialTicks = delta;
 		double per = animationUtil.uodate(0.05).calcPercent();
-		setAlphaLimit(stack,(float) per);
 		stack.push();
 
 		stack.translate((float) window.getScaledWidth() / 4, (float) window.getScaledHeight() / 4, 0);

@@ -44,7 +44,6 @@ public class AdminChecker extends Module
 			new String[]{"Rank", "Tell"});
 		addSetting(delay, checkMode);
 		super.init();
-		
 	}
 	
 	public void onEvent(Event<?> e)

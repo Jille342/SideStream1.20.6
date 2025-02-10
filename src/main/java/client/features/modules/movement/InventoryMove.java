@@ -101,7 +101,6 @@ public class InventoryMove extends Module
 		if(event instanceof EventPacket)
 		{
 			EventPacket ep = (EventPacket)event;
-			
 			if(!this.mode.getMode().equals("Normal"))
 			{
 				Packet<?> packet = ep.getPacket();

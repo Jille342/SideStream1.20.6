@@ -55,6 +55,7 @@ public class LegitAura2 extends Module
     MultiBooleanSetting targeting;
     NumberSetting angleStepSetting;
     MultiBooleanSetting legitInstantSettings;
+    BooleanSetting legitMoveTurnFast;
 
 
 
@@ -90,11 +91,12 @@ public class LegitAura2 extends Module
         legitInstantSettings.addValue("Legit Instant", false);
         legitInstantSettings.addValue("Smart Legit Instant", false);
         smartSilent = new BooleanSetting("Smart Silent",false);
+        legitMoveTurnFast = new BooleanSetting("Legit Move Turn Fast", true);
         legitInstantAimSpeed = new NumberSetting("Legit Instant Aim Speed", 0.01, 0.01, 0.5, 0.01D);
 targetESP = new BooleanSetting("Target ESP", true);
         addSetting(angleStepSetting,rotationmode, maxCPS, minCPS
                         ,targeting, sortmode,
-              fov, hitThroughWalls, rangeSetting, clickOnly, moveFix, itemCheck, testMove,silent, legitAimSpeed,swingRange,smartSilent,legitInstantSettings,legitInstantAimSpeed,targetESP);
+              fov, hitThroughWalls, rangeSetting, clickOnly, moveFix, itemCheck, testMove,silent, legitAimSpeed,swingRange,smartSilent,legitMoveTurnFast,legitInstantSettings,legitInstantAimSpeed,targetESP);
         super.init();
     }
     public static ArrayList<LivingEntity> targets = new ArrayList<LivingEntity>();
@@ -185,10 +187,17 @@ targetESP = new BooleanSetting("Target ESP", true);
                 } else
                 if(rotationmode.getMode().equalsIgnoreCase("Legit"))
                 {
+                    boolean shouldTurnFast = legitMoveTurnFast.getValue() && PlayerHelper.isMoving();
+                    float[] currentAngles;
+                    if(isSilent){
+                       currentAngles = angles;
+                    } else {
+                        currentAngles = new float[]{mc.player.getYaw(mc.getTickDelta()), mc.player.getPitch(mc.getTickDelta())};
+                    }
                     float aimSpeed = (float) legitAimSpeed.getValue();
                      aimSpeed = (float)
                             RandomUtils.nextFloat(aimSpeed - 0.02f, aimSpeed + 0.02f)*0.1f;
-                       angles = rotationUtils.calcRotation(target, aimSpeed, (float) rangeSetting.getValue(), isInstant,  angles, (float) legitInstantAimSpeed.getValue());
+                       angles = rotationUtils.calcRotation(legitMoveTurnFast.getValue(),target, aimSpeed, (float) rangeSetting.getValue(), isInstant,  currentAngles, (float) legitInstantAimSpeed.getValue());
                      //   angles = RotationUtils.getLimitedAngles(serverSideAngles,tempAngles,target);
                 }
                 if(angles != null){
@@ -259,8 +268,8 @@ targetESP = new BooleanSetting("Target ESP", true);
             currentCPS = RandomUtils.nextDouble(minCPS.getValue(),
                     maxCPS.getValue());
             if(target != null) {
-                if (angles != null) {
-                    EntityHitResult hitResult = RaytraceUtils.rayCastByRotation(angles[0], angles[1], (float) rangeSetting.getValue());
+                if (fixed != null) {
+                    EntityHitResult hitResult = RaytraceUtils.rayCastByRotation(fixed[0], fixed[1], (float) rangeSetting.getValue());
                     if (hitResult != null && hitResult.getEntity() != mc.player) {
                         EventAttack eventAttack = new EventAttack(target);
                         Client.onEvent(eventAttack);
@@ -294,8 +303,6 @@ targetESP = new BooleanSetting("Target ESP", true);
         boolean targetInvisibles =  targeting.getValues().get("Targeting Invisibles");
        boolean targetMobs =  targeting.getValues().get("Targeting Mobs");
        boolean ignoreTeams =  targeting.getValues().get("Ignore Teams");
-        EntityHitResult hitResult = RaytraceUtils.rayCastByRotation(angles[0], angles[1], (float) rangeSetting.getValue());
-
         if(entity instanceof LivingEntity && entity != mc.player)
         {
             if(!entity.isAlive() || entity.age < 10)
